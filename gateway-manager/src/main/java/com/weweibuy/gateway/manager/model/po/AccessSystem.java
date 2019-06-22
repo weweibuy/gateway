@@ -9,6 +9,8 @@ public class AccessSystem {
 
     private String systemName;
 
+    private String lbUri;
+
     private String systemDomain;
 
     private String systemDesc;
@@ -39,6 +41,14 @@ public class AccessSystem {
 
     public void setSystemName(String systemName) {
         this.systemName = systemName == null ? null : systemName.trim();
+    }
+
+    public String getLbUri() {
+        return lbUri;
+    }
+
+    public void setLbUri(String lbUri) {
+        this.lbUri = lbUri == null ? null : lbUri.trim();
     }
 
     public String getSystemDomain() {

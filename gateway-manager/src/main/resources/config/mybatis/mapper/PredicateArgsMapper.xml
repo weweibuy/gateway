@@ -300,4 +300,303 @@
     </if>
     limit 1
   </select>
+  <resultMap id="BaseResultMap" type="com.weweibuy.gateway.manager.model.po.PredicateArgs">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="predicate_id" jdbcType="BIGINT" property="predicateId" />
+    <result column="args_name" jdbcType="VARCHAR" property="argsName" />
+    <result column="args_value" jdbcType="VARCHAR" property="argsValue" />
+    <result column="dict_id" jdbcType="BIGINT" property="dictId" />
+    <result column="dict_type" jdbcType="VARCHAR" property="dictType" />
+    <result column="args_desc" jdbcType="VARCHAR" property="argsDesc" />
+    <result column="status" jdbcType="TINYINT" property="status" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    id, predicate_id, args_name, args_value, dict_id, dict_type, args_desc, status, create_time, 
+    update_time
+  </sql>
+  <select id="selectByExample" parameterType="com.weweibuy.gateway.manager.model.po.PredicateArgsExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from predicate_args
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from predicate_args
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from predicate_args
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.weweibuy.gateway.manager.model.po.PredicateArgsExample">
+    delete from predicate_args
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.weweibuy.gateway.manager.model.po.PredicateArgs">
+    insert into predicate_args (id, predicate_id, args_name, 
+      args_value, dict_id, dict_type, 
+      args_desc, status, create_time, 
+      update_time)
+    values (#{id,jdbcType=BIGINT}, #{predicateId,jdbcType=BIGINT}, #{argsName,jdbcType=VARCHAR}, 
+      #{argsValue,jdbcType=VARCHAR}, #{dictId,jdbcType=BIGINT}, #{dictType,jdbcType=VARCHAR}, 
+      #{argsDesc,jdbcType=VARCHAR}, #{status,jdbcType=TINYINT}, #{createTime,jdbcType=TIMESTAMP}, 
+      #{updateTime,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.weweibuy.gateway.manager.model.po.PredicateArgs">
+    insert into predicate_args
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="predicateId != null">
+        predicate_id,
+      </if>
+      <if test="argsName != null">
+        args_name,
+      </if>
+      <if test="argsValue != null">
+        args_value,
+      </if>
+      <if test="dictId != null">
+        dict_id,
+      </if>
+      <if test="dictType != null">
+        dict_type,
+      </if>
+      <if test="argsDesc != null">
+        args_desc,
+      </if>
+      <if test="status != null">
+        status,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="updateTime != null">
+        update_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="predicateId != null">
+        #{predicateId,jdbcType=BIGINT},
+      </if>
+      <if test="argsName != null">
+        #{argsName,jdbcType=VARCHAR},
+      </if>
+      <if test="argsValue != null">
+        #{argsValue,jdbcType=VARCHAR},
+      </if>
+      <if test="dictId != null">
+        #{dictId,jdbcType=BIGINT},
+      </if>
+      <if test="dictType != null">
+        #{dictType,jdbcType=VARCHAR},
+      </if>
+      <if test="argsDesc != null">
+        #{argsDesc,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null">
+        #{status,jdbcType=TINYINT},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null">
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.weweibuy.gateway.manager.model.po.PredicateArgsExample" resultType="java.lang.Long">
+    select count(*) from predicate_args
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    update predicate_args
+    <set>
+      <if test="record.id != null">
+        id = #{record.id,jdbcType=BIGINT},
+      </if>
+      <if test="record.predicateId != null">
+        predicate_id = #{record.predicateId,jdbcType=BIGINT},
+      </if>
+      <if test="record.argsName != null">
+        args_name = #{record.argsName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.argsValue != null">
+        args_value = #{record.argsValue,jdbcType=VARCHAR},
+      </if>
+      <if test="record.dictId != null">
+        dict_id = #{record.dictId,jdbcType=BIGINT},
+      </if>
+      <if test="record.dictType != null">
+        dict_type = #{record.dictType,jdbcType=VARCHAR},
+      </if>
+      <if test="record.argsDesc != null">
+        args_desc = #{record.argsDesc,jdbcType=VARCHAR},
+      </if>
+      <if test="record.status != null">
+        status = #{record.status,jdbcType=TINYINT},
+      </if>
+      <if test="record.createTime != null">
+        create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.updateTime != null">
+        update_time = #{record.updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update predicate_args
+    set id = #{record.id,jdbcType=BIGINT},
+      predicate_id = #{record.predicateId,jdbcType=BIGINT},
+      args_name = #{record.argsName,jdbcType=VARCHAR},
+      args_value = #{record.argsValue,jdbcType=VARCHAR},
+      dict_id = #{record.dictId,jdbcType=BIGINT},
+      dict_type = #{record.dictType,jdbcType=VARCHAR},
+      args_desc = #{record.argsDesc,jdbcType=VARCHAR},
+      status = #{record.status,jdbcType=TINYINT},
+      create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      update_time = #{record.updateTime,jdbcType=TIMESTAMP}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.weweibuy.gateway.manager.model.po.PredicateArgs">
+    update predicate_args
+    <set>
+      <if test="predicateId != null">
+        predicate_id = #{predicateId,jdbcType=BIGINT},
+      </if>
+      <if test="argsName != null">
+        args_name = #{argsName,jdbcType=VARCHAR},
+      </if>
+      <if test="argsValue != null">
+        args_value = #{argsValue,jdbcType=VARCHAR},
+      </if>
+      <if test="dictId != null">
+        dict_id = #{dictId,jdbcType=BIGINT},
+      </if>
+      <if test="dictType != null">
+        dict_type = #{dictType,jdbcType=VARCHAR},
+      </if>
+      <if test="argsDesc != null">
+        args_desc = #{argsDesc,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null">
+        status = #{status,jdbcType=TINYINT},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null">
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.weweibuy.gateway.manager.model.po.PredicateArgs">
+    update predicate_args
+    set predicate_id = #{predicateId,jdbcType=BIGINT},
+      args_name = #{argsName,jdbcType=VARCHAR},
+      args_value = #{argsValue,jdbcType=VARCHAR},
+      dict_id = #{dictId,jdbcType=BIGINT},
+      dict_type = #{dictType,jdbcType=VARCHAR},
+      args_desc = #{argsDesc,jdbcType=VARCHAR},
+      status = #{status,jdbcType=TINYINT},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_time = #{updateTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <select id="selectOneByExample" parameterType="com.weweibuy.gateway.manager.model.po.PredicateArgsExample" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from predicate_args
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+    limit 1
+  </select>
 </mapper>

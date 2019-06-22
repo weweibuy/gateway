@@ -305,6 +305,76 @@ public class AccessSystemExample {
             return (Criteria) this;
         }
 
+        public Criteria andLbUriIsNull() {
+            addCriterion("lb_uri is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andLbUriIsNotNull() {
+            addCriterion("lb_uri is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andLbUriEqualTo(String value) {
+            addCriterion("lb_uri =", value, "lbUri");
+            return (Criteria) this;
+        }
+
+        public Criteria andLbUriNotEqualTo(String value) {
+            addCriterion("lb_uri <>", value, "lbUri");
+            return (Criteria) this;
+        }
+
+        public Criteria andLbUriGreaterThan(String value) {
+            addCriterion("lb_uri >", value, "lbUri");
+            return (Criteria) this;
+        }
+
+        public Criteria andLbUriGreaterThanOrEqualTo(String value) {
+            addCriterion("lb_uri >=", value, "lbUri");
+            return (Criteria) this;
+        }
+
+        public Criteria andLbUriLessThan(String value) {
+            addCriterion("lb_uri <", value, "lbUri");
+            return (Criteria) this;
+        }
+
+        public Criteria andLbUriLessThanOrEqualTo(String value) {
+            addCriterion("lb_uri <=", value, "lbUri");
+            return (Criteria) this;
+        }
+
+        public Criteria andLbUriLike(String value) {
+            addCriterion("lb_uri like", value, "lbUri");
+            return (Criteria) this;
+        }
+
+        public Criteria andLbUriNotLike(String value) {
+            addCriterion("lb_uri not like", value, "lbUri");
+            return (Criteria) this;
+        }
+
+        public Criteria andLbUriIn(List<String> values) {
+            addCriterion("lb_uri in", values, "lbUri");
+            return (Criteria) this;
+        }
+
+        public Criteria andLbUriNotIn(List<String> values) {
+            addCriterion("lb_uri not in", values, "lbUri");
+            return (Criteria) this;
+        }
+
+        public Criteria andLbUriBetween(String value1, String value2) {
+            addCriterion("lb_uri between", value1, value2, "lbUri");
+            return (Criteria) this;
+        }
+
+        public Criteria andLbUriNotBetween(String value1, String value2) {
+            addCriterion("lb_uri not between", value1, value2, "lbUri");
+            return (Criteria) this;
+        }
+
         public Criteria andSystemDomainIsNull() {
             addCriterion("system_domain is null");
             return (Criteria) this;
