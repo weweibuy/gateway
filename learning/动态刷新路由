@@ -1,0 +1,14 @@
+
+
+1. 路由的映射由 RoutePredicateHandlerMapping 完成
+    RoutePredicateHandlerMapping 根据当前请求与查询到的所有路由的断言进行匹配;决定进入哪一个路由规则
+
+2. RoutePredicateHandlerMapping 通过lookup 方法查询所有路由
+    lookup方法交由 RouteLocator获取全部路由; Spring-Gateway 在 GatewayAutoConfiguration 配置了多个RouteLocator,
+    这里使用的被@Primary 注解标记的CachingRouteLocator;
+
+3. CachingRouteLocator其内部持有的全部的其他 RouteLocator 对象
+    CachingRouteLocator 监听 RefreshRoutesEvent 事件并对器内部缓存的路由清空
+
+4. CachingRouteLocator在创建时为其内部的 cache 增加了一个监听器,监听缓存清空;当清空时调用内部委托者
+    进行重新加载路由

@@ -1,0 +1,5 @@
+app:
+  id: ${spring.application.name}
+apollo:
+  meta: http://106.12.15.87:9080
+
