@@ -1,7 +1,7 @@
 package com.weweibuy.gateway.manager.controller;
 
-import com.weweibuy.gateway.common.model.dto.CommonBizJsonResponse;
-import com.weweibuy.gateway.common.model.dto.CommonJsonResponse;
+import com.weweibuy.gateway.common.model.dto.CommonDataJsonResponse;
+import com.weweibuy.gateway.common.model.dto.CommonCodeJsonResponse;
 import com.weweibuy.gateway.manager.controller.constant.ApiPrefixConstant;
 import com.weweibuy.gateway.manager.model.dto.AccessSystemQueryDto;
 import com.weweibuy.gateway.manager.model.po.AccessSystem;
@@ -29,38 +29,38 @@ public class AccessSystemController {
     private AccessSystemService accessSystemService;
 
     @GetMapping("/{id}")
-    public ResponseEntity<CommonBizJsonResponse<AccessSystem>> getAccessSystem(@PathVariable Long id) {
-        return ResponseEntity.ok(CommonBizJsonResponse.success(accessSystemService.getSystemById(id)));
+    public ResponseEntity<CommonDataJsonResponse<AccessSystem>> getAccessSystem(@PathVariable Long id) {
+        return ResponseEntity.ok(CommonDataJsonResponse.success(accessSystemService.getSystemById(id)));
     }
 
     @GetMapping("/router/{routerId}")
-    public ResponseEntity<CommonBizJsonResponse<AccessSystem>> getAccessSystemByRouterId(@PathVariable String routerId) {
-        return ResponseEntity.ok(CommonBizJsonResponse.success(accessSystemService.getSystemByRouterId(routerId)));
+    public ResponseEntity<CommonDataJsonResponse<AccessSystem>> getAccessSystemByRouterId(@PathVariable String routerId) {
+        return ResponseEntity.ok(CommonDataJsonResponse.success(accessSystemService.getSystemByRouterId(routerId)));
     }
 
     @GetMapping
-    public ResponseEntity<CommonBizJsonResponse<AccessSystemQueryDto>> getAccessSystems(AccessSystemQueryVo queryVo) {
-        return ResponseEntity.ok(CommonBizJsonResponse.success(accessSystemService.getAccessSystems(queryVo)));
+    public ResponseEntity<CommonDataJsonResponse<AccessSystemQueryDto>> getAccessSystems(AccessSystemQueryVo queryVo) {
+        return ResponseEntity.ok(CommonDataJsonResponse.success(accessSystemService.getAccessSystems(queryVo)));
     }
 
     @PostMapping
-    public ResponseEntity<CommonJsonResponse> addAccessSystem(
+    public ResponseEntity<CommonCodeJsonResponse> addAccessSystem(
             @Validated @RequestBody AccessSystemAddVo accessSystemAddVo) {
         accessSystemService.addAccessSystem(accessSystemAddVo);
-        return ResponseEntity.ok(CommonJsonResponse.success());
+        return ResponseEntity.ok(CommonCodeJsonResponse.success());
     }
 
     @PutMapping
-    public ResponseEntity<CommonJsonResponse> updateAccessSystem(
+    public ResponseEntity<CommonCodeJsonResponse> updateAccessSystem(
             @Validated @RequestBody AccessSystemUpdateVo accessSystemUpdateVo) {
         accessSystemService.updateAccessSystem(accessSystemUpdateVo);
-        return ResponseEntity.ok(CommonJsonResponse.success());
+        return ResponseEntity.ok(CommonCodeJsonResponse.success());
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<CommonJsonResponse> deleteAccessSystem(@PathVariable Long id) {
+    public ResponseEntity<CommonCodeJsonResponse> deleteAccessSystem(@PathVariable Long id) {
         accessSystemService.deleteAccessSystemById(id);
-        return ResponseEntity.ok(CommonJsonResponse.success());
+        return ResponseEntity.ok(CommonCodeJsonResponse.success());
     }
 
 }

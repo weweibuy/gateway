@@ -1,7 +1,7 @@
 package com.weweibuy.gateway.manager.controller;
 
-import com.weweibuy.gateway.common.model.dto.CommonBizJsonResponse;
-import com.weweibuy.gateway.common.model.dto.CommonJsonResponse;
+import com.weweibuy.gateway.common.model.dto.CommonDataJsonResponse;
+import com.weweibuy.gateway.common.model.dto.CommonCodeJsonResponse;
 import com.weweibuy.gateway.manager.controller.constant.ApiPrefixConstant;
 import com.weweibuy.gateway.manager.model.po.PredicateArgs;
 import com.weweibuy.gateway.manager.model.po.RouterPredicate;
@@ -36,76 +36,76 @@ public class PredicateController {
     private PredicateArgsService predicateArgsService;
 
     @GetMapping("/{id}")
-    public ResponseEntity<CommonBizJsonResponse<RouterPredicate>> getPredicate(@PathVariable Long id) {
-        return ResponseEntity.ok(CommonBizJsonResponse.success(predicateService.getPredicateById(id)));
+    public ResponseEntity<CommonDataJsonResponse<RouterPredicate>> getPredicate(@PathVariable Long id) {
+        return ResponseEntity.ok(CommonDataJsonResponse.success(predicateService.getPredicateById(id)));
     }
 
     @GetMapping
-    public ResponseEntity<CommonBizJsonResponse<List<RouterPredicate>>> getPredicates(
+    public ResponseEntity<CommonDataJsonResponse<List<RouterPredicate>>> getPredicates(
             @Validated @NotBlank(message = "routerId不能为空") String routerId) {
-        return ResponseEntity.ok(CommonBizJsonResponse.success(predicateService.getPredicatesByRouterId(routerId)));
+        return ResponseEntity.ok(CommonDataJsonResponse.success(predicateService.getPredicatesByRouterId(routerId)));
     }
 
     @PostMapping
-    public ResponseEntity<CommonJsonResponse> addPredicate(@RequestBody @Validated PredicateAddVo predicateAddVo) {
+    public ResponseEntity<CommonCodeJsonResponse> addPredicate(@RequestBody @Validated PredicateAddVo predicateAddVo) {
         predicateService.addPredicate(predicateAddVo);
-        return ResponseEntity.ok(CommonJsonResponse.success());
+        return ResponseEntity.ok(CommonCodeJsonResponse.success());
     }
 
     @PutMapping
-    public ResponseEntity<CommonJsonResponse> updatePredicate(@RequestBody @Validated PredicateUpdateVo predicateUpdateVo) {
+    public ResponseEntity<CommonCodeJsonResponse> updatePredicate(@RequestBody @Validated PredicateUpdateVo predicateUpdateVo) {
         predicateService.updatePredicate(predicateUpdateVo);
-        return ResponseEntity.ok(CommonJsonResponse.success());
+        return ResponseEntity.ok(CommonCodeJsonResponse.success());
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<CommonJsonResponse> deletePredicateById(Long id) {
+    public ResponseEntity<CommonCodeJsonResponse> deletePredicateById(Long id) {
         predicateService.deletePredicateById(id);
-        return ResponseEntity.ok(CommonJsonResponse.success());
+        return ResponseEntity.ok(CommonCodeJsonResponse.success());
     }
 
     @DeleteMapping
-    public ResponseEntity<CommonJsonResponse> deletePredicatesByRouterId(
+    public ResponseEntity<CommonCodeJsonResponse> deletePredicatesByRouterId(
             @Validated @NotNull(message = "routerId不能为空") String routerId) {
         predicateService.deletePredicatesByRouterId(routerId);
-        return ResponseEntity.ok(CommonJsonResponse.success());
+        return ResponseEntity.ok(CommonCodeJsonResponse.success());
     }
 
     @GetMapping("/args/{id}")
-    public ResponseEntity<CommonBizJsonResponse<PredicateArgs>> getPredicateArgs(@PathVariable Long id) {
-        return ResponseEntity.ok(CommonBizJsonResponse.success(predicateArgsService.getPredicateArgsById(id)));
+    public ResponseEntity<CommonDataJsonResponse<PredicateArgs>> getPredicateArgs(@PathVariable Long id) {
+        return ResponseEntity.ok(CommonDataJsonResponse.success(predicateArgsService.getPredicateArgsById(id)));
     }
 
     @GetMapping("/args")
-    public ResponseEntity<CommonBizJsonResponse<List<PredicateArgs>>> getPredicateArgsByPredicateId(
+    public ResponseEntity<CommonDataJsonResponse<List<PredicateArgs>>> getPredicateArgsByPredicateId(
             @Validated @NotNull(message = "PredicateId不能为空") Long predicateId) {
         return ResponseEntity
-                .ok(CommonBizJsonResponse.success(predicateArgsService.getPredicateArgsByPredicateId(predicateId)));
+                .ok(CommonDataJsonResponse.success(predicateArgsService.getPredicateArgsByPredicateId(predicateId)));
     }
 
     @PostMapping("/args")
-    public ResponseEntity<CommonJsonResponse> addPredicateArgs(@Validated PredicateArgsAddVo predicateArgsAddVo) {
+    public ResponseEntity<CommonCodeJsonResponse> addPredicateArgs(@Validated PredicateArgsAddVo predicateArgsAddVo) {
         predicateArgsService.addPredicateArgs(predicateArgsAddVo);
-        return ResponseEntity.ok(CommonJsonResponse.success());
+        return ResponseEntity.ok(CommonCodeJsonResponse.success());
     }
 
     @PutMapping("/args")
-    public ResponseEntity<CommonJsonResponse> updatePredicateArgs(@Validated PredicateArgsUpdateVo predicateArgsUpdateVo) {
+    public ResponseEntity<CommonCodeJsonResponse> updatePredicateArgs(@Validated PredicateArgsUpdateVo predicateArgsUpdateVo) {
         predicateArgsService.updatePredicateArgs(predicateArgsUpdateVo);
-        return ResponseEntity.ok(CommonJsonResponse.success());
+        return ResponseEntity.ok(CommonCodeJsonResponse.success());
     }
 
     @DeleteMapping("/args/{id}")
-    public ResponseEntity<CommonJsonResponse> deletePredicateArgs(@PathVariable Long id) {
+    public ResponseEntity<CommonCodeJsonResponse> deletePredicateArgs(@PathVariable Long id) {
         predicateArgsService.deletePredicateArgsById(id);
-        return ResponseEntity.ok(CommonJsonResponse.success());
+        return ResponseEntity.ok(CommonCodeJsonResponse.success());
     }
 
     @DeleteMapping("/args")
-    public ResponseEntity<CommonJsonResponse> deletePredicateArgsByPredicateId(
+    public ResponseEntity<CommonCodeJsonResponse> deletePredicateArgsByPredicateId(
             @Validated @NotNull(message = "predicateId不能为空") Long predicateId) {
         predicateArgsService.deletePredicateArgsByPredicateId(predicateId);
-        return ResponseEntity.ok(CommonJsonResponse.success());
+        return ResponseEntity.ok(CommonCodeJsonResponse.success());
     }
 
 }

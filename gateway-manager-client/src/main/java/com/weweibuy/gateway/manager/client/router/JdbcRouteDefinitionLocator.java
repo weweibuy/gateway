@@ -102,7 +102,7 @@ public class JdbcRouteDefinitionLocator implements RouteDefinitionLocator, Appli
      */
     @Override
     public void onApplicationEvent(CustomRefreshRoutesEvent event) {
-        log.info("接收到自定义路由刷新事件");
+        log.info("【路由刷新】>>> 接收到自定义路由刷新事件");
         this.cache.clear();
     }
 }

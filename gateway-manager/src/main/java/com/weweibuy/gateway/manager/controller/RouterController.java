@@ -1,7 +1,7 @@
 package com.weweibuy.gateway.manager.controller;
 
-import com.weweibuy.gateway.common.model.dto.CommonBizJsonResponse;
-import com.weweibuy.gateway.common.model.dto.CommonJsonResponse;
+import com.weweibuy.gateway.common.model.dto.CommonDataJsonResponse;
+import com.weweibuy.gateway.common.model.dto.CommonCodeJsonResponse;
 import com.weweibuy.gateway.manager.controller.constant.ApiPrefixConstant;
 import com.weweibuy.gateway.manager.model.dto.RouterPageQueryDto;
 import com.weweibuy.gateway.manager.model.po.GatewayRouter;
@@ -33,8 +33,8 @@ public class RouterController {
      * @return
      */
     @GetMapping
-    public ResponseEntity<CommonBizJsonResponse<RouterPageQueryDto>> getRouters(RouterQueryVo queryVo) {
-        return ResponseEntity.ok(CommonBizJsonResponse.success(routerService.getRouters(queryVo)));
+    public ResponseEntity<CommonDataJsonResponse<RouterPageQueryDto>> getRouters(RouterQueryVo queryVo) {
+        return ResponseEntity.ok(CommonDataJsonResponse.success(routerService.getRouters(queryVo)));
     }
 
     /**
@@ -44,8 +44,8 @@ public class RouterController {
      * @return
      */
     @GetMapping("/{id}")
-    public ResponseEntity<CommonBizJsonResponse<GatewayRouter>> getRouter(@PathVariable Long id) {
-        return ResponseEntity.ok(CommonBizJsonResponse.success(routerService.getRouterById(id)));
+    public ResponseEntity<CommonDataJsonResponse<GatewayRouter>> getRouter(@PathVariable Long id) {
+        return ResponseEntity.ok(CommonDataJsonResponse.success(routerService.getRouterById(id)));
     }
 
     /**
@@ -55,9 +55,9 @@ public class RouterController {
      * @return
      */
     @PostMapping
-    public ResponseEntity<CommonJsonResponse> addRouter(@RequestBody @Validated RouterAddVo routerAddVo) {
+    public ResponseEntity<CommonCodeJsonResponse> addRouter(@RequestBody @Validated RouterAddVo routerAddVo) {
         routerService.addRouter(routerAddVo);
-        return ResponseEntity.ok(CommonJsonResponse.success());
+        return ResponseEntity.ok(CommonCodeJsonResponse.success());
     }
 
     /**
@@ -67,15 +67,15 @@ public class RouterController {
      * @return
      */
     @PutMapping
-    public ResponseEntity<CommonJsonResponse> updateRouter(@RequestBody @Validated RouterUpdateVo routerUpdateVo) {
+    public ResponseEntity<CommonCodeJsonResponse> updateRouter(@RequestBody @Validated RouterUpdateVo routerUpdateVo) {
         routerService.updateRouter(routerUpdateVo);
-        return ResponseEntity.ok(CommonJsonResponse.success());
+        return ResponseEntity.ok(CommonCodeJsonResponse.success());
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<CommonJsonResponse> deleteRouter(@PathVariable Long id) {
+    public ResponseEntity<CommonCodeJsonResponse> deleteRouter(@PathVariable Long id) {
         routerService.deleteRouter(id);
-        return ResponseEntity.ok(CommonJsonResponse.success());
+        return ResponseEntity.ok(CommonCodeJsonResponse.success());
     }
 
 }

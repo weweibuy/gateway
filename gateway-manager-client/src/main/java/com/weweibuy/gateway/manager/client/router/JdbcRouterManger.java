@@ -37,7 +37,7 @@ public class JdbcRouterManger {
     private FilterArgsMapper filterArgsMapper;
 
     public List<RouterVo> getAllRouter() {
-        log.info("【路由加载】从DB中捞取路由数据");
+        log.info("【路由加载】>>> 从DB中捞取路由数据");
         GatewayRouterExample example = new GatewayRouterExample();
 
         example.createCriteria()

@@ -143,7 +143,7 @@
                 <activeByDefault>true</activeByDefault>
             </activation>
             <properties>
-                <profileActive>dev</profileActive>
+                <profile-active>dev</profile-active>
             </properties>
             <build>
                 <plugins>
@@ -173,11 +173,6 @@
                         </dependencies>
                     </plugin>
                 </plugins>
-                <resources>
-                    <resource>
-                        <directory>src/main/resources</directory>
-                    </resource>
-                </resources>
             </build>
         </profile>
         <!--测试环境-->
@@ -187,7 +182,7 @@
                 <activeByDefault>false</activeByDefault>
             </activation>
             <properties>
-                <profileActive>test</profileActive>
+                <profile-active>test</profile-active>
             </properties>
             <build>
                 <plugins>
@@ -215,4 +210,5 @@
             </build>
         </profile>
     </profiles>
+
 </project>

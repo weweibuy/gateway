@@ -1,7 +1,7 @@
 package com.weweibuy.gateway.manager.controller;
 
-import com.weweibuy.gateway.common.model.dto.CommonBizJsonResponse;
-import com.weweibuy.gateway.common.model.dto.CommonJsonResponse;
+import com.weweibuy.gateway.common.model.dto.CommonDataJsonResponse;
+import com.weweibuy.gateway.common.model.dto.CommonCodeJsonResponse;
 import com.weweibuy.gateway.manager.controller.constant.ApiPrefixConstant;
 import com.weweibuy.gateway.manager.model.po.GatewayDataDictionary;
 import com.weweibuy.gateway.manager.model.vo.DataDictAddVo;
@@ -30,8 +30,8 @@ public class DataDictController {
     private DataDictService dataDictService;
 
     @GetMapping("/{id}")
-    public ResponseEntity<CommonBizJsonResponse<GatewayDataDictionary>> getDict(Long id) {
-        return ResponseEntity.ok(CommonBizJsonResponse.success(dataDictService.getDictById(id)));
+    public ResponseEntity<CommonDataJsonResponse<GatewayDataDictionary>> getDict(Long id) {
+        return ResponseEntity.ok(CommonDataJsonResponse.success(dataDictService.getDictById(id)));
     }
 
     /**
@@ -41,13 +41,13 @@ public class DataDictController {
      * @return
      */
     @GetMapping("/predicates")
-    public ResponseEntity<CommonBizJsonResponse<List<GatewayDataDictionary>>> getPredicates() {
-        return ResponseEntity.ok(CommonBizJsonResponse.success(dataDictService.getPredicates()));
+    public ResponseEntity<CommonDataJsonResponse<List<GatewayDataDictionary>>> getPredicates() {
+        return ResponseEntity.ok(CommonDataJsonResponse.success(dataDictService.getPredicates()));
     }
 
     @GetMapping("/filters")
-    public ResponseEntity<CommonBizJsonResponse<List<GatewayDataDictionary>>> getFilters() {
-        return ResponseEntity.ok(CommonBizJsonResponse.success(dataDictService.getFilters()));
+    public ResponseEntity<CommonDataJsonResponse<List<GatewayDataDictionary>>> getFilters() {
+        return ResponseEntity.ok(CommonDataJsonResponse.success(dataDictService.getFilters()));
     }
 
 
@@ -59,8 +59,8 @@ public class DataDictController {
      * @return
      */
     @GetMapping("/parent/{id}")
-    public ResponseEntity<CommonBizJsonResponse<List<GatewayDataDictionary>>> getChildDict(Long id) {
-        return ResponseEntity.ok(CommonBizJsonResponse.success(dataDictService.getChildDictByPid(id)));
+    public ResponseEntity<CommonDataJsonResponse<List<GatewayDataDictionary>>> getChildDict(Long id) {
+        return ResponseEntity.ok(CommonDataJsonResponse.success(dataDictService.getChildDictByPid(id)));
     }
 
     /**
@@ -70,27 +70,27 @@ public class DataDictController {
      * @return
      */
     @GetMapping("/type")
-    public ResponseEntity<CommonBizJsonResponse<List<GatewayDataDictionary>>> getDictByType(
+    public ResponseEntity<CommonDataJsonResponse<List<GatewayDataDictionary>>> getDictByType(
             @Validated @NotBlank(message = "类型不能为空") String dictType) {
-        return ResponseEntity.ok(CommonBizJsonResponse.success(dataDictService.getDictByType(dictType)));
+        return ResponseEntity.ok(CommonDataJsonResponse.success(dataDictService.getDictByType(dictType)));
     }
 
     @PostMapping
-    public ResponseEntity<CommonJsonResponse> addDict(@RequestBody @Validated DataDictAddVo dataDictAddVo){
+    public ResponseEntity<CommonCodeJsonResponse> addDict(@RequestBody @Validated DataDictAddVo dataDictAddVo){
         dataDictService.addDict(dataDictAddVo);
-        return ResponseEntity.ok(CommonJsonResponse.success());
+        return ResponseEntity.ok(CommonCodeJsonResponse.success());
     }
 
     @PutMapping
-    public ResponseEntity<CommonJsonResponse> updateDict(@RequestBody @Validated DataDictUpdateVo dataDictUpdateVo){
+    public ResponseEntity<CommonCodeJsonResponse> updateDict(@RequestBody @Validated DataDictUpdateVo dataDictUpdateVo){
         dataDictService.updateDict(dataDictUpdateVo);
-        return ResponseEntity.ok(CommonJsonResponse.success());
+        return ResponseEntity.ok(CommonCodeJsonResponse.success());
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<CommonJsonResponse> deleteDict(Long id){
+    public ResponseEntity<CommonCodeJsonResponse> deleteDict(Long id){
         dataDictService.deleteDictById(id);
-        return ResponseEntity.ok(CommonJsonResponse.success());
+        return ResponseEntity.ok(CommonCodeJsonResponse.success());
     }
 
 
