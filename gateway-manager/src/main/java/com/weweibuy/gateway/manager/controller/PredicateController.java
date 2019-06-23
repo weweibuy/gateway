@@ -17,6 +17,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 import java.util.List;
 
@@ -46,13 +47,13 @@ public class PredicateController {
     }
 
     @PostMapping
-    public ResponseEntity<CommonCodeJsonResponse> addPredicate(@RequestBody @Validated PredicateAddVo predicateAddVo) {
+    public ResponseEntity<CommonCodeJsonResponse> addPredicate(@RequestBody @Valid PredicateAddVo predicateAddVo) {
         predicateService.addPredicate(predicateAddVo);
         return ResponseEntity.ok(CommonCodeJsonResponse.success());
     }
 
     @PutMapping
-    public ResponseEntity<CommonCodeJsonResponse> updatePredicate(@RequestBody @Validated PredicateUpdateVo predicateUpdateVo) {
+    public ResponseEntity<CommonCodeJsonResponse> updatePredicate(@RequestBody @Valid PredicateUpdateVo predicateUpdateVo) {
         predicateService.updatePredicate(predicateUpdateVo);
         return ResponseEntity.ok(CommonCodeJsonResponse.success());
     }
