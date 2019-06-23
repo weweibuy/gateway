@@ -52,6 +52,7 @@ public class PredicateController {
         return ResponseEntity.ok(CommonJsonResponse.success());
     }
 
+
     @PutMapping
     public ResponseEntity<CommonJsonResponse> updatePredicate(@RequestBody @Validated PredicateUpdateVo predicateUpdateVo) {
         predicateService.updatePredicate(predicateUpdateVo);
