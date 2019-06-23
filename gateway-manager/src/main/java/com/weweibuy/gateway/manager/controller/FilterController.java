@@ -17,6 +17,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.util.List;
 
@@ -72,13 +73,13 @@ public class FilterController {
 
 
     @GetMapping("/args/{id}")
-    public ResponseEntity<CommonDataJsonResponse<FilterArgs>> getFilterArgs(@PathVariable Long id) {
+    public ResponseEntity<CommonDataJsonResponse<FilterArgs>> getFilterArgsById(@PathVariable Long id) {
         return ResponseEntity.ok(CommonDataJsonResponse.success(filterArgsService.getFilterArgsById(id)));
     }
 
     @GetMapping("/args")
     public ResponseEntity<CommonDataJsonResponse<List<FilterArgs>>> getFilterArgsByFilterId(
-            @Validated @NotNull(message = "filterId不能为空") Long filterId) {
+            @Validated @NotBlank(message = "filterId不能为空") String filterId) {
         return ResponseEntity
                 .ok(CommonDataJsonResponse.success(filterArgsService.getFilterArgsByFilterId(filterId)));
     }
@@ -96,14 +97,14 @@ public class FilterController {
     }
 
     @DeleteMapping("/args/{id}")
-    public ResponseEntity<CommonCodeJsonResponse> deleteFilterArgs(@PathVariable Long id) {
+    public ResponseEntity<CommonCodeJsonResponse> deleteFilterArgsById(@PathVariable Long id) {
         filterArgsService.deleteFilterArgsById(id);
         return ResponseEntity.ok(CommonCodeJsonResponse.success());
     }
 
     @DeleteMapping("/args")
     public ResponseEntity<CommonCodeJsonResponse> deleteFilterArgsByFilterId(
-            @Validated @NotNull(message = "filterId不能为空") Long filterId) {
+            @Validated @NotBlank(message = "filterId不能为空") String filterId) {
         filterArgsService.deleteFilterArgsByFilterId(filterId);
         return ResponseEntity.ok(CommonCodeJsonResponse.success());
     }

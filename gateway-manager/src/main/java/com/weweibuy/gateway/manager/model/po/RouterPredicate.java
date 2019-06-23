@@ -7,6 +7,8 @@ public class RouterPredicate {
 
     private String routerId;
 
+    private String predicateId;
+
     private String predicateName;
 
     private Long dictId;
@@ -15,7 +17,7 @@ public class RouterPredicate {
 
     private String predicateDesc;
 
-    private Byte status;
+    private Boolean isUse;
 
     private Date createTime;
 
@@ -35,6 +37,14 @@ public class RouterPredicate {
 
     public void setRouterId(String routerId) {
         this.routerId = routerId == null ? null : routerId.trim();
+    }
+
+    public String getPredicateId() {
+        return predicateId;
+    }
+
+    public void setPredicateId(String predicateId) {
+        this.predicateId = predicateId == null ? null : predicateId.trim();
     }
 
     public String getPredicateName() {
@@ -69,12 +79,12 @@ public class RouterPredicate {
         this.predicateDesc = predicateDesc == null ? null : predicateDesc.trim();
     }
 
-    public Byte getStatus() {
-        return status;
+    public Boolean getIsUse() {
+        return isUse;
     }
 
-    public void setStatus(Byte status) {
-        this.status = status;
+    public void setIsUse(Boolean isUse) {
+        this.isUse = isUse;
     }
 
     public Date getCreateTime() {

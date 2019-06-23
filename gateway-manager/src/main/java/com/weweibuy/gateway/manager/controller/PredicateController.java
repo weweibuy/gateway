@@ -1,7 +1,7 @@
 package com.weweibuy.gateway.manager.controller;
 
-import com.weweibuy.gateway.common.model.dto.CommonDataJsonResponse;
 import com.weweibuy.gateway.common.model.dto.CommonCodeJsonResponse;
+import com.weweibuy.gateway.common.model.dto.CommonDataJsonResponse;
 import com.weweibuy.gateway.manager.controller.constant.ApiPrefixConstant;
 import com.weweibuy.gateway.manager.model.po.PredicateArgs;
 import com.weweibuy.gateway.manager.model.po.RouterPredicate;
@@ -18,7 +18,6 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
 import java.util.List;
 
 /**
@@ -66,7 +65,7 @@ public class PredicateController {
 
     @DeleteMapping
     public ResponseEntity<CommonCodeJsonResponse> deletePredicatesByRouterId(
-            @Validated @NotNull(message = "routerId不能为空") String routerId) {
+            @Validated @NotBlank(message = "routerId不能为空") String routerId) {
         predicateService.deletePredicatesByRouterId(routerId);
         return ResponseEntity.ok(CommonCodeJsonResponse.success());
     }
@@ -78,7 +77,7 @@ public class PredicateController {
 
     @GetMapping("/args")
     public ResponseEntity<CommonDataJsonResponse<List<PredicateArgs>>> getPredicateArgsByPredicateId(
-            @Validated @NotNull(message = "PredicateId不能为空") Long predicateId) {
+            @Validated @NotBlank(message = "PredicateId不能为空") String predicateId) {
         return ResponseEntity
                 .ok(CommonDataJsonResponse.success(predicateArgsService.getPredicateArgsByPredicateId(predicateId)));
     }
@@ -103,7 +102,7 @@ public class PredicateController {
 
     @DeleteMapping("/args")
     public ResponseEntity<CommonCodeJsonResponse> deletePredicateArgsByPredicateId(
-            @Validated @NotNull(message = "predicateId不能为空") Long predicateId) {
+            @Validated @NotBlank(message = "predicateId不能为空") String predicateId) {
         predicateArgsService.deletePredicateArgsByPredicateId(predicateId);
         return ResponseEntity.ok(CommonCodeJsonResponse.success());
     }

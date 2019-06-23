@@ -3,7 +3,7 @@ package com.weweibuy.gateway.manager.model.dto;
 import com.weweibuy.gateway.manager.model.po.PredicateArgs;
 import lombok.Builder;
 import lombok.Data;
-import org.springframework.beans.BeanUtils;
+import org.springframework.cglib.beans.BeanCopier;
 
 /**
  * @author durenhao
@@ -12,6 +12,8 @@ import org.springframework.beans.BeanUtils;
 @Data
 @Builder
 public class PredicateArgsDto {
+
+    private static final BeanCopier COPIER = BeanCopier.create(PredicateArgs.class, PredicateArgsDto.class, false);
 
     private Long id;
 
@@ -27,7 +29,7 @@ public class PredicateArgsDto {
 
     public static PredicateArgsDto convert(PredicateArgs predicateArgs){
         PredicateArgsDto predicateArgsDto = PredicateArgsDto.builder().build();
-        BeanUtils.copyProperties(predicateArgs, predicateArgsDto);
+        COPIER.copy(predicateArgs, predicateArgsDto, null);
         return predicateArgsDto;
     }
 

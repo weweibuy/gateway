@@ -14,7 +14,7 @@ public interface FilterArgsService {
 
     FilterArgs getFilterArgsById(Long id);
 
-    List<FilterArgs> getFilterArgsByFilterId(Long filterId);
+    List<FilterArgs> getFilterArgsByFilterId(String filterId);
 
     void addFilterArgs(FilterArgsAddVo filterArgsAddVo);
 
@@ -22,6 +22,6 @@ public interface FilterArgsService {
 
     void deleteFilterArgsById(Long id);
 
-    void deleteFilterArgsByFilterId(Long filterId);
+    void deleteFilterArgsByFilterId(String filterId);
 
 }

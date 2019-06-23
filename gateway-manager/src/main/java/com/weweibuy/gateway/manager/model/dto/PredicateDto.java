@@ -3,7 +3,7 @@ package com.weweibuy.gateway.manager.model.dto;
 import com.weweibuy.gateway.manager.model.po.RouterPredicate;
 import lombok.Builder;
 import lombok.Data;
-import org.springframework.beans.BeanUtils;
+import org.springframework.cglib.beans.BeanCopier;
 
 import java.util.List;
 
@@ -14,6 +14,8 @@ import java.util.List;
 @Data
 @Builder
 public class PredicateDto {
+
+    private static final BeanCopier COPIER = BeanCopier.create(RouterPredicate.class, PredicateDto.class, false);
 
     private Long id;
 
@@ -35,7 +37,7 @@ public class PredicateDto {
                 .predicateArgs(predicateArgs)
                 .filters(filters)
                 .build();
-        BeanUtils.copyProperties(predicate, predicateDto);
+        COPIER.copy(predicate, predicateDto, null);
         return predicateDto;
     }
 

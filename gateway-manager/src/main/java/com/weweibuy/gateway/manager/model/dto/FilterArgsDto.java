@@ -3,7 +3,7 @@ package com.weweibuy.gateway.manager.model.dto;
 import com.weweibuy.gateway.manager.model.po.FilterArgs;
 import lombok.Builder;
 import lombok.Data;
-import org.springframework.beans.BeanUtils;
+import org.springframework.cglib.beans.BeanCopier;
 
 /**
  * @author durenhao
@@ -12,6 +12,8 @@ import org.springframework.beans.BeanUtils;
 @Data
 @Builder
 public class FilterArgsDto {
+
+    private static final BeanCopier copier = BeanCopier.create(FilterArgs.class, FilterArgsDto.class, false);
 
     private Long id;
 
@@ -25,9 +27,9 @@ public class FilterArgsDto {
 
     private String argsDesc;
 
-    public static FilterArgsDto convert(FilterArgs filterArgs){
+    public static FilterArgsDto convert(FilterArgs filterArgs) {
         FilterArgsDto filterArgsDto = FilterArgsDto.builder().build();
-        BeanUtils.copyProperties(filterArgs, filterArgsDto);
+        copier.copy(filterArgs, filterArgsDto, null);
         return filterArgsDto;
     }
 

@@ -59,7 +59,7 @@ public class DataDictController {
      * @return
      */
     @GetMapping("/parent/{id}")
-    public ResponseEntity<CommonDataJsonResponse<List<GatewayDataDictionary>>> getChildDict(Long id) {
+    public ResponseEntity<CommonDataJsonResponse<List<GatewayDataDictionary>>> getChildDict(@PathVariable Long id) {
         return ResponseEntity.ok(CommonDataJsonResponse.success(dataDictService.getChildDictByPid(id)));
     }
 

@@ -15,6 +15,8 @@ public class AccessSystem {
 
     private String systemDesc;
 
+    private Boolean isDelete;
+
     private Date createTime;
 
     private Date updateTime;
@@ -65,6 +67,14 @@ public class AccessSystem {
 
     public void setSystemDesc(String systemDesc) {
         this.systemDesc = systemDesc == null ? null : systemDesc.trim();
+    }
+
+    public Boolean getIsDelete() {
+        return isDelete;
+    }
+
+    public void setIsDelete(Boolean isDelete) {
+        this.isDelete = isDelete;
     }
 
     public Date getCreateTime() {

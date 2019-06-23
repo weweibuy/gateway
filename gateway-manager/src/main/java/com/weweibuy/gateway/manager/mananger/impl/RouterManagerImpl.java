@@ -5,8 +5,10 @@ import com.weweibuy.gateway.manager.mapper.*;
 import com.weweibuy.gateway.manager.model.po.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Objects;
 
 /**
  * @author durenhao
@@ -44,16 +46,22 @@ public class RouterManagerImpl implements RouterManager {
 
     @Override
     public void deletePredicateById(Long id) {
+        RouterPredicate routerPredicate = predicateMapper.selectByPrimaryKey(id);
+        if (Objects.isNull(routerPredicate)) {
+            return;
+        }
         // 删除参数
         PredicateArgsExample example = new PredicateArgsExample();
         example.createCriteria()
-                .andPredicateIdEqualTo(id);
+                .andPredicateIdEqualTo(routerPredicate.getPredicateId());
         predicateArgsMapper.deleteByExample(example);
         // 删除断言
         predicateMapper.deleteByPrimaryKey(id);
     }
 
+
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public void deletePredicateByRouterId(String routerId) {
         RouterPredicateExample example = new RouterPredicateExample();
         example.createCriteria()
@@ -64,7 +72,7 @@ public class RouterManagerImpl implements RouterManager {
         predicateList.forEach(predicate -> {
             // 删除参数
             predicateArgsExample.createCriteria()
-                    .andPredicateIdEqualTo(predicate.getId());
+                    .andPredicateIdEqualTo(predicate.getPredicateId());
             predicateArgsMapper.deleteByExample(predicateArgsExample);
             predicateArgsExample.clear();
         });
@@ -72,9 +80,14 @@ public class RouterManagerImpl implements RouterManager {
 
     @Override
     public void deleteFilterById(Long id) {
+
+        RouterFilter routerFilter = filterMapper.selectByPrimaryKey(id);
+        if (Objects.isNull(routerFilter)) {
+            return;
+        }
         FilterArgsExample filterArgsExample = new FilterArgsExample();
         filterArgsExample.createCriteria()
-                .andFilterIdEqualTo(id);
+                .andFilterIdEqualTo(routerFilter.getFilterId());
         // 删除参数
         filterArgsMapper.deleteByExample(filterArgsExample);
         // 删除过滤器
@@ -91,7 +104,7 @@ public class RouterManagerImpl implements RouterManager {
         FilterArgsExample filterArgsExample = new FilterArgsExample();
         routerFilters.forEach(filter -> {
             filterArgsExample.createCriteria()
-                    .andFilterIdEqualTo(filter.getId());
+                    .andFilterIdEqualTo(filter.getFilterId());
             // 删除参数
             filterArgsMapper.deleteByExample(filterArgsExample);
             filterArgsExample.clear();

@@ -3,7 +3,7 @@ package com.weweibuy.gateway.manager.model.dto;
 import com.weweibuy.gateway.manager.model.po.GatewayRouter;
 import lombok.Builder;
 import lombok.Data;
-import org.springframework.beans.BeanUtils;
+import org.springframework.cglib.beans.BeanCopier;
 
 import java.util.Date;
 import java.util.List;
@@ -15,6 +15,8 @@ import java.util.List;
 @Data
 @Builder
 public class RouterDto {
+
+    private static final BeanCopier COPIER = BeanCopier.create(GatewayRouter.class, RouterDto.class, false);
 
     private Long id;
 
@@ -36,11 +38,11 @@ public class RouterDto {
 
     private Date updateTime;
 
-    public static RouterDto convert(GatewayRouter router, List<PredicateDto> predicates){
+    public static RouterDto convert(GatewayRouter router, List<PredicateDto> predicates) {
         RouterDto routerDto = RouterDto.builder()
                 .predicates(predicates)
                 .build();
-        BeanUtils.copyProperties(router, routerDto);
+        COPIER.copy(router, routerDto, null);
         return routerDto;
     }
 

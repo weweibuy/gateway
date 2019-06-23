@@ -235,6 +235,76 @@ public class RouterFilterExample {
             return (Criteria) this;
         }
 
+        public Criteria andFilterIdIsNull() {
+            addCriterion("filter_id is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andFilterIdIsNotNull() {
+            addCriterion("filter_id is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andFilterIdEqualTo(String value) {
+            addCriterion("filter_id =", value, "filterId");
+            return (Criteria) this;
+        }
+
+        public Criteria andFilterIdNotEqualTo(String value) {
+            addCriterion("filter_id <>", value, "filterId");
+            return (Criteria) this;
+        }
+
+        public Criteria andFilterIdGreaterThan(String value) {
+            addCriterion("filter_id >", value, "filterId");
+            return (Criteria) this;
+        }
+
+        public Criteria andFilterIdGreaterThanOrEqualTo(String value) {
+            addCriterion("filter_id >=", value, "filterId");
+            return (Criteria) this;
+        }
+
+        public Criteria andFilterIdLessThan(String value) {
+            addCriterion("filter_id <", value, "filterId");
+            return (Criteria) this;
+        }
+
+        public Criteria andFilterIdLessThanOrEqualTo(String value) {
+            addCriterion("filter_id <=", value, "filterId");
+            return (Criteria) this;
+        }
+
+        public Criteria andFilterIdLike(String value) {
+            addCriterion("filter_id like", value, "filterId");
+            return (Criteria) this;
+        }
+
+        public Criteria andFilterIdNotLike(String value) {
+            addCriterion("filter_id not like", value, "filterId");
+            return (Criteria) this;
+        }
+
+        public Criteria andFilterIdIn(List<String> values) {
+            addCriterion("filter_id in", values, "filterId");
+            return (Criteria) this;
+        }
+
+        public Criteria andFilterIdNotIn(List<String> values) {
+            addCriterion("filter_id not in", values, "filterId");
+            return (Criteria) this;
+        }
+
+        public Criteria andFilterIdBetween(String value1, String value2) {
+            addCriterion("filter_id between", value1, value2, "filterId");
+            return (Criteria) this;
+        }
+
+        public Criteria andFilterIdNotBetween(String value1, String value2) {
+            addCriterion("filter_id not between", value1, value2, "filterId");
+            return (Criteria) this;
+        }
+
         public Criteria andFilterNameIsNull() {
             addCriterion("filter_name is null");
             return (Criteria) this;
@@ -565,63 +635,63 @@ public class RouterFilterExample {
             return (Criteria) this;
         }
 
-        public Criteria andStatusIsNull() {
-            addCriterion("status is null");
+        public Criteria andIsUseIsNull() {
+            addCriterion("is_use is null");
             return (Criteria) this;
         }
 
-        public Criteria andStatusIsNotNull() {
-            addCriterion("status is not null");
+        public Criteria andIsUseIsNotNull() {
+            addCriterion("is_use is not null");
             return (Criteria) this;
         }
 
-        public Criteria andStatusEqualTo(Byte value) {
-            addCriterion("status =", value, "status");
+        public Criteria andIsUseEqualTo(Boolean value) {
+            addCriterion("is_use =", value, "isUse");
             return (Criteria) this;
         }
 
-        public Criteria andStatusNotEqualTo(Byte value) {
-            addCriterion("status <>", value, "status");
+        public Criteria andIsUseNotEqualTo(Boolean value) {
+            addCriterion("is_use <>", value, "isUse");
             return (Criteria) this;
         }
 
-        public Criteria andStatusGreaterThan(Byte value) {
-            addCriterion("status >", value, "status");
+        public Criteria andIsUseGreaterThan(Boolean value) {
+            addCriterion("is_use >", value, "isUse");
             return (Criteria) this;
         }
 
-        public Criteria andStatusGreaterThanOrEqualTo(Byte value) {
-            addCriterion("status >=", value, "status");
+        public Criteria andIsUseGreaterThanOrEqualTo(Boolean value) {
+            addCriterion("is_use >=", value, "isUse");
             return (Criteria) this;
         }
 
-        public Criteria andStatusLessThan(Byte value) {
-            addCriterion("status <", value, "status");
+        public Criteria andIsUseLessThan(Boolean value) {
+            addCriterion("is_use <", value, "isUse");
             return (Criteria) this;
         }
 
-        public Criteria andStatusLessThanOrEqualTo(Byte value) {
-            addCriterion("status <=", value, "status");
+        public Criteria andIsUseLessThanOrEqualTo(Boolean value) {
+            addCriterion("is_use <=", value, "isUse");
             return (Criteria) this;
         }
 
-        public Criteria andStatusIn(List<Byte> values) {
-            addCriterion("status in", values, "status");
+        public Criteria andIsUseIn(List<Boolean> values) {
+            addCriterion("is_use in", values, "isUse");
             return (Criteria) this;
         }
 
-        public Criteria andStatusNotIn(List<Byte> values) {
-            addCriterion("status not in", values, "status");
+        public Criteria andIsUseNotIn(List<Boolean> values) {
+            addCriterion("is_use not in", values, "isUse");
             return (Criteria) this;
         }
 
-        public Criteria andStatusBetween(Byte value1, Byte value2) {
-            addCriterion("status between", value1, value2, "status");
+        public Criteria andIsUseBetween(Boolean value1, Boolean value2) {
+            addCriterion("is_use between", value1, value2, "isUse");
             return (Criteria) this;
         }
 
-        public Criteria andStatusNotBetween(Byte value1, Byte value2) {
-            addCriterion("status not between", value1, value2, "status");
+        public Criteria andIsUseNotBetween(Boolean value1, Boolean value2) {
+            addCriterion("is_use not between", value1, value2, "isUse");
             return (Criteria) this;
         }
 

@@ -23,25 +23,25 @@ public class RouterQueryVo {
 
     private String uri;
 
-    private Byte status;
+    private Boolean isUse;
 
     public GatewayRouterExample convertExample() {
         GatewayRouterExample example = new GatewayRouterExample();
         GatewayRouterExample.Criteria criteria = example.createCriteria();
-        if(StringUtils.isNotBlank(routerId)){
+        if (StringUtils.isNotBlank(routerId)) {
             criteria.andRouterIdEqualTo(routerId);
         }
-        if(StringUtils.isNotBlank(systemId)){
+        if (StringUtils.isNotBlank(systemId)) {
             criteria.andSystemIdEqualTo(systemId);
         }
-        if(StringUtils.isNotBlank(systemName)){
+        if (StringUtils.isNotBlank(systemName)) {
             criteria.andSystemNameLike(systemName.trim() + "%");
         }
-        if(StringUtils.isNotBlank(uri)){
+        if (StringUtils.isNotBlank(uri)) {
             criteria.andUriLike(uri.trim() + "%");
         }
-        if(status != null){
-            criteria.andStatusEqualTo(status);
+        if (isUse != null) {
+            criteria.andIsUseEqualTo(isUse);
         }
         return example;
     }
