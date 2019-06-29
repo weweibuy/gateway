@@ -2,15 +2,16 @@ package com.weweibuy.gateway.manager.service.impl;
 
 import com.weweibuy.gateway.common.exception.BusinessException;
 import com.weweibuy.gateway.manager.mananger.RouterManager;
+import com.weweibuy.gateway.manager.mapper.FilterArgsMapper;
 import com.weweibuy.gateway.manager.mapper.RouterFilterMapper;
 import com.weweibuy.gateway.manager.model.eum.GatewayManagerErrorCode;
 import com.weweibuy.gateway.manager.model.po.RouterFilter;
 import com.weweibuy.gateway.manager.model.po.RouterFilterExample;
 import com.weweibuy.gateway.manager.model.vo.FilterAddVo;
+import com.weweibuy.gateway.manager.model.vo.FilterArgsAddVo;
 import com.weweibuy.gateway.manager.model.vo.FilterUpdateVo;
 import com.weweibuy.gateway.manager.service.FilterService;
 import com.weweibuy.gateway.manager.utils.ObjectConvertUtil;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -23,11 +24,17 @@ import java.util.List;
 @Service
 public class FilterServiceImpl implements FilterService {
 
-    @Autowired
-    private RouterFilterMapper filterMapper;
+    private final RouterFilterMapper filterMapper;
 
-    @Autowired
-    private RouterManager routerManager;
+    private final FilterArgsMapper filterArgsMapper;
+
+    private final RouterManager routerManager;
+
+    public FilterServiceImpl(RouterFilterMapper filterMapper, FilterArgsMapper filterArgsMapper, RouterManager routerManager) {
+        this.filterMapper = filterMapper;
+        this.filterArgsMapper = filterArgsMapper;
+        this.routerManager = routerManager;
+    }
 
     @Override
     public RouterFilter getFilterById(Long id) {
@@ -43,11 +50,16 @@ public class FilterServiceImpl implements FilterService {
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public void addFilter(FilterAddVo filterAddVo) {
-        int i = filterMapper.insertSelective(ObjectConvertUtil.convert(filterAddVo, RouterFilter.class));
-        if (i == 0) {
-            throw new BusinessException(GatewayManagerErrorCode.FILTER_ADD_FAIL);
-        }
+        RouterFilter routerFilter = FilterAddVo.convertToPo(filterAddVo);
+        filterAddVo.getFilterArgs()
+                .stream()
+                .map(FilterArgsAddVo::convertToPo)
+                .forEach(args -> {
+                    filterArgsMapper.insertSelective(args);
+                });
+        filterMapper.insertSelective(routerFilter);
     }
 
     @Override
