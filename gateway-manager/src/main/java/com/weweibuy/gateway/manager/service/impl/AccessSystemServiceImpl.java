@@ -16,10 +16,12 @@ import com.weweibuy.gateway.manager.model.vo.AccessSystemQueryVo;
 import com.weweibuy.gateway.manager.model.vo.AccessSystemUpdateVo;
 import com.weweibuy.gateway.manager.service.AccessSystemService;
 import com.weweibuy.gateway.manager.utils.ObjectConvertUtil;
+import org.apache.commons.lang.math.NumberUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Objects;
 
 /**
  * @author durenhao
@@ -45,7 +47,7 @@ public class AccessSystemServiceImpl implements AccessSystemService {
         example.createCriteria()
                 .andSystemIdEqualTo(routerId);
         GatewayRouter gatewayRouter = routerMapper.selectOneByExample(example);
-        if (gatewayRouter == null) {
+        if (Objects.isNull(gatewayRouter)) {
             throw new BusinessException(GatewayManagerErrorCode.ROUTER_NOT_EXISTED);
         }
         AccessSystemExample systemExample = new AccessSystemExample();
@@ -65,7 +67,7 @@ public class AccessSystemServiceImpl implements AccessSystemService {
     @Override
     public void addAccessSystem(AccessSystemAddVo accessSystemAddVo) {
         int i = accessSystemMapper.insertSelective(ObjectConvertUtil.convert(accessSystemAddVo, AccessSystem.class));
-        if (i == 0) {
+        if (i == NumberUtils.INTEGER_ZERO) {
             throw new BusinessException(GatewayManagerErrorCode.ACCESS_SYSTEM_ADD_FAIL);
         }
 
@@ -74,7 +76,7 @@ public class AccessSystemServiceImpl implements AccessSystemService {
     @Override
     public void updateAccessSystem(AccessSystemUpdateVo accessSystemUpdateVo) {
         int i = accessSystemMapper.updateByPrimaryKeySelective(ObjectConvertUtil.convert(accessSystemUpdateVo, AccessSystem.class));
-        if (i == 0) {
+        if (i == NumberUtils.INTEGER_ZERO) {
             throw new BusinessException(GatewayManagerErrorCode.ACCESS_SYSTEM_NOT_EXISTED);
         }
     }
@@ -82,12 +84,12 @@ public class AccessSystemServiceImpl implements AccessSystemService {
     @Override
     public void deleteAccessSystemById(Long id) {
         AccessSystem accessSystem = accessSystemMapper.selectByPrimaryKey(id);
-        if (accessSystem != null) {
+        if (Objects.nonNull(accessSystem)) {
             GatewayRouterExample example = new GatewayRouterExample();
             example.createCriteria()
                     .andSystemIdEqualTo(accessSystem.getSystemId());
             GatewayRouter gatewayRouter = routerMapper.selectOneByExample(example);
-            if (gatewayRouter != null) {
+            if (Objects.nonNull(gatewayRouter)) {
                 throw new BusinessException(GatewayManagerErrorCode.ROUTER_EXISTED_CANNOT_DELETE_ACCESS_SYSTEM);
             }
             accessSystemMapper.deleteByPrimaryKey(id);
