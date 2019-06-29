@@ -1,0 +1,17 @@
+server:
+  port: 8090
+
+
+spring:
+  application:
+    name: sample-gateway-client
+
+gateway:
+  client:
+    enable: false
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'

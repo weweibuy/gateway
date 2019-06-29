@@ -13,6 +13,7 @@
         <module>gateway-server</module>
         <module>gateway-manager</module>
         <module>gateway-manager-client</module>
+        <module>gateway-client-sample</module>
     </modules>
 
 
@@ -59,6 +60,12 @@
             <dependency>
                 <groupId>com.weweibuy</groupId>
                 <artifactId>gateway-manager-client</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.weweibuy</groupId>
+                <artifactId>gateway-server-client</artifactId>
                 <version>${project.version}</version>
             </dependency>
 
