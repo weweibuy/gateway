@@ -365,73 +365,73 @@ public class GatewayDataDictionaryExample {
             return (Criteria) this;
         }
 
-        public Criteria andDictValuesIsNull() {
-            addCriterion("dict_values is null");
+        public Criteria andDictValueIsNull() {
+            addCriterion("dict_value is null");
             return (Criteria) this;
         }
 
-        public Criteria andDictValuesIsNotNull() {
-            addCriterion("dict_values is not null");
+        public Criteria andDictValueIsNotNull() {
+            addCriterion("dict_value is not null");
             return (Criteria) this;
         }
 
-        public Criteria andDictValuesEqualTo(String value) {
-            addCriterion("dict_values =", value, "dictValues");
+        public Criteria andDictValueEqualTo(String value) {
+            addCriterion("dict_value =", value, "dictValue");
             return (Criteria) this;
         }
 
-        public Criteria andDictValuesNotEqualTo(String value) {
-            addCriterion("dict_values <>", value, "dictValues");
+        public Criteria andDictValueNotEqualTo(String value) {
+            addCriterion("dict_value <>", value, "dictValue");
             return (Criteria) this;
         }
 
-        public Criteria andDictValuesGreaterThan(String value) {
-            addCriterion("dict_values >", value, "dictValues");
+        public Criteria andDictValueGreaterThan(String value) {
+            addCriterion("dict_value >", value, "dictValue");
             return (Criteria) this;
         }
 
-        public Criteria andDictValuesGreaterThanOrEqualTo(String value) {
-            addCriterion("dict_values >=", value, "dictValues");
+        public Criteria andDictValueGreaterThanOrEqualTo(String value) {
+            addCriterion("dict_value >=", value, "dictValue");
             return (Criteria) this;
         }
 
-        public Criteria andDictValuesLessThan(String value) {
-            addCriterion("dict_values <", value, "dictValues");
+        public Criteria andDictValueLessThan(String value) {
+            addCriterion("dict_value <", value, "dictValue");
             return (Criteria) this;
         }
 
-        public Criteria andDictValuesLessThanOrEqualTo(String value) {
-            addCriterion("dict_values <=", value, "dictValues");
+        public Criteria andDictValueLessThanOrEqualTo(String value) {
+            addCriterion("dict_value <=", value, "dictValue");
             return (Criteria) this;
         }
 
-        public Criteria andDictValuesLike(String value) {
-            addCriterion("dict_values like", value, "dictValues");
+        public Criteria andDictValueLike(String value) {
+            addCriterion("dict_value like", value, "dictValue");
             return (Criteria) this;
         }
 
-        public Criteria andDictValuesNotLike(String value) {
-            addCriterion("dict_values not like", value, "dictValues");
+        public Criteria andDictValueNotLike(String value) {
+            addCriterion("dict_value not like", value, "dictValue");
             return (Criteria) this;
         }
 
-        public Criteria andDictValuesIn(List<String> values) {
-            addCriterion("dict_values in", values, "dictValues");
+        public Criteria andDictValueIn(List<String> values) {
+            addCriterion("dict_value in", values, "dictValue");
             return (Criteria) this;
         }
 
-        public Criteria andDictValuesNotIn(List<String> values) {
-            addCriterion("dict_values not in", values, "dictValues");
+        public Criteria andDictValueNotIn(List<String> values) {
+            addCriterion("dict_value not in", values, "dictValue");
             return (Criteria) this;
         }
 
-        public Criteria andDictValuesBetween(String value1, String value2) {
-            addCriterion("dict_values between", value1, value2, "dictValues");
+        public Criteria andDictValueBetween(String value1, String value2) {
+            addCriterion("dict_value between", value1, value2, "dictValue");
             return (Criteria) this;
         }
 
-        public Criteria andDictValuesNotBetween(String value1, String value2) {
-            addCriterion("dict_values not between", value1, value2, "dictValues");
+        public Criteria andDictValueNotBetween(String value1, String value2) {
+            addCriterion("dict_value not between", value1, value2, "dictValue");
             return (Criteria) this;
         }
 
@@ -505,63 +505,63 @@ public class GatewayDataDictionaryExample {
             return (Criteria) this;
         }
 
-        public Criteria andStatusIsNull() {
-            addCriterion("status is null");
+        public Criteria andIsDeleteIsNull() {
+            addCriterion("is_delete is null");
             return (Criteria) this;
         }
 
-        public Criteria andStatusIsNotNull() {
-            addCriterion("status is not null");
+        public Criteria andIsDeleteIsNotNull() {
+            addCriterion("is_delete is not null");
             return (Criteria) this;
         }
 
-        public Criteria andStatusEqualTo(Byte value) {
-            addCriterion("status =", value, "status");
+        public Criteria andIsDeleteEqualTo(Boolean value) {
+            addCriterion("is_delete =", value, "isDelete");
             return (Criteria) this;
         }
 
-        public Criteria andStatusNotEqualTo(Byte value) {
-            addCriterion("status <>", value, "status");
+        public Criteria andIsDeleteNotEqualTo(Boolean value) {
+            addCriterion("is_delete <>", value, "isDelete");
             return (Criteria) this;
         }
 
-        public Criteria andStatusGreaterThan(Byte value) {
-            addCriterion("status >", value, "status");
+        public Criteria andIsDeleteGreaterThan(Boolean value) {
+            addCriterion("is_delete >", value, "isDelete");
             return (Criteria) this;
         }
 
-        public Criteria andStatusGreaterThanOrEqualTo(Byte value) {
-            addCriterion("status >=", value, "status");
+        public Criteria andIsDeleteGreaterThanOrEqualTo(Boolean value) {
+            addCriterion("is_delete >=", value, "isDelete");
             return (Criteria) this;
         }
 
-        public Criteria andStatusLessThan(Byte value) {
-            addCriterion("status <", value, "status");
+        public Criteria andIsDeleteLessThan(Boolean value) {
+            addCriterion("is_delete <", value, "isDelete");
             return (Criteria) this;
         }
 
-        public Criteria andStatusLessThanOrEqualTo(Byte value) {
-            addCriterion("status <=", value, "status");
+        public Criteria andIsDeleteLessThanOrEqualTo(Boolean value) {
+            addCriterion("is_delete <=", value, "isDelete");
             return (Criteria) this;
         }
 
-        public Criteria andStatusIn(List<Byte> values) {
-            addCriterion("status in", values, "status");
+        public Criteria andIsDeleteIn(List<Boolean> values) {
+            addCriterion("is_delete in", values, "isDelete");
             return (Criteria) this;
         }
 
-        public Criteria andStatusNotIn(List<Byte> values) {
-            addCriterion("status not in", values, "status");
+        public Criteria andIsDeleteNotIn(List<Boolean> values) {
+            addCriterion("is_delete not in", values, "isDelete");
             return (Criteria) this;
         }
 
-        public Criteria andStatusBetween(Byte value1, Byte value2) {
-            addCriterion("status between", value1, value2, "status");
+        public Criteria andIsDeleteBetween(Boolean value1, Boolean value2) {
+            addCriterion("is_delete between", value1, value2, "isDelete");
             return (Criteria) this;
         }
 
-        public Criteria andStatusNotBetween(Byte value1, Byte value2) {
-            addCriterion("status not between", value1, value2, "status");
+        public Criteria andIsDeleteNotBetween(Boolean value1, Boolean value2) {
+            addCriterion("is_delete not between", value1, value2, "isDelete");
             return (Criteria) this;
         }
 

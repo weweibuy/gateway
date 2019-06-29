@@ -305,6 +305,76 @@ public class AccessSystemExample {
             return (Criteria) this;
         }
 
+        public Criteria andLbUriIsNull() {
+            addCriterion("lb_uri is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andLbUriIsNotNull() {
+            addCriterion("lb_uri is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andLbUriEqualTo(String value) {
+            addCriterion("lb_uri =", value, "lbUri");
+            return (Criteria) this;
+        }
+
+        public Criteria andLbUriNotEqualTo(String value) {
+            addCriterion("lb_uri <>", value, "lbUri");
+            return (Criteria) this;
+        }
+
+        public Criteria andLbUriGreaterThan(String value) {
+            addCriterion("lb_uri >", value, "lbUri");
+            return (Criteria) this;
+        }
+
+        public Criteria andLbUriGreaterThanOrEqualTo(String value) {
+            addCriterion("lb_uri >=", value, "lbUri");
+            return (Criteria) this;
+        }
+
+        public Criteria andLbUriLessThan(String value) {
+            addCriterion("lb_uri <", value, "lbUri");
+            return (Criteria) this;
+        }
+
+        public Criteria andLbUriLessThanOrEqualTo(String value) {
+            addCriterion("lb_uri <=", value, "lbUri");
+            return (Criteria) this;
+        }
+
+        public Criteria andLbUriLike(String value) {
+            addCriterion("lb_uri like", value, "lbUri");
+            return (Criteria) this;
+        }
+
+        public Criteria andLbUriNotLike(String value) {
+            addCriterion("lb_uri not like", value, "lbUri");
+            return (Criteria) this;
+        }
+
+        public Criteria andLbUriIn(List<String> values) {
+            addCriterion("lb_uri in", values, "lbUri");
+            return (Criteria) this;
+        }
+
+        public Criteria andLbUriNotIn(List<String> values) {
+            addCriterion("lb_uri not in", values, "lbUri");
+            return (Criteria) this;
+        }
+
+        public Criteria andLbUriBetween(String value1, String value2) {
+            addCriterion("lb_uri between", value1, value2, "lbUri");
+            return (Criteria) this;
+        }
+
+        public Criteria andLbUriNotBetween(String value1, String value2) {
+            addCriterion("lb_uri not between", value1, value2, "lbUri");
+            return (Criteria) this;
+        }
+
         public Criteria andSystemDomainIsNull() {
             addCriterion("system_domain is null");
             return (Criteria) this;
@@ -442,6 +512,66 @@ public class AccessSystemExample {
 
         public Criteria andSystemDescNotBetween(String value1, String value2) {
             addCriterion("system_desc not between", value1, value2, "systemDesc");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsDeleteIsNull() {
+            addCriterion("is_delete is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsDeleteIsNotNull() {
+            addCriterion("is_delete is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsDeleteEqualTo(Boolean value) {
+            addCriterion("is_delete =", value, "isDelete");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsDeleteNotEqualTo(Boolean value) {
+            addCriterion("is_delete <>", value, "isDelete");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsDeleteGreaterThan(Boolean value) {
+            addCriterion("is_delete >", value, "isDelete");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsDeleteGreaterThanOrEqualTo(Boolean value) {
+            addCriterion("is_delete >=", value, "isDelete");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsDeleteLessThan(Boolean value) {
+            addCriterion("is_delete <", value, "isDelete");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsDeleteLessThanOrEqualTo(Boolean value) {
+            addCriterion("is_delete <=", value, "isDelete");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsDeleteIn(List<Boolean> values) {
+            addCriterion("is_delete in", values, "isDelete");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsDeleteNotIn(List<Boolean> values) {
+            addCriterion("is_delete not in", values, "isDelete");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsDeleteBetween(Boolean value1, Boolean value2) {
+            addCriterion("is_delete between", value1, value2, "isDelete");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsDeleteNotBetween(Boolean value1, Boolean value2) {
+            addCriterion("is_delete not between", value1, value2, "isDelete");
             return (Criteria) this;
         }
 

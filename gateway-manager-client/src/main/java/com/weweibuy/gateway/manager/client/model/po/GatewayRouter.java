@@ -15,7 +15,7 @@ public class GatewayRouter {
 
     private Integer priority;
 
-    private Byte status;
+    private Boolean isUse;
 
     private Date createTime;
 
@@ -69,12 +69,12 @@ public class GatewayRouter {
         this.priority = priority;
     }
 
-    public Byte getStatus() {
-        return status;
+    public Boolean getIsUse() {
+        return isUse;
     }
 
-    public void setStatus(Byte status) {
-        this.status = status;
+    public void setIsUse(Boolean isUse) {
+        this.isUse = isUse;
     }
 
     public Date getCreateTime() {

@@ -14,6 +14,11 @@
     <dependencies>
 
         <dependency>
+            <groupId>com.weweibuy</groupId>
+            <artifactId>gateway-manager-client</artifactId>
+        </dependency>
+
+        <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-webflux</artifactId>
         </dependency>

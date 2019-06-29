@@ -8,7 +8,7 @@
     <result column="system_name" jdbcType="VARCHAR" property="systemName" />
     <result column="uri" jdbcType="VARCHAR" property="uri" />
     <result column="priority" jdbcType="INTEGER" property="priority" />
-    <result column="status" jdbcType="TINYINT" property="status" />
+    <result column="is_use" jdbcType="BIT" property="isUse" />
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
     <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
   </resultMap>
@@ -71,7 +71,7 @@
     </where>
   </sql>
   <sql id="Base_Column_List">
-    id, router_id, system_id, system_name, uri, priority, status, create_time, update_time
+    id, router_id, system_id, system_name, uri, priority, is_use, create_time, update_time
   </sql>
   <select id="selectByExample" parameterType="com.weweibuy.gateway.manager.client.model.po.GatewayRouterExample" resultMap="BaseResultMap">
     select
@@ -106,11 +106,11 @@
   <insert id="insert" parameterType="com.weweibuy.gateway.manager.client.model.po.GatewayRouter">
     insert into gateway_router (id, router_id, system_id, 
       system_name, uri, priority, 
-      status, create_time, update_time
+      is_use, create_time, update_time
       )
     values (#{id,jdbcType=BIGINT}, #{routerId,jdbcType=VARCHAR}, #{systemId,jdbcType=VARCHAR}, 
       #{systemName,jdbcType=VARCHAR}, #{uri,jdbcType=VARCHAR}, #{priority,jdbcType=INTEGER}, 
-      #{status,jdbcType=TINYINT}, #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}
+      #{isUse,jdbcType=BIT}, #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}
       )
   </insert>
   <insert id="insertSelective" parameterType="com.weweibuy.gateway.manager.client.model.po.GatewayRouter">
@@ -134,8 +134,8 @@
       <if test="priority != null">
         priority,
       </if>
-      <if test="status != null">
-        status,
+      <if test="isUse != null">
+        is_use,
       </if>
       <if test="createTime != null">
         create_time,
@@ -163,8 +163,8 @@
       <if test="priority != null">
         #{priority,jdbcType=INTEGER},
       </if>
-      <if test="status != null">
-        #{status,jdbcType=TINYINT},
+      <if test="isUse != null">
+        #{isUse,jdbcType=BIT},
       </if>
       <if test="createTime != null">
         #{createTime,jdbcType=TIMESTAMP},
@@ -201,8 +201,8 @@
       <if test="record.priority != null">
         priority = #{record.priority,jdbcType=INTEGER},
       </if>
-      <if test="record.status != null">
-        status = #{record.status,jdbcType=TINYINT},
+      <if test="record.isUse != null">
+        is_use = #{record.isUse,jdbcType=BIT},
       </if>
       <if test="record.createTime != null">
         create_time = #{record.createTime,jdbcType=TIMESTAMP},
@@ -223,7 +223,7 @@
       system_name = #{record.systemName,jdbcType=VARCHAR},
       uri = #{record.uri,jdbcType=VARCHAR},
       priority = #{record.priority,jdbcType=INTEGER},
-      status = #{record.status,jdbcType=TINYINT},
+      is_use = #{record.isUse,jdbcType=BIT},
       create_time = #{record.createTime,jdbcType=TIMESTAMP},
       update_time = #{record.updateTime,jdbcType=TIMESTAMP}
     <if test="_parameter != null">
@@ -248,8 +248,8 @@
       <if test="priority != null">
         priority = #{priority,jdbcType=INTEGER},
       </if>
-      <if test="status != null">
-        status = #{status,jdbcType=TINYINT},
+      <if test="isUse != null">
+        is_use = #{isUse,jdbcType=BIT},
       </if>
       <if test="createTime != null">
         create_time = #{createTime,jdbcType=TIMESTAMP},
@@ -267,7 +267,7 @@
       system_name = #{systemName,jdbcType=VARCHAR},
       uri = #{uri,jdbcType=VARCHAR},
       priority = #{priority,jdbcType=INTEGER},
-      status = #{status,jdbcType=TINYINT},
+      is_use = #{isUse,jdbcType=BIT},
       create_time = #{createTime,jdbcType=TIMESTAMP},
       update_time = #{updateTime,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=BIGINT}

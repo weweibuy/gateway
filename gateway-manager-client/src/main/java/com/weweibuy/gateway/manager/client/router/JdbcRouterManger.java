@@ -41,7 +41,7 @@ public class JdbcRouterManger {
         GatewayRouterExample example = new GatewayRouterExample();
 
         example.createCriteria()
-                .andStatusEqualTo((byte) 0);
+                .andIsUseEqualTo(true);
         List<GatewayRouter> gatewayRouters = routerMapper.selectByExample(example);
 
         RouterPredicateExample predicateExample = new RouterPredicateExample();
@@ -50,7 +50,7 @@ public class JdbcRouterManger {
                     String routerId = router.getRouterId();
                     predicateExample.createCriteria()
                             .andRouterIdEqualTo(routerId)
-                            .andStatusEqualTo((byte) 0);
+                            .andIsUseEqualTo(true);
 
                     // 断言
                     List<RouterPredicate> routerPredicates = predicateMapper.selectByExample(predicateExample);
@@ -61,8 +61,7 @@ public class JdbcRouterManger {
                     List<PredicateVo> predicateVoList = routerPredicates.stream()
                             .map(predicate -> {
                                 predicateArgsExample.createCriteria()
-                                        .andPredicateIdEqualTo(predicate.getId())
-                                        .andStatusEqualTo((byte) 0);
+                                        .andPredicateIdEqualTo(predicate.getPredicateId());
                                 // 断言参数
                                 List<PredicateArgs> predicateArgs = predicateArgsMapper.selectByExample(predicateArgsExample);
                                 predicateArgsExample.clear();
@@ -76,7 +75,7 @@ public class JdbcRouterManger {
                     RouterFilterExample routerFilterExample = new RouterFilterExample();
                     routerFilterExample.createCriteria()
                             .andRouterIdEqualTo(routerId)
-                            .andStatusEqualTo((byte) 0);
+                            .andIsUseEqualTo(true);
 
                     // 过滤器
                     List<RouterFilter> routerFilters = routerFilterMapper.selectByExample(routerFilterExample);
@@ -86,8 +85,7 @@ public class JdbcRouterManger {
                     List<FilterVo> filterVoList = routerFilters.stream()
                             .map(filter -> {
                                 filterArgsExample.createCriteria()
-                                        .andFilterIdEqualTo(filter.getId())
-                                        .andStatusEqualTo((byte) 0);
+                                        .andFilterIdEqualTo(filter.getFilterId());
                                 List<FilterArgs> filterArgs = filterArgsMapper.selectByExample(filterArgsExample);
                                 filterArgsExample.clear();
 
