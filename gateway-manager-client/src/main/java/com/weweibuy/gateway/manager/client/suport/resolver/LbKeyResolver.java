@@ -1,5 +1,6 @@
 package com.weweibuy.gateway.manager.client.suport.resolver;
 
+import com.weweibuy.gateway.manager.client.model.constant.ExchangeAttributeConstant;
 import com.weweibuy.gateway.manager.client.utils.RouteToRequestUrlUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cloud.client.ServiceInstance;
@@ -17,7 +18,7 @@ import java.util.Optional;
 import static org.springframework.cloud.gateway.support.ServerWebExchangeUtils.GATEWAY_SCHEME_PREFIX_ATTR;
 
 /**
- * 根据服务实例的接口限流;  多台实例,每个服务实例限流相同
+ * 解析 获取的服务实例 的 url
  *
  * @author durenhao
  * @date 2019/7/6 9:56
@@ -25,11 +26,11 @@ import static org.springframework.cloud.gateway.support.ServerWebExchangeUtils.G
 @Slf4j
 @Component
 @Primary
-public class LbRateLimitKeyResolver implements KeyResolver {
+public class LbKeyResolver implements KeyResolver {
 
     protected final LoadBalancerClient loadBalancer;
 
-    public LbRateLimitKeyResolver(LoadBalancerClient loadBalancer) {
+    public LbKeyResolver(LoadBalancerClient loadBalancer) {
         this.loadBalancer = loadBalancer;
     }
 
@@ -47,7 +48,7 @@ public class LbRateLimitKeyResolver implements KeyResolver {
                 || (!"lb".equals(lbUri.get().getScheme()) && !"lb".equals(schemePrefix))) {
             return Mono.empty();
         }
-        ServiceInstance instance = choose(exchange, lbUri.get());
+        ServiceInstance instance = choose(lbUri.get());
         URI uri = exchange.getRequest().getURI();
         String overrideScheme = instance.isSecure() ? "https" : "http";
         if (schemePrefix != null) {
@@ -56,11 +57,13 @@ public class LbRateLimitKeyResolver implements KeyResolver {
 
         URI requestUrl = loadBalancer.reconstructURI(
                 new DelegatingServiceInstance(instance, overrideScheme), uri);
-        return Mono.just(requestUrl.toString());
+        String s = requestUrl.toString();
+        exchange.getAttributes().put(ExchangeAttributeConstant.LB_URL_ATTR, s);
+        return Mono.just(s);
     }
 
 
-    private ServiceInstance choose(ServerWebExchange exchange, URI uri) {
+    private ServiceInstance choose(URI uri) {
         return loadBalancer.choose(uri.getHost());
     }
 

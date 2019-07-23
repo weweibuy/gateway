@@ -32,6 +32,11 @@ public class CommonCodeJsonResponse {
         return new CommonCodeJsonResponse(CommonResponseEum.SYSTEM_UNKNOWN_EXCEPTION);
     }
 
+    public static CommonCodeJsonResponse fallback() {
+        return new CommonCodeJsonResponse(CommonResponseEum.SERVICE_FALL_BACK);
+    }
+
+
     public static CommonCodeJsonResponse badRequestParam() {
         return new CommonCodeJsonResponse(CommonResponseEum.BAD_REQUEST_PARAM);
     }
