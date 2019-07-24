@@ -47,6 +47,7 @@ public class SentinelConfig {
     @PostConstruct
     public void init(){
         initCustomizedApis();
+        loadRules();
     }
 
     @Bean
@@ -78,13 +79,13 @@ public class SentinelConfig {
     private static void loadRules() {
         // Set up basic information, only for demo purpose. You may adjust them based on your actual environment.
         // For more information, please refer https://github.com/ctripcorp/apollo
-        String appId = "sentinel-demo";
-        String apolloMetaServerAddress = "http://localhost:8080";
+        String appId = "gateway-server";
+        String apolloMetaServerAddress = "http://106.12.15.87:9080";
         System.setProperty("app.id", appId);
         System.setProperty("apollo.meta", apolloMetaServerAddress);
 
-        String namespaceName = "application";
-        String flowRuleKey = "flowRules";
+        String namespaceName = "sentinel";
+        String flowRuleKey = "sentinel.flow-rules";
         // It's better to provide a meaningful default value.
         String defaultFlowRules = "[]";
 
