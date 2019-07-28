@@ -9,6 +9,8 @@ import com.alibaba.csp.sentinel.adapter.gateway.sc.SentinelGatewayFilter;
 import com.alibaba.csp.sentinel.adapter.gateway.sc.exception.SentinelGatewayBlockExceptionHandler;
 import com.alibaba.csp.sentinel.datasource.ReadableDataSource;
 import com.alibaba.csp.sentinel.datasource.apollo.ApolloDataSource;
+import com.alibaba.csp.sentinel.slots.block.degrade.DegradeRule;
+import com.alibaba.csp.sentinel.slots.block.degrade.DegradeRuleManager;
 import com.alibaba.csp.sentinel.slots.block.flow.FlowRule;
 import com.alibaba.csp.sentinel.slots.block.flow.FlowRuleManager;
 import com.alibaba.fastjson.JSON;
@@ -86,13 +88,23 @@ public class SentinelConfig {
 
         String namespaceName = "sentinel";
         String flowRuleKey = "sentinel.flow-rules";
+        String degradeRuleKey = "sentinel.degrade-rules";
+
         // It's better to provide a meaningful default value.
         String defaultFlowRules = "[]";
+        String defaultDegradeRule = "[]";
 
         ReadableDataSource<String, List<FlowRule>> flowRuleDataSource = new ApolloDataSource<>(namespaceName,
                 flowRuleKey, defaultFlowRules, source -> JSON.parseObject(source, new TypeReference<List<FlowRule>>() {
         }));
+
+        ReadableDataSource<String, List<DegradeRule>> degradeRuleDataSource = new ApolloDataSource<>(namespaceName,
+                degradeRuleKey, defaultDegradeRule, source -> JSON.parseObject(source, new TypeReference<List<DegradeRule>>() {
+        }));
+
         FlowRuleManager.register2Property(flowRuleDataSource.getProperty());
+        DegradeRuleManager.register2Property(degradeRuleDataSource.getProperty());
+
     }
 
 
