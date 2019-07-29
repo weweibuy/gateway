@@ -228,4 +228,22 @@
         </profile>
     </profiles>
 
+
+    <repositories>
+        <repository>
+            <id>nexus-aliyun</id>
+            <name>Nexus aliyun</name>
+            <url>http://maven.aliyun.com/nexus/content/groups/public</url>
+        </repository>
+    </repositories>
+
+    <developers>
+        <developer>
+            <name>durenhao</name>
+            <email>ak514250@126.com</email>
+            <timezone>+8</timezone>
+        </developer>
+    </developers>
+
+
 </project>
