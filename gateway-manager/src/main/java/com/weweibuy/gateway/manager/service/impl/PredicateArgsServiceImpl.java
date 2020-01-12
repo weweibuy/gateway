@@ -31,7 +31,7 @@ public class PredicateArgsServiceImpl implements PredicateArgsService {
     }
 
     @Override
-    public List<PredicateArgs> getPredicateArgsByPredicateId(Long predicateId) {
+    public List<PredicateArgs> getPredicateArgsByPredicateId(String predicateId) {
         PredicateArgsExample example = new PredicateArgsExample();
         example.createCriteria()
                 .andPredicateIdEqualTo(predicateId);
@@ -61,7 +61,7 @@ public class PredicateArgsServiceImpl implements PredicateArgsService {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public void deletePredicateArgsByPredicateId(Long predicateId) {
+    public void deletePredicateArgsByPredicateId(String predicateId) {
         PredicateArgsExample example = new PredicateArgsExample();
         example.createCriteria()
                 .andPredicateIdEqualTo(predicateId);

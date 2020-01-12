@@ -3,6 +3,7 @@ package com.weweibuy.gateway.manager.client.router;
 import com.weweibuy.gateway.manager.client.model.event.CustomRefreshRoutesEvent;
 import com.weweibuy.gateway.manager.client.model.vo.FilterVo;
 import com.weweibuy.gateway.manager.client.model.vo.PredicateVo;
+import com.weweibuy.gateway.manager.client.model.vo.RouterVo;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.gateway.filter.FilterDefinition;
@@ -50,12 +51,14 @@ public class JdbcRouteDefinitionLocator implements RouteDefinitionLocator, Appli
      */
     private Flux<RouteDefinition> loadFormDB() {
         return Flux.fromStream(jdbcRouterManger.getAllRouter().stream()
+                .filter(RouterVo::getIsUse)
                 .map(routerVo -> {
                     String routerId = routerVo.getRouterId();
                     RouteDefinition routeDefinition = new RouteDefinition();
                     List<PredicateVo> predicates = routerVo.getPredicates();
                     // 断言
                     List<PredicateDefinition> predicateDefinitions = predicates.stream()
+                            .filter(PredicateVo::getIsUse)
                             .map(predicate -> {
                                 PredicateDefinition predicateDefinition = new PredicateDefinition();
                                 predicateDefinition.setName(predicate.getPredicateName());
@@ -68,6 +71,7 @@ public class JdbcRouteDefinitionLocator implements RouteDefinitionLocator, Appli
 
                     // 过滤器
                     List<FilterDefinition> filterDefinitions = filters.stream()
+                            .filter(FilterVo::getIsUse)
                             // 根据优先级排序, 排序越小越靠前
                             .sorted(Comparator.comparing(FilterVo::getPriority))
                             .map(filter -> {
@@ -102,7 +106,7 @@ public class JdbcRouteDefinitionLocator implements RouteDefinitionLocator, Appli
      */
     @Override
     public void onApplicationEvent(CustomRefreshRoutesEvent event) {
-        log.info("接收到自定义路由刷新事件");
+        log.info("【路由刷新】>>> 接收到自定义路由刷新事件");
         this.cache.clear();
     }
 }

@@ -1,6 +1,9 @@
 package com.weweibuy.gateway.manager.model.vo;
 
+import com.weweibuy.gateway.common.utils.IdWorker;
+import com.weweibuy.gateway.manager.model.po.FilterArgs;
 import lombok.Data;
+import org.springframework.cglib.beans.BeanCopier;
 
 /**
  * @author durenhao
@@ -8,6 +11,8 @@ import lombok.Data;
  **/
 @Data
 public class FilterArgsAddVo {
+
+    private static final BeanCopier COPIER = BeanCopier.create(FilterArgsAddVo.class, FilterArgs.class, false);
 
     private Long filterId;
 
@@ -20,5 +25,12 @@ public class FilterArgsAddVo {
     private String dictType;
 
     private String argsDesc;
+
+    public static FilterArgs convertToPo(FilterArgsAddVo vo) {
+        FilterArgs filterArgs = new FilterArgs();
+        COPIER.copy(vo, filterArgs, null);
+        filterArgs.setFilterId(IdWorker.nextStringId());
+        return filterArgs;
+    }
 
 }

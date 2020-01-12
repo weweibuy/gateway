@@ -9,9 +9,13 @@ public class AccessSystem {
 
     private String systemName;
 
+    private String lbUri;
+
     private String systemDomain;
 
     private String systemDesc;
+
+    private Boolean isDelete;
 
     private Date createTime;
 
@@ -41,6 +45,14 @@ public class AccessSystem {
         this.systemName = systemName == null ? null : systemName.trim();
     }
 
+    public String getLbUri() {
+        return lbUri;
+    }
+
+    public void setLbUri(String lbUri) {
+        this.lbUri = lbUri == null ? null : lbUri.trim();
+    }
+
     public String getSystemDomain() {
         return systemDomain;
     }
@@ -55,6 +67,14 @@ public class AccessSystem {
 
     public void setSystemDesc(String systemDesc) {
         this.systemDesc = systemDesc == null ? null : systemDesc.trim();
+    }
+
+    public Boolean getIsDelete() {
+        return isDelete;
+    }
+
+    public void setIsDelete(Boolean isDelete) {
+        this.isDelete = isDelete;
     }
 
     public Date getCreateTime() {

@@ -31,7 +31,7 @@ public class FilterArgsServiceImpl implements FilterArgsService {
     }
 
     @Override
-    public List<FilterArgs> getFilterArgsByFilterId(Long filterId) {
+    public List<FilterArgs> getFilterArgsByFilterId(String filterId) {
         FilterArgsExample example = new FilterArgsExample();
         example.createCriteria()
                 .andFilterIdEqualTo(filterId);
@@ -61,7 +61,7 @@ public class FilterArgsServiceImpl implements FilterArgsService {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public void deleteFilterArgsByFilterId(Long filterId) {
+    public void deleteFilterArgsByFilterId(String filterId) {
         FilterArgsExample example = new FilterArgsExample();
         example.createCriteria()
                 .andFilterIdEqualTo(filterId);

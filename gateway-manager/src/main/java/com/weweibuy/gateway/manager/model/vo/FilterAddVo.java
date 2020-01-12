@@ -1,6 +1,11 @@
 package com.weweibuy.gateway.manager.model.vo;
 
+import com.weweibuy.gateway.common.utils.IdWorker;
+import com.weweibuy.gateway.manager.model.po.RouterFilter;
 import lombok.Data;
+import org.springframework.cglib.beans.BeanCopier;
+
+import java.util.List;
 
 /**
  * @author durenhao
@@ -8,6 +13,8 @@ import lombok.Data;
  **/
 @Data
 public class FilterAddVo {
+
+    private static final BeanCopier COPIER = BeanCopier.create(FilterAddVo.class, RouterFilter.class, false);
 
     private Long predicateId;
 
@@ -20,4 +27,14 @@ public class FilterAddVo {
     private String filterDesc;
 
     private Integer priority;
+
+    private List<FilterArgsAddVo> filterArgs;
+
+    public static RouterFilter convertToPo(FilterAddVo vo) {
+        RouterFilter routerFilter = new RouterFilter();
+        COPIER.copy(vo, routerFilter, null);
+        routerFilter.setFilterId(IdWorker.nextStringId());
+        return routerFilter;
+    }
+
 }

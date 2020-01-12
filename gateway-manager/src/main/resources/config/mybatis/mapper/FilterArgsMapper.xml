@@ -3,13 +3,14 @@
 <mapper namespace="com.weweibuy.gateway.manager.mapper.FilterArgsMapper">
   <resultMap id="BaseResultMap" type="com.weweibuy.gateway.manager.model.po.FilterArgs">
     <id column="id" jdbcType="BIGINT" property="id" />
-    <result column="filter_id" jdbcType="BIGINT" property="filterId" />
+    <result column="filter_id" jdbcType="VARCHAR" property="filterId" />
+    <result column="filter_args_id" jdbcType="VARCHAR" property="filterArgsId" />
     <result column="args_name" jdbcType="VARCHAR" property="argsName" />
     <result column="args_value" jdbcType="VARCHAR" property="argsValue" />
     <result column="dict_id" jdbcType="BIGINT" property="dictId" />
     <result column="dict_type" jdbcType="VARCHAR" property="dictType" />
     <result column="args_desc" jdbcType="VARCHAR" property="argsDesc" />
-    <result column="status" jdbcType="TINYINT" property="status" />
+    <result column="is_use" jdbcType="BIT" property="isUse" />
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
     <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
   </resultMap>
@@ -72,8 +73,8 @@
     </where>
   </sql>
   <sql id="Base_Column_List">
-    id, filter_id, args_name, args_value, dict_id, dict_type, args_desc, status, create_time, 
-    update_time
+    id, filter_id, filter_args_id, args_name, args_value, dict_id, dict_type, args_desc, 
+    is_use, create_time, update_time
   </sql>
   <select id="selectByExample" parameterType="com.weweibuy.gateway.manager.model.po.FilterArgsExample" resultMap="BaseResultMap">
     select
@@ -106,14 +107,14 @@
     </if>
   </delete>
   <insert id="insert" parameterType="com.weweibuy.gateway.manager.model.po.FilterArgs">
-    insert into filter_args (id, filter_id, args_name, 
-      args_value, dict_id, dict_type, 
-      args_desc, status, create_time, 
-      update_time)
-    values (#{id,jdbcType=BIGINT}, #{filterId,jdbcType=BIGINT}, #{argsName,jdbcType=VARCHAR}, 
-      #{argsValue,jdbcType=VARCHAR}, #{dictId,jdbcType=BIGINT}, #{dictType,jdbcType=VARCHAR}, 
-      #{argsDesc,jdbcType=VARCHAR}, #{status,jdbcType=TINYINT}, #{createTime,jdbcType=TIMESTAMP}, 
-      #{updateTime,jdbcType=TIMESTAMP})
+    insert into filter_args (id, filter_id, filter_args_id, 
+      args_name, args_value, dict_id, 
+      dict_type, args_desc, is_use, 
+      create_time, update_time)
+    values (#{id,jdbcType=BIGINT}, #{filterId,jdbcType=VARCHAR}, #{filterArgsId,jdbcType=VARCHAR}, 
+      #{argsName,jdbcType=VARCHAR}, #{argsValue,jdbcType=VARCHAR}, #{dictId,jdbcType=BIGINT}, 
+      #{dictType,jdbcType=VARCHAR}, #{argsDesc,jdbcType=VARCHAR}, #{isUse,jdbcType=BIT}, 
+      #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP})
   </insert>
   <insert id="insertSelective" parameterType="com.weweibuy.gateway.manager.model.po.FilterArgs">
     insert into filter_args
@@ -123,6 +124,9 @@
       </if>
       <if test="filterId != null">
         filter_id,
+      </if>
+      <if test="filterArgsId != null">
+        filter_args_id,
       </if>
       <if test="argsName != null">
         args_name,
@@ -139,8 +143,8 @@
       <if test="argsDesc != null">
         args_desc,
       </if>
-      <if test="status != null">
-        status,
+      <if test="isUse != null">
+        is_use,
       </if>
       <if test="createTime != null">
         create_time,
@@ -154,7 +158,10 @@
         #{id,jdbcType=BIGINT},
       </if>
       <if test="filterId != null">
-        #{filterId,jdbcType=BIGINT},
+        #{filterId,jdbcType=VARCHAR},
+      </if>
+      <if test="filterArgsId != null">
+        #{filterArgsId,jdbcType=VARCHAR},
       </if>
       <if test="argsName != null">
         #{argsName,jdbcType=VARCHAR},
@@ -171,8 +178,8 @@
       <if test="argsDesc != null">
         #{argsDesc,jdbcType=VARCHAR},
       </if>
-      <if test="status != null">
-        #{status,jdbcType=TINYINT},
+      <if test="isUse != null">
+        #{isUse,jdbcType=BIT},
       </if>
       <if test="createTime != null">
         #{createTime,jdbcType=TIMESTAMP},
@@ -195,7 +202,10 @@
         id = #{record.id,jdbcType=BIGINT},
       </if>
       <if test="record.filterId != null">
-        filter_id = #{record.filterId,jdbcType=BIGINT},
+        filter_id = #{record.filterId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.filterArgsId != null">
+        filter_args_id = #{record.filterArgsId,jdbcType=VARCHAR},
       </if>
       <if test="record.argsName != null">
         args_name = #{record.argsName,jdbcType=VARCHAR},
@@ -212,8 +222,8 @@
       <if test="record.argsDesc != null">
         args_desc = #{record.argsDesc,jdbcType=VARCHAR},
       </if>
-      <if test="record.status != null">
-        status = #{record.status,jdbcType=TINYINT},
+      <if test="record.isUse != null">
+        is_use = #{record.isUse,jdbcType=BIT},
       </if>
       <if test="record.createTime != null">
         create_time = #{record.createTime,jdbcType=TIMESTAMP},
@@ -229,13 +239,14 @@
   <update id="updateByExample" parameterType="map">
     update filter_args
     set id = #{record.id,jdbcType=BIGINT},
-      filter_id = #{record.filterId,jdbcType=BIGINT},
+      filter_id = #{record.filterId,jdbcType=VARCHAR},
+      filter_args_id = #{record.filterArgsId,jdbcType=VARCHAR},
       args_name = #{record.argsName,jdbcType=VARCHAR},
       args_value = #{record.argsValue,jdbcType=VARCHAR},
       dict_id = #{record.dictId,jdbcType=BIGINT},
       dict_type = #{record.dictType,jdbcType=VARCHAR},
       args_desc = #{record.argsDesc,jdbcType=VARCHAR},
-      status = #{record.status,jdbcType=TINYINT},
+      is_use = #{record.isUse,jdbcType=BIT},
       create_time = #{record.createTime,jdbcType=TIMESTAMP},
       update_time = #{record.updateTime,jdbcType=TIMESTAMP}
     <if test="_parameter != null">
@@ -246,7 +257,10 @@
     update filter_args
     <set>
       <if test="filterId != null">
-        filter_id = #{filterId,jdbcType=BIGINT},
+        filter_id = #{filterId,jdbcType=VARCHAR},
+      </if>
+      <if test="filterArgsId != null">
+        filter_args_id = #{filterArgsId,jdbcType=VARCHAR},
       </if>
       <if test="argsName != null">
         args_name = #{argsName,jdbcType=VARCHAR},
@@ -263,8 +277,8 @@
       <if test="argsDesc != null">
         args_desc = #{argsDesc,jdbcType=VARCHAR},
       </if>
-      <if test="status != null">
-        status = #{status,jdbcType=TINYINT},
+      <if test="isUse != null">
+        is_use = #{isUse,jdbcType=BIT},
       </if>
       <if test="createTime != null">
         create_time = #{createTime,jdbcType=TIMESTAMP},
@@ -277,13 +291,14 @@
   </update>
   <update id="updateByPrimaryKey" parameterType="com.weweibuy.gateway.manager.model.po.FilterArgs">
     update filter_args
-    set filter_id = #{filterId,jdbcType=BIGINT},
+    set filter_id = #{filterId,jdbcType=VARCHAR},
+      filter_args_id = #{filterArgsId,jdbcType=VARCHAR},
       args_name = #{argsName,jdbcType=VARCHAR},
       args_value = #{argsValue,jdbcType=VARCHAR},
       dict_id = #{dictId,jdbcType=BIGINT},
       dict_type = #{dictType,jdbcType=VARCHAR},
       args_desc = #{argsDesc,jdbcType=VARCHAR},
-      status = #{status,jdbcType=TINYINT},
+      is_use = #{isUse,jdbcType=BIT},
       create_time = #{createTime,jdbcType=TIMESTAMP},
       update_time = #{updateTime,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=BIGINT}

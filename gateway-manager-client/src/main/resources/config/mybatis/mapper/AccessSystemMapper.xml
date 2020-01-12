@@ -5,8 +5,10 @@
     <id column="id" jdbcType="BIGINT" property="id" />
     <result column="system_id" jdbcType="VARCHAR" property="systemId" />
     <result column="system_name" jdbcType="VARCHAR" property="systemName" />
+    <result column="lb_uri" jdbcType="VARCHAR" property="lbUri" />
     <result column="system_domain" jdbcType="VARCHAR" property="systemDomain" />
     <result column="system_desc" jdbcType="VARCHAR" property="systemDesc" />
+    <result column="is_delete" jdbcType="BIT" property="isDelete" />
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
     <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
   </resultMap>
@@ -69,7 +71,8 @@
     </where>
   </sql>
   <sql id="Base_Column_List">
-    id, system_id, system_name, system_domain, system_desc, create_time, update_time
+    id, system_id, system_name, lb_uri, system_domain, system_desc, is_delete, create_time, 
+    update_time
   </sql>
   <select id="selectByExample" parameterType="com.weweibuy.gateway.manager.client.model.po.AccessSystemExample" resultMap="BaseResultMap">
     select
@@ -103,11 +106,13 @@
   </delete>
   <insert id="insert" parameterType="com.weweibuy.gateway.manager.client.model.po.AccessSystem">
     insert into access_system (id, system_id, system_name, 
-      system_domain, system_desc, create_time, 
-      update_time)
+      lb_uri, system_domain, system_desc, 
+      is_delete, create_time, update_time
+      )
     values (#{id,jdbcType=BIGINT}, #{systemId,jdbcType=VARCHAR}, #{systemName,jdbcType=VARCHAR}, 
-      #{systemDomain,jdbcType=VARCHAR}, #{systemDesc,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
-      #{updateTime,jdbcType=TIMESTAMP})
+      #{lbUri,jdbcType=VARCHAR}, #{systemDomain,jdbcType=VARCHAR}, #{systemDesc,jdbcType=VARCHAR}, 
+      #{isDelete,jdbcType=BIT}, #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}
+      )
   </insert>
   <insert id="insertSelective" parameterType="com.weweibuy.gateway.manager.client.model.po.AccessSystem">
     insert into access_system
@@ -121,11 +126,17 @@
       <if test="systemName != null">
         system_name,
       </if>
+      <if test="lbUri != null">
+        lb_uri,
+      </if>
       <if test="systemDomain != null">
         system_domain,
       </if>
       <if test="systemDesc != null">
         system_desc,
+      </if>
+      <if test="isDelete != null">
+        is_delete,
       </if>
       <if test="createTime != null">
         create_time,
@@ -144,11 +155,17 @@
       <if test="systemName != null">
         #{systemName,jdbcType=VARCHAR},
       </if>
+      <if test="lbUri != null">
+        #{lbUri,jdbcType=VARCHAR},
+      </if>
       <if test="systemDomain != null">
         #{systemDomain,jdbcType=VARCHAR},
       </if>
       <if test="systemDesc != null">
         #{systemDesc,jdbcType=VARCHAR},
+      </if>
+      <if test="isDelete != null">
+        #{isDelete,jdbcType=BIT},
       </if>
       <if test="createTime != null">
         #{createTime,jdbcType=TIMESTAMP},
@@ -176,11 +193,17 @@
       <if test="record.systemName != null">
         system_name = #{record.systemName,jdbcType=VARCHAR},
       </if>
+      <if test="record.lbUri != null">
+        lb_uri = #{record.lbUri,jdbcType=VARCHAR},
+      </if>
       <if test="record.systemDomain != null">
         system_domain = #{record.systemDomain,jdbcType=VARCHAR},
       </if>
       <if test="record.systemDesc != null">
         system_desc = #{record.systemDesc,jdbcType=VARCHAR},
+      </if>
+      <if test="record.isDelete != null">
+        is_delete = #{record.isDelete,jdbcType=BIT},
       </if>
       <if test="record.createTime != null">
         create_time = #{record.createTime,jdbcType=TIMESTAMP},
@@ -198,8 +221,10 @@
     set id = #{record.id,jdbcType=BIGINT},
       system_id = #{record.systemId,jdbcType=VARCHAR},
       system_name = #{record.systemName,jdbcType=VARCHAR},
+      lb_uri = #{record.lbUri,jdbcType=VARCHAR},
       system_domain = #{record.systemDomain,jdbcType=VARCHAR},
       system_desc = #{record.systemDesc,jdbcType=VARCHAR},
+      is_delete = #{record.isDelete,jdbcType=BIT},
       create_time = #{record.createTime,jdbcType=TIMESTAMP},
       update_time = #{record.updateTime,jdbcType=TIMESTAMP}
     <if test="_parameter != null">
@@ -215,11 +240,17 @@
       <if test="systemName != null">
         system_name = #{systemName,jdbcType=VARCHAR},
       </if>
+      <if test="lbUri != null">
+        lb_uri = #{lbUri,jdbcType=VARCHAR},
+      </if>
       <if test="systemDomain != null">
         system_domain = #{systemDomain,jdbcType=VARCHAR},
       </if>
       <if test="systemDesc != null">
         system_desc = #{systemDesc,jdbcType=VARCHAR},
+      </if>
+      <if test="isDelete != null">
+        is_delete = #{isDelete,jdbcType=BIT},
       </if>
       <if test="createTime != null">
         create_time = #{createTime,jdbcType=TIMESTAMP},
@@ -234,8 +265,10 @@
     update access_system
     set system_id = #{systemId,jdbcType=VARCHAR},
       system_name = #{systemName,jdbcType=VARCHAR},
+      lb_uri = #{lbUri,jdbcType=VARCHAR},
       system_domain = #{systemDomain,jdbcType=VARCHAR},
       system_desc = #{systemDesc,jdbcType=VARCHAR},
+      is_delete = #{isDelete,jdbcType=BIT},
       create_time = #{createTime,jdbcType=TIMESTAMP},
       update_time = #{updateTime,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=BIGINT}

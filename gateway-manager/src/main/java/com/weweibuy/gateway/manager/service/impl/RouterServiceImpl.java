@@ -2,9 +2,9 @@ package com.weweibuy.gateway.manager.service.impl;
 
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
-import com.weweibuy.gateway.common.eum.CommonResponseEum;
 import com.weweibuy.gateway.common.exception.BusinessException;
 import com.weweibuy.gateway.common.exception.SystemException;
+import com.weweibuy.gateway.common.model.eum.CommonResponseEum;
 import com.weweibuy.gateway.manager.mananger.RouterManager;
 import com.weweibuy.gateway.manager.mapper.GatewayRouterMapper;
 import com.weweibuy.gateway.manager.model.dto.RouterPageQueryDto;

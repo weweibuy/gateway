@@ -7,6 +7,8 @@ public class RouterFilter {
 
     private String routerId;
 
+    private String filterId;
+
     private String filterName;
 
     private String dictType;
@@ -17,7 +19,7 @@ public class RouterFilter {
 
     private Integer priority;
 
-    private Byte status;
+    private Boolean isUse;
 
     private Date createTime;
 
@@ -37,6 +39,14 @@ public class RouterFilter {
 
     public void setRouterId(String routerId) {
         this.routerId = routerId == null ? null : routerId.trim();
+    }
+
+    public String getFilterId() {
+        return filterId;
+    }
+
+    public void setFilterId(String filterId) {
+        this.filterId = filterId == null ? null : filterId.trim();
     }
 
     public String getFilterName() {
@@ -79,12 +89,12 @@ public class RouterFilter {
         this.priority = priority;
     }
 
-    public Byte getStatus() {
-        return status;
+    public Boolean getIsUse() {
+        return isUse;
     }
 
-    public void setStatus(Byte status) {
-        this.status = status;
+    public void setIsUse(Boolean isUse) {
+        this.isUse = isUse;
     }
 
     public Date getCreateTime() {

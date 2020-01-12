@@ -175,53 +175,133 @@ public class FilterArgsExample {
             return (Criteria) this;
         }
 
-        public Criteria andFilterIdEqualTo(Long value) {
+        public Criteria andFilterIdEqualTo(String value) {
             addCriterion("filter_id =", value, "filterId");
             return (Criteria) this;
         }
 
-        public Criteria andFilterIdNotEqualTo(Long value) {
+        public Criteria andFilterIdNotEqualTo(String value) {
             addCriterion("filter_id <>", value, "filterId");
             return (Criteria) this;
         }
 
-        public Criteria andFilterIdGreaterThan(Long value) {
+        public Criteria andFilterIdGreaterThan(String value) {
             addCriterion("filter_id >", value, "filterId");
             return (Criteria) this;
         }
 
-        public Criteria andFilterIdGreaterThanOrEqualTo(Long value) {
+        public Criteria andFilterIdGreaterThanOrEqualTo(String value) {
             addCriterion("filter_id >=", value, "filterId");
             return (Criteria) this;
         }
 
-        public Criteria andFilterIdLessThan(Long value) {
+        public Criteria andFilterIdLessThan(String value) {
             addCriterion("filter_id <", value, "filterId");
             return (Criteria) this;
         }
 
-        public Criteria andFilterIdLessThanOrEqualTo(Long value) {
+        public Criteria andFilterIdLessThanOrEqualTo(String value) {
             addCriterion("filter_id <=", value, "filterId");
             return (Criteria) this;
         }
 
-        public Criteria andFilterIdIn(List<Long> values) {
+        public Criteria andFilterIdLike(String value) {
+            addCriterion("filter_id like", value, "filterId");
+            return (Criteria) this;
+        }
+
+        public Criteria andFilterIdNotLike(String value) {
+            addCriterion("filter_id not like", value, "filterId");
+            return (Criteria) this;
+        }
+
+        public Criteria andFilterIdIn(List<String> values) {
             addCriterion("filter_id in", values, "filterId");
             return (Criteria) this;
         }
 
-        public Criteria andFilterIdNotIn(List<Long> values) {
+        public Criteria andFilterIdNotIn(List<String> values) {
             addCriterion("filter_id not in", values, "filterId");
             return (Criteria) this;
         }
 
-        public Criteria andFilterIdBetween(Long value1, Long value2) {
+        public Criteria andFilterIdBetween(String value1, String value2) {
             addCriterion("filter_id between", value1, value2, "filterId");
             return (Criteria) this;
         }
 
-        public Criteria andFilterIdNotBetween(Long value1, Long value2) {
+        public Criteria andFilterIdNotBetween(String value1, String value2) {
             addCriterion("filter_id not between", value1, value2, "filterId");
+            return (Criteria) this;
+        }
+
+        public Criteria andFilterArgsIdIsNull() {
+            addCriterion("filter_args_id is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andFilterArgsIdIsNotNull() {
+            addCriterion("filter_args_id is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andFilterArgsIdEqualTo(String value) {
+            addCriterion("filter_args_id =", value, "filterArgsId");
+            return (Criteria) this;
+        }
+
+        public Criteria andFilterArgsIdNotEqualTo(String value) {
+            addCriterion("filter_args_id <>", value, "filterArgsId");
+            return (Criteria) this;
+        }
+
+        public Criteria andFilterArgsIdGreaterThan(String value) {
+            addCriterion("filter_args_id >", value, "filterArgsId");
+            return (Criteria) this;
+        }
+
+        public Criteria andFilterArgsIdGreaterThanOrEqualTo(String value) {
+            addCriterion("filter_args_id >=", value, "filterArgsId");
+            return (Criteria) this;
+        }
+
+        public Criteria andFilterArgsIdLessThan(String value) {
+            addCriterion("filter_args_id <", value, "filterArgsId");
+            return (Criteria) this;
+        }
+
+        public Criteria andFilterArgsIdLessThanOrEqualTo(String value) {
+            addCriterion("filter_args_id <=", value, "filterArgsId");
+            return (Criteria) this;
+        }
+
+        public Criteria andFilterArgsIdLike(String value) {
+            addCriterion("filter_args_id like", value, "filterArgsId");
+            return (Criteria) this;
+        }
+
+        public Criteria andFilterArgsIdNotLike(String value) {
+            addCriterion("filter_args_id not like", value, "filterArgsId");
+            return (Criteria) this;
+        }
+
+        public Criteria andFilterArgsIdIn(List<String> values) {
+            addCriterion("filter_args_id in", values, "filterArgsId");
+            return (Criteria) this;
+        }
+
+        public Criteria andFilterArgsIdNotIn(List<String> values) {
+            addCriterion("filter_args_id not in", values, "filterArgsId");
+            return (Criteria) this;
+        }
+
+        public Criteria andFilterArgsIdBetween(String value1, String value2) {
+            addCriterion("filter_args_id between", value1, value2, "filterArgsId");
+            return (Criteria) this;
+        }
+
+        public Criteria andFilterArgsIdNotBetween(String value1, String value2) {
+            addCriterion("filter_args_id not between", value1, value2, "filterArgsId");
             return (Criteria) this;
         }
 
@@ -562,66 +642,6 @@ public class FilterArgsExample {
 
         public Criteria andArgsDescNotBetween(String value1, String value2) {
             addCriterion("args_desc not between", value1, value2, "argsDesc");
-            return (Criteria) this;
-        }
-
-        public Criteria andStatusIsNull() {
-            addCriterion("status is null");
-            return (Criteria) this;
-        }
-
-        public Criteria andStatusIsNotNull() {
-            addCriterion("status is not null");
-            return (Criteria) this;
-        }
-
-        public Criteria andStatusEqualTo(Byte value) {
-            addCriterion("status =", value, "status");
-            return (Criteria) this;
-        }
-
-        public Criteria andStatusNotEqualTo(Byte value) {
-            addCriterion("status <>", value, "status");
-            return (Criteria) this;
-        }
-
-        public Criteria andStatusGreaterThan(Byte value) {
-            addCriterion("status >", value, "status");
-            return (Criteria) this;
-        }
-
-        public Criteria andStatusGreaterThanOrEqualTo(Byte value) {
-            addCriterion("status >=", value, "status");
-            return (Criteria) this;
-        }
-
-        public Criteria andStatusLessThan(Byte value) {
-            addCriterion("status <", value, "status");
-            return (Criteria) this;
-        }
-
-        public Criteria andStatusLessThanOrEqualTo(Byte value) {
-            addCriterion("status <=", value, "status");
-            return (Criteria) this;
-        }
-
-        public Criteria andStatusIn(List<Byte> values) {
-            addCriterion("status in", values, "status");
-            return (Criteria) this;
-        }
-
-        public Criteria andStatusNotIn(List<Byte> values) {
-            addCriterion("status not in", values, "status");
-            return (Criteria) this;
-        }
-
-        public Criteria andStatusBetween(Byte value1, Byte value2) {
-            addCriterion("status between", value1, value2, "status");
-            return (Criteria) this;
-        }
-
-        public Criteria andStatusNotBetween(Byte value1, Byte value2) {
-            addCriterion("status not between", value1, value2, "status");
             return (Criteria) this;
         }
 

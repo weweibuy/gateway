@@ -5,7 +5,9 @@ import java.util.Date;
 public class PredicateArgs {
     private Long id;
 
-    private Long predicateId;
+    private String predicateId;
+
+    private String predicateArgId;
 
     private String argsName;
 
@@ -17,7 +19,7 @@ public class PredicateArgs {
 
     private String argsDesc;
 
-    private Byte status;
+    private Boolean isUse;
 
     private Date createTime;
 
@@ -31,12 +33,20 @@ public class PredicateArgs {
         this.id = id;
     }
 
-    public Long getPredicateId() {
+    public String getPredicateId() {
         return predicateId;
     }
 
-    public void setPredicateId(Long predicateId) {
-        this.predicateId = predicateId;
+    public void setPredicateId(String predicateId) {
+        this.predicateId = predicateId == null ? null : predicateId.trim();
+    }
+
+    public String getPredicateArgId() {
+        return predicateArgId;
+    }
+
+    public void setPredicateArgId(String predicateArgId) {
+        this.predicateArgId = predicateArgId == null ? null : predicateArgId.trim();
     }
 
     public String getArgsName() {
@@ -79,12 +89,12 @@ public class PredicateArgs {
         this.argsDesc = argsDesc == null ? null : argsDesc.trim();
     }
 
-    public Byte getStatus() {
-        return status;
+    public Boolean getIsUse() {
+        return isUse;
     }
 
-    public void setStatus(Byte status) {
-        this.status = status;
+    public void setIsUse(Boolean isUse) {
+        this.isUse = isUse;
     }
 
     public Date getCreateTime() {

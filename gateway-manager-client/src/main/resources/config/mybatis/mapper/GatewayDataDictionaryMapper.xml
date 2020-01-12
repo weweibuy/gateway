@@ -6,9 +6,9 @@
     <result column="parent_id" jdbcType="BIGINT" property="parentId" />
     <result column="dict_type" jdbcType="VARCHAR" property="dictType" />
     <result column="dict_name" jdbcType="VARCHAR" property="dictName" />
-    <result column="dict_values" jdbcType="VARCHAR" property="dictValues" />
+    <result column="dict_value" jdbcType="VARCHAR" property="dictValue" />
     <result column="dict_desc" jdbcType="VARCHAR" property="dictDesc" />
-    <result column="status" jdbcType="TINYINT" property="status" />
+    <result column="is_delete" jdbcType="BIT" property="isDelete" />
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
     <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
   </resultMap>
@@ -71,7 +71,7 @@
     </where>
   </sql>
   <sql id="Base_Column_List">
-    id, parent_id, dict_type, dict_name, dict_values, dict_desc, status, create_time, 
+    id, parent_id, dict_type, dict_name, dict_value, dict_desc, is_delete, create_time, 
     update_time
   </sql>
   <select id="selectByExample" parameterType="com.weweibuy.gateway.manager.client.model.po.GatewayDataDictionaryExample" resultMap="BaseResultMap">
@@ -106,12 +106,12 @@
   </delete>
   <insert id="insert" parameterType="com.weweibuy.gateway.manager.client.model.po.GatewayDataDictionary">
     insert into gateway_data_dictionary (id, parent_id, dict_type, 
-      dict_name, dict_values, dict_desc, 
-      status, create_time, update_time
+      dict_name, dict_value, dict_desc, 
+      is_delete, create_time, update_time
       )
     values (#{id,jdbcType=BIGINT}, #{parentId,jdbcType=BIGINT}, #{dictType,jdbcType=VARCHAR}, 
-      #{dictName,jdbcType=VARCHAR}, #{dictValues,jdbcType=VARCHAR}, #{dictDesc,jdbcType=VARCHAR}, 
-      #{status,jdbcType=TINYINT}, #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}
+      #{dictName,jdbcType=VARCHAR}, #{dictValue,jdbcType=VARCHAR}, #{dictDesc,jdbcType=VARCHAR}, 
+      #{isDelete,jdbcType=BIT}, #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}
       )
   </insert>
   <insert id="insertSelective" parameterType="com.weweibuy.gateway.manager.client.model.po.GatewayDataDictionary">
@@ -129,14 +129,14 @@
       <if test="dictName != null">
         dict_name,
       </if>
-      <if test="dictValues != null">
-        dict_values,
+      <if test="dictValue != null">
+        dict_value,
       </if>
       <if test="dictDesc != null">
         dict_desc,
       </if>
-      <if test="status != null">
-        status,
+      <if test="isDelete != null">
+        is_delete,
       </if>
       <if test="createTime != null">
         create_time,
@@ -158,14 +158,14 @@
       <if test="dictName != null">
         #{dictName,jdbcType=VARCHAR},
       </if>
-      <if test="dictValues != null">
-        #{dictValues,jdbcType=VARCHAR},
+      <if test="dictValue != null">
+        #{dictValue,jdbcType=VARCHAR},
       </if>
       <if test="dictDesc != null">
         #{dictDesc,jdbcType=VARCHAR},
       </if>
-      <if test="status != null">
-        #{status,jdbcType=TINYINT},
+      <if test="isDelete != null">
+        #{isDelete,jdbcType=BIT},
       </if>
       <if test="createTime != null">
         #{createTime,jdbcType=TIMESTAMP},
@@ -196,14 +196,14 @@
       <if test="record.dictName != null">
         dict_name = #{record.dictName,jdbcType=VARCHAR},
       </if>
-      <if test="record.dictValues != null">
-        dict_values = #{record.dictValues,jdbcType=VARCHAR},
+      <if test="record.dictValue != null">
+        dict_value = #{record.dictValue,jdbcType=VARCHAR},
       </if>
       <if test="record.dictDesc != null">
         dict_desc = #{record.dictDesc,jdbcType=VARCHAR},
       </if>
-      <if test="record.status != null">
-        status = #{record.status,jdbcType=TINYINT},
+      <if test="record.isDelete != null">
+        is_delete = #{record.isDelete,jdbcType=BIT},
       </if>
       <if test="record.createTime != null">
         create_time = #{record.createTime,jdbcType=TIMESTAMP},
@@ -222,9 +222,9 @@
       parent_id = #{record.parentId,jdbcType=BIGINT},
       dict_type = #{record.dictType,jdbcType=VARCHAR},
       dict_name = #{record.dictName,jdbcType=VARCHAR},
-      dict_values = #{record.dictValues,jdbcType=VARCHAR},
+      dict_value = #{record.dictValue,jdbcType=VARCHAR},
       dict_desc = #{record.dictDesc,jdbcType=VARCHAR},
-      status = #{record.status,jdbcType=TINYINT},
+      is_delete = #{record.isDelete,jdbcType=BIT},
       create_time = #{record.createTime,jdbcType=TIMESTAMP},
       update_time = #{record.updateTime,jdbcType=TIMESTAMP}
     <if test="_parameter != null">
@@ -243,14 +243,14 @@
       <if test="dictName != null">
         dict_name = #{dictName,jdbcType=VARCHAR},
       </if>
-      <if test="dictValues != null">
-        dict_values = #{dictValues,jdbcType=VARCHAR},
+      <if test="dictValue != null">
+        dict_value = #{dictValue,jdbcType=VARCHAR},
       </if>
       <if test="dictDesc != null">
         dict_desc = #{dictDesc,jdbcType=VARCHAR},
       </if>
-      <if test="status != null">
-        status = #{status,jdbcType=TINYINT},
+      <if test="isDelete != null">
+        is_delete = #{isDelete,jdbcType=BIT},
       </if>
       <if test="createTime != null">
         create_time = #{createTime,jdbcType=TIMESTAMP},
@@ -266,9 +266,9 @@
     set parent_id = #{parentId,jdbcType=BIGINT},
       dict_type = #{dictType,jdbcType=VARCHAR},
       dict_name = #{dictName,jdbcType=VARCHAR},
-      dict_values = #{dictValues,jdbcType=VARCHAR},
+      dict_value = #{dictValue,jdbcType=VARCHAR},
       dict_desc = #{dictDesc,jdbcType=VARCHAR},
-      status = #{status,jdbcType=TINYINT},
+      is_delete = #{isDelete,jdbcType=BIT},
       create_time = #{createTime,jdbcType=TIMESTAMP},
       update_time = #{updateTime,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=BIGINT}

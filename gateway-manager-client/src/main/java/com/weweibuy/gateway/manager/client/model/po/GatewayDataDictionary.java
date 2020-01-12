@@ -11,11 +11,11 @@ public class GatewayDataDictionary {
 
     private String dictName;
 
-    private String dictValues;
+    private String dictValue;
 
     private String dictDesc;
 
-    private Byte status;
+    private Boolean isDelete;
 
     private Date createTime;
 
@@ -53,12 +53,12 @@ public class GatewayDataDictionary {
         this.dictName = dictName == null ? null : dictName.trim();
     }
 
-    public String getDictValues() {
-        return dictValues;
+    public String getDictValue() {
+        return dictValue;
     }
 
-    public void setDictValues(String dictValues) {
-        this.dictValues = dictValues == null ? null : dictValues.trim();
+    public void setDictValue(String dictValue) {
+        this.dictValue = dictValue == null ? null : dictValue.trim();
     }
 
     public String getDictDesc() {
@@ -69,12 +69,12 @@ public class GatewayDataDictionary {
         this.dictDesc = dictDesc == null ? null : dictDesc.trim();
     }
 
-    public Byte getStatus() {
-        return status;
+    public Boolean getIsDelete() {
+        return isDelete;
     }
 
-    public void setStatus(Byte status) {
-        this.status = status;
+    public void setIsDelete(Boolean isDelete) {
+        this.isDelete = isDelete;
     }
 
     public Date getCreateTime() {

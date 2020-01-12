@@ -5,7 +5,6 @@ import lombok.Builder;
 import lombok.Data;
 import org.springframework.beans.BeanUtils;
 
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -28,15 +27,11 @@ public class RouterVo {
 
     private Integer priority;
 
-    private Byte status;
+    private Boolean isUse;
 
     private List<PredicateVo> predicates;
 
     private List<FilterVo> filters;
-
-    private Date createTime;
-
-    private Date updateTime;
 
     public static RouterVo convert(GatewayRouter router, List<PredicateVo> predicates,
                                    List<FilterVo> filters){

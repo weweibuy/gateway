@@ -14,7 +14,7 @@ public interface PredicateArgsService {
 
     PredicateArgs getPredicateArgsById(Long id);
 
-    List<PredicateArgs> getPredicateArgsByPredicateId(Long predicateId);
+    List<PredicateArgs> getPredicateArgsByPredicateId(String predicateId);
 
     void addPredicateArgs(PredicateArgsAddVo predicateArgsAddVo);
 
@@ -22,5 +22,5 @@ public interface PredicateArgsService {
 
     void deletePredicateArgsById(Long id);
 
-    void deletePredicateArgsByPredicateId(Long predicateId);
+    void deletePredicateArgsByPredicateId(String predicateId);
 }

@@ -5,7 +5,9 @@ import java.util.Date;
 public class FilterArgs {
     private Long id;
 
-    private Long filterId;
+    private String filterId;
+
+    private String filterArgsId;
 
     private String argsName;
 
@@ -16,8 +18,6 @@ public class FilterArgs {
     private String dictType;
 
     private String argsDesc;
-
-    private Byte status;
 
     private Date createTime;
 
@@ -31,12 +31,20 @@ public class FilterArgs {
         this.id = id;
     }
 
-    public Long getFilterId() {
+    public String getFilterId() {
         return filterId;
     }
 
-    public void setFilterId(Long filterId) {
-        this.filterId = filterId;
+    public void setFilterId(String filterId) {
+        this.filterId = filterId == null ? null : filterId.trim();
+    }
+
+    public String getFilterArgsId() {
+        return filterArgsId;
+    }
+
+    public void setFilterArgsId(String filterArgsId) {
+        this.filterArgsId = filterArgsId == null ? null : filterArgsId.trim();
     }
 
     public String getArgsName() {
@@ -77,14 +85,6 @@ public class FilterArgs {
 
     public void setArgsDesc(String argsDesc) {
         this.argsDesc = argsDesc == null ? null : argsDesc.trim();
-    }
-
-    public Byte getStatus() {
-        return status;
-    }
-
-    public void setStatus(Byte status) {
-        this.status = status;
     }
 
     public Date getCreateTime() {

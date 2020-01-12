@@ -75,7 +75,6 @@
             <artifactId>mysql-connector-java</artifactId>
         </dependency>
 
-
         <!--logstash日志收集-->
         <dependency>
             <groupId>net.logstash.logback</groupId>

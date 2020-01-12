@@ -175,53 +175,133 @@ public class PredicateArgsExample {
             return (Criteria) this;
         }
 
-        public Criteria andPredicateIdEqualTo(Long value) {
+        public Criteria andPredicateIdEqualTo(String value) {
             addCriterion("predicate_id =", value, "predicateId");
             return (Criteria) this;
         }
 
-        public Criteria andPredicateIdNotEqualTo(Long value) {
+        public Criteria andPredicateIdNotEqualTo(String value) {
             addCriterion("predicate_id <>", value, "predicateId");
             return (Criteria) this;
         }
 
-        public Criteria andPredicateIdGreaterThan(Long value) {
+        public Criteria andPredicateIdGreaterThan(String value) {
             addCriterion("predicate_id >", value, "predicateId");
             return (Criteria) this;
         }
 
-        public Criteria andPredicateIdGreaterThanOrEqualTo(Long value) {
+        public Criteria andPredicateIdGreaterThanOrEqualTo(String value) {
             addCriterion("predicate_id >=", value, "predicateId");
             return (Criteria) this;
         }
 
-        public Criteria andPredicateIdLessThan(Long value) {
+        public Criteria andPredicateIdLessThan(String value) {
             addCriterion("predicate_id <", value, "predicateId");
             return (Criteria) this;
         }
 
-        public Criteria andPredicateIdLessThanOrEqualTo(Long value) {
+        public Criteria andPredicateIdLessThanOrEqualTo(String value) {
             addCriterion("predicate_id <=", value, "predicateId");
             return (Criteria) this;
         }
 
-        public Criteria andPredicateIdIn(List<Long> values) {
+        public Criteria andPredicateIdLike(String value) {
+            addCriterion("predicate_id like", value, "predicateId");
+            return (Criteria) this;
+        }
+
+        public Criteria andPredicateIdNotLike(String value) {
+            addCriterion("predicate_id not like", value, "predicateId");
+            return (Criteria) this;
+        }
+
+        public Criteria andPredicateIdIn(List<String> values) {
             addCriterion("predicate_id in", values, "predicateId");
             return (Criteria) this;
         }
 
-        public Criteria andPredicateIdNotIn(List<Long> values) {
+        public Criteria andPredicateIdNotIn(List<String> values) {
             addCriterion("predicate_id not in", values, "predicateId");
             return (Criteria) this;
         }
 
-        public Criteria andPredicateIdBetween(Long value1, Long value2) {
+        public Criteria andPredicateIdBetween(String value1, String value2) {
             addCriterion("predicate_id between", value1, value2, "predicateId");
             return (Criteria) this;
         }
 
-        public Criteria andPredicateIdNotBetween(Long value1, Long value2) {
+        public Criteria andPredicateIdNotBetween(String value1, String value2) {
             addCriterion("predicate_id not between", value1, value2, "predicateId");
+            return (Criteria) this;
+        }
+
+        public Criteria andPredicateArgIdIsNull() {
+            addCriterion("predicate_arg_id is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andPredicateArgIdIsNotNull() {
+            addCriterion("predicate_arg_id is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andPredicateArgIdEqualTo(String value) {
+            addCriterion("predicate_arg_id =", value, "predicateArgId");
+            return (Criteria) this;
+        }
+
+        public Criteria andPredicateArgIdNotEqualTo(String value) {
+            addCriterion("predicate_arg_id <>", value, "predicateArgId");
+            return (Criteria) this;
+        }
+
+        public Criteria andPredicateArgIdGreaterThan(String value) {
+            addCriterion("predicate_arg_id >", value, "predicateArgId");
+            return (Criteria) this;
+        }
+
+        public Criteria andPredicateArgIdGreaterThanOrEqualTo(String value) {
+            addCriterion("predicate_arg_id >=", value, "predicateArgId");
+            return (Criteria) this;
+        }
+
+        public Criteria andPredicateArgIdLessThan(String value) {
+            addCriterion("predicate_arg_id <", value, "predicateArgId");
+            return (Criteria) this;
+        }
+
+        public Criteria andPredicateArgIdLessThanOrEqualTo(String value) {
+            addCriterion("predicate_arg_id <=", value, "predicateArgId");
+            return (Criteria) this;
+        }
+
+        public Criteria andPredicateArgIdLike(String value) {
+            addCriterion("predicate_arg_id like", value, "predicateArgId");
+            return (Criteria) this;
+        }
+
+        public Criteria andPredicateArgIdNotLike(String value) {
+            addCriterion("predicate_arg_id not like", value, "predicateArgId");
+            return (Criteria) this;
+        }
+
+        public Criteria andPredicateArgIdIn(List<String> values) {
+            addCriterion("predicate_arg_id in", values, "predicateArgId");
+            return (Criteria) this;
+        }
+
+        public Criteria andPredicateArgIdNotIn(List<String> values) {
+            addCriterion("predicate_arg_id not in", values, "predicateArgId");
+            return (Criteria) this;
+        }
+
+        public Criteria andPredicateArgIdBetween(String value1, String value2) {
+            addCriterion("predicate_arg_id between", value1, value2, "predicateArgId");
+            return (Criteria) this;
+        }
+
+        public Criteria andPredicateArgIdNotBetween(String value1, String value2) {
+            addCriterion("predicate_arg_id not between", value1, value2, "predicateArgId");
             return (Criteria) this;
         }
 
@@ -565,63 +645,63 @@ public class PredicateArgsExample {
             return (Criteria) this;
         }
 
-        public Criteria andStatusIsNull() {
-            addCriterion("status is null");
+        public Criteria andIsUseIsNull() {
+            addCriterion("is_use is null");
             return (Criteria) this;
         }
 
-        public Criteria andStatusIsNotNull() {
-            addCriterion("status is not null");
+        public Criteria andIsUseIsNotNull() {
+            addCriterion("is_use is not null");
             return (Criteria) this;
         }
 
-        public Criteria andStatusEqualTo(Byte value) {
-            addCriterion("status =", value, "status");
+        public Criteria andIsUseEqualTo(Boolean value) {
+            addCriterion("is_use =", value, "isUse");
             return (Criteria) this;
         }
 
-        public Criteria andStatusNotEqualTo(Byte value) {
-            addCriterion("status <>", value, "status");
+        public Criteria andIsUseNotEqualTo(Boolean value) {
+            addCriterion("is_use <>", value, "isUse");
             return (Criteria) this;
         }
 
-        public Criteria andStatusGreaterThan(Byte value) {
-            addCriterion("status >", value, "status");
+        public Criteria andIsUseGreaterThan(Boolean value) {
+            addCriterion("is_use >", value, "isUse");
             return (Criteria) this;
         }
 
-        public Criteria andStatusGreaterThanOrEqualTo(Byte value) {
-            addCriterion("status >=", value, "status");
+        public Criteria andIsUseGreaterThanOrEqualTo(Boolean value) {
+            addCriterion("is_use >=", value, "isUse");
             return (Criteria) this;
         }
 
-        public Criteria andStatusLessThan(Byte value) {
-            addCriterion("status <", value, "status");
+        public Criteria andIsUseLessThan(Boolean value) {
+            addCriterion("is_use <", value, "isUse");
             return (Criteria) this;
         }
 
-        public Criteria andStatusLessThanOrEqualTo(Byte value) {
-            addCriterion("status <=", value, "status");
+        public Criteria andIsUseLessThanOrEqualTo(Boolean value) {
+            addCriterion("is_use <=", value, "isUse");
             return (Criteria) this;
         }
 
-        public Criteria andStatusIn(List<Byte> values) {
-            addCriterion("status in", values, "status");
+        public Criteria andIsUseIn(List<Boolean> values) {
+            addCriterion("is_use in", values, "isUse");
             return (Criteria) this;
         }
 
-        public Criteria andStatusNotIn(List<Byte> values) {
-            addCriterion("status not in", values, "status");
+        public Criteria andIsUseNotIn(List<Boolean> values) {
+            addCriterion("is_use not in", values, "isUse");
             return (Criteria) this;
         }
 
-        public Criteria andStatusBetween(Byte value1, Byte value2) {
-            addCriterion("status between", value1, value2, "status");
+        public Criteria andIsUseBetween(Boolean value1, Boolean value2) {
+            addCriterion("is_use between", value1, value2, "isUse");
             return (Criteria) this;
         }
 
-        public Criteria andStatusNotBetween(Byte value1, Byte value2) {
-            addCriterion("status not between", value1, value2, "status");
+        public Criteria andIsUseNotBetween(Boolean value1, Boolean value2) {
+            addCriterion("is_use not between", value1, value2, "isUse");
             return (Criteria) this;
         }
 

@@ -19,11 +19,11 @@ public class PredicateVo {
 
     private String routerId;
 
+    private String predicateId;
+
     private String predicateName;
 
-    private Long dictId;
-
-    private String predicateDesc;
+    private Boolean isUse;
 
     private Map<String, String> predicateArgs;
 

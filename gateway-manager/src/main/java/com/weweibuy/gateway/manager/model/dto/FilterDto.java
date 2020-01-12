@@ -1,8 +1,9 @@
 package com.weweibuy.gateway.manager.model.dto;
 
 import com.weweibuy.gateway.manager.model.po.RouterFilter;
-import lombok.*;
-import org.springframework.beans.BeanUtils;
+import lombok.Builder;
+import lombok.Data;
+import org.springframework.cglib.beans.BeanCopier;
 
 import java.util.List;
 
@@ -13,6 +14,8 @@ import java.util.List;
 @Data
 @Builder
 public class FilterDto {
+
+    private static final BeanCopier COPIER = BeanCopier.create(RouterFilter.class, FilterDto.class, false);
 
     private Long id;
 
@@ -32,7 +35,7 @@ public class FilterDto {
         FilterDto filterDto = FilterDto.builder()
                 .filterArgs(args)
                 .build();
-        BeanUtils.copyProperties(routerFilter, filterDto);
+        COPIER.copy(routerFilter, filterDto, null);
         return filterDto;
     }
 }
