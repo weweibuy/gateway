@@ -154,14 +154,6 @@
         </filter>
     </appender>
 
-    <appender name="LOGSTASH" class="net.logstash.logback.appender.LogstashTcpSocketAppender">
-        <destination>106.12.95.245:4560</destination>
-        <encoder charset="UTF-8" class="net.logstash.logback.encoder.LogstashEncoder" >
-            <!--如果配置了：<property name="appName" value="${app_name}" />  下面不用配 -->
-            <!--<customFields>{"appname":"${appName}"}</customFields>-->
-            <customFields>{"instance_id":"${instance_id}"}</customFields>
-        </encoder>
-    </appender>
 
     <!--
         <logger>用来设置某一个包或者具体的某一个类的日志打印级别、
@@ -199,7 +191,6 @@
             <appender-ref ref="INFO_FILE" />
             <appender-ref ref="WARN_FILE" />
             <appender-ref ref="ERROR_FILE" />
-            <appender-ref ref="LOGSTASH" />
         </root>
     </springProfile>
 
@@ -212,7 +203,6 @@
             <appender-ref ref="INFO_FILE" />
             <appender-ref ref="ERROR_FILE" />
             <appender-ref ref="WARN_FILE" />
-            <appender-ref ref="LOGSTASH" />
         </root>
     </springProfile>
 
