@@ -15,15 +15,15 @@ import java.util.List;
 @Builder
 public class RouterVo {
 
-    private String routerId;
+    private String routeId;
 
     private String systemId;
 
     private String systemName;
 
-    private String uri;
+    private String routeUri;
 
-    private Integer priority;
+    private Integer routePriority;
 
     private List<PredicateVo> predicates;
 

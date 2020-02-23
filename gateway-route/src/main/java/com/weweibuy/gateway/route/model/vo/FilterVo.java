@@ -13,13 +13,13 @@ import java.util.Map;
 @Data
 public class FilterVo {
 
-    private String routerId;
+    private String routeId;
 
     private String filterId;
 
     private String filterName;
 
-    private Integer priority;
+    private Integer filterPriority;
 
     private Map<String, String> filterArgs;
 

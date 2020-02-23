@@ -7,6 +7,16 @@ spring:
   application:
     name: gateway-server
 
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    type: com.zaxxer.hikari.HikariDataSource
+    url: jdbc:mysql://106.12.208.53:3306/webuy_gateway?useUnicode=true&characterEncoding=UTF-8&allowMutiQueries=true
+    username: user01
+    password: ak402507979
+    hikari:
+      idle-timeout: 30000
+
+
 logging:
   config: classpath:config/logback/logback-spring.xml
 

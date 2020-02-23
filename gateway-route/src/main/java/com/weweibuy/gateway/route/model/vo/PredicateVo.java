@@ -15,13 +15,13 @@ import java.util.Map;
 @Builder
 public class PredicateVo {
 
-    private String routerId;
+    private String routeId;
 
     private String predicateId;
 
     private String predicateName;
 
-    private Map<String, String> predicateArgs;
+    private Integer predicatePriority;
 
     public static PredicateVo convert(RoutePredicate predicate, Map<String, String> predicateArgs){
         PredicateVo predicateDto = PredicateVo.builder()
@@ -30,5 +30,7 @@ public class PredicateVo {
         BeanUtils.copyProperties(predicate, predicateDto);
         return predicateDto;
     }
+
+    private Map<String, String> predicateArgs;
 
 }

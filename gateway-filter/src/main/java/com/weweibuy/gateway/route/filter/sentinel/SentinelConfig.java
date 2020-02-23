@@ -19,7 +19,6 @@ import com.ctrip.framework.apollo.core.spi.Ordered;
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.cloud.gateway.filter.GlobalFilter;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
 import org.springframework.http.codec.ServerCodecConfigurer;
 import org.springframework.web.reactive.result.view.ViewResolver;
@@ -34,7 +33,7 @@ import java.util.Set;
  * @author durenhao
  * @date 2019/7/19 22:43
  **/
-@Configuration
+//@Configuration
 public class SentinelConfig {
 
     private final List<ViewResolver> viewResolvers;

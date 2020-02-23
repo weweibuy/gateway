@@ -6,6 +6,7 @@
     <result column="route_id" jdbcType="VARCHAR" property="routeId" />
     <result column="predicate_id" jdbcType="VARCHAR" property="predicateId" />
     <result column="predicate_name" jdbcType="VARCHAR" property="predicateName" />
+    <result column="predicate_priority" jdbcType="INTEGER" property="predicatePriority" />
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
     <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
   </resultMap>
@@ -68,7 +69,7 @@
     </where>
   </sql>
   <sql id="Base_Column_List">
-    id, route_id, predicate_id, predicate_name, create_time, update_time
+    id, route_id, predicate_id, predicate_name, predicate_priority, create_time, update_time
   </sql>
   <select id="selectByExample" parameterType="com.weweibuy.gateway.route.model.po.RoutePredicateExample" resultMap="BaseResultMap">
     select
@@ -102,11 +103,11 @@
   </delete>
   <insert id="insert" parameterType="com.weweibuy.gateway.route.model.po.RoutePredicate">
     insert into route_predicate (id, route_id, predicate_id, 
-      predicate_name, create_time, update_time
-      )
+      predicate_name, predicate_priority, create_time, 
+      update_time)
     values (#{id,jdbcType=BIGINT}, #{routeId,jdbcType=VARCHAR}, #{predicateId,jdbcType=VARCHAR}, 
-      #{predicateName,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}
-      )
+      #{predicateName,jdbcType=VARCHAR}, #{predicatePriority,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP}, 
+      #{updateTime,jdbcType=TIMESTAMP})
   </insert>
   <insert id="insertSelective" parameterType="com.weweibuy.gateway.route.model.po.RoutePredicate">
     insert into route_predicate
@@ -122,6 +123,9 @@
       </if>
       <if test="predicateName != null">
         predicate_name,
+      </if>
+      <if test="predicatePriority != null">
+        predicate_priority,
       </if>
       <if test="createTime != null">
         create_time,
@@ -142,6 +146,9 @@
       </if>
       <if test="predicateName != null">
         #{predicateName,jdbcType=VARCHAR},
+      </if>
+      <if test="predicatePriority != null">
+        #{predicatePriority,jdbcType=INTEGER},
       </if>
       <if test="createTime != null">
         #{createTime,jdbcType=TIMESTAMP},
@@ -172,6 +179,9 @@
       <if test="record.predicateName != null">
         predicate_name = #{record.predicateName,jdbcType=VARCHAR},
       </if>
+      <if test="record.predicatePriority != null">
+        predicate_priority = #{record.predicatePriority,jdbcType=INTEGER},
+      </if>
       <if test="record.createTime != null">
         create_time = #{record.createTime,jdbcType=TIMESTAMP},
       </if>
@@ -189,6 +199,7 @@
       route_id = #{record.routeId,jdbcType=VARCHAR},
       predicate_id = #{record.predicateId,jdbcType=VARCHAR},
       predicate_name = #{record.predicateName,jdbcType=VARCHAR},
+      predicate_priority = #{record.predicatePriority,jdbcType=INTEGER},
       create_time = #{record.createTime,jdbcType=TIMESTAMP},
       update_time = #{record.updateTime,jdbcType=TIMESTAMP}
     <if test="_parameter != null">
@@ -207,6 +218,9 @@
       <if test="predicateName != null">
         predicate_name = #{predicateName,jdbcType=VARCHAR},
       </if>
+      <if test="predicatePriority != null">
+        predicate_priority = #{predicatePriority,jdbcType=INTEGER},
+      </if>
       <if test="createTime != null">
         create_time = #{createTime,jdbcType=TIMESTAMP},
       </if>
@@ -221,6 +235,7 @@
     set route_id = #{routeId,jdbcType=VARCHAR},
       predicate_id = #{predicateId,jdbcType=VARCHAR},
       predicate_name = #{predicateName,jdbcType=VARCHAR},
+      predicate_priority = #{predicatePriority,jdbcType=INTEGER},
       create_time = #{createTime,jdbcType=TIMESTAMP},
       update_time = #{updateTime,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=BIGINT}

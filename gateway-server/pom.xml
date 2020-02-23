@@ -15,7 +15,13 @@
 
         <dependency>
             <groupId>com.weweibuy</groupId>
-            <artifactId>gateway-core</artifactId>
+            <artifactId>gateway-route</artifactId>
+        </dependency>
+
+
+        <dependency>
+            <groupId>com.weweibuy</groupId>
+            <artifactId>gateway-filter</artifactId>
         </dependency>
 
 

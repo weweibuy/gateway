@@ -375,6 +375,66 @@ public class RoutePredicateExample {
             return (Criteria) this;
         }
 
+        public Criteria andPredicatePriorityIsNull() {
+            addCriterion("predicate_priority is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andPredicatePriorityIsNotNull() {
+            addCriterion("predicate_priority is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andPredicatePriorityEqualTo(Integer value) {
+            addCriterion("predicate_priority =", value, "predicatePriority");
+            return (Criteria) this;
+        }
+
+        public Criteria andPredicatePriorityNotEqualTo(Integer value) {
+            addCriterion("predicate_priority <>", value, "predicatePriority");
+            return (Criteria) this;
+        }
+
+        public Criteria andPredicatePriorityGreaterThan(Integer value) {
+            addCriterion("predicate_priority >", value, "predicatePriority");
+            return (Criteria) this;
+        }
+
+        public Criteria andPredicatePriorityGreaterThanOrEqualTo(Integer value) {
+            addCriterion("predicate_priority >=", value, "predicatePriority");
+            return (Criteria) this;
+        }
+
+        public Criteria andPredicatePriorityLessThan(Integer value) {
+            addCriterion("predicate_priority <", value, "predicatePriority");
+            return (Criteria) this;
+        }
+
+        public Criteria andPredicatePriorityLessThanOrEqualTo(Integer value) {
+            addCriterion("predicate_priority <=", value, "predicatePriority");
+            return (Criteria) this;
+        }
+
+        public Criteria andPredicatePriorityIn(List<Integer> values) {
+            addCriterion("predicate_priority in", values, "predicatePriority");
+            return (Criteria) this;
+        }
+
+        public Criteria andPredicatePriorityNotIn(List<Integer> values) {
+            addCriterion("predicate_priority not in", values, "predicatePriority");
+            return (Criteria) this;
+        }
+
+        public Criteria andPredicatePriorityBetween(Integer value1, Integer value2) {
+            addCriterion("predicate_priority between", value1, value2, "predicatePriority");
+            return (Criteria) this;
+        }
+
+        public Criteria andPredicatePriorityNotBetween(Integer value1, Integer value2) {
+            addCriterion("predicate_priority not between", value1, value2, "predicatePriority");
+            return (Criteria) this;
+        }
+
         public Criteria andCreateTimeIsNull() {
             addCriterion("create_time is null");
             return (Criteria) this;

@@ -7,7 +7,6 @@ import com.weweibuy.gateway.route.model.vo.PredicateVo;
 import com.weweibuy.gateway.route.model.vo.RouterVo;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 
 import java.util.List;
 import java.util.Map;
@@ -18,7 +17,6 @@ import java.util.stream.Collectors;
  * @date 2019/5/20 22:41
  **/
 @Slf4j
-@Component
 public class JdbcRouterManger {
 
     @Autowired

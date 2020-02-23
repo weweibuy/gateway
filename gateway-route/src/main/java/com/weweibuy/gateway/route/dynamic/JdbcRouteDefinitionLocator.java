@@ -27,7 +27,6 @@ import java.util.stream.Collectors;
  * @date 2019/5/20 22:28
  **/
 @Slf4j
-@Component
 public class JdbcRouteDefinitionLocator implements RouteDefinitionLocator, ApplicationListener<CustomRefreshRoutesEvent> {
 
     @Autowired
@@ -51,11 +50,12 @@ public class JdbcRouteDefinitionLocator implements RouteDefinitionLocator, Appli
     private Flux<RouteDefinition> loadFormDB() {
         return Flux.fromStream(jdbcRouterManger.getAllRouter().stream()
                 .map(routerVo -> {
-                    String routerId = routerVo.getRouterId();
+                    String routerId = routerVo.getRouteId();
                     RouteDefinition routeDefinition = new RouteDefinition();
                     List<PredicateVo> predicates = routerVo.getPredicates();
                     // 断言
                     List<PredicateDefinition> predicateDefinitions = predicates.stream()
+                            .sorted(Comparator.comparing(PredicateVo::getPredicatePriority))
                             .map(predicate -> {
                                 PredicateDefinition predicateDefinition = new PredicateDefinition();
                                 predicateDefinition.setName(predicate.getPredicateName());
@@ -69,7 +69,7 @@ public class JdbcRouteDefinitionLocator implements RouteDefinitionLocator, Appli
                     // 过滤器
                     List<FilterDefinition> filterDefinitions = filters.stream()
                             // 根据优先级排序, 排序越小越靠前
-                            .sorted(Comparator.comparing(FilterVo::getPriority))
+                            .sorted(Comparator.comparing(FilterVo::getFilterPriority))
                             .map(filter -> {
                                 FilterDefinition filterDefinition = new FilterDefinition();
                                 filterDefinition.setName(filter.getFilterName());
@@ -81,8 +81,8 @@ public class JdbcRouteDefinitionLocator implements RouteDefinitionLocator, Appli
                     routeDefinition.setPredicates(predicateDefinitions);
                     routeDefinition.setFilters(filterDefinitions);
                     routeDefinition.setId(routerId);
-                    routeDefinition.setOrder(routerVo.getPriority());
-                    routeDefinition.setUri(UriComponentsBuilder.fromUriString(routerVo.getUri()).build().toUri());
+                    routeDefinition.setOrder(routerVo.getRoutePriority());
+                    routeDefinition.setUri(UriComponentsBuilder.fromUriString(routerVo.getRouteUri()).build().toUri());
                     return routeDefinition;
                 }));
     }

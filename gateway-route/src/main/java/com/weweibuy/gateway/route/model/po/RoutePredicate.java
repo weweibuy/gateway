@@ -11,6 +11,8 @@ public class RoutePredicate {
 
     private String predicateName;
 
+    private Integer predicatePriority;
+
     private LocalDateTime createTime;
 
     private LocalDateTime updateTime;
@@ -45,6 +47,14 @@ public class RoutePredicate {
 
     public void setPredicateName(String predicateName) {
         this.predicateName = predicateName == null ? null : predicateName.trim();
+    }
+
+    public Integer getPredicatePriority() {
+        return predicatePriority;
+    }
+
+    public void setPredicatePriority(Integer predicatePriority) {
+        this.predicatePriority = predicatePriority;
     }
 
     public LocalDateTime getCreateTime() {
