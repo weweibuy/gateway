@@ -158,6 +158,9 @@
             <resource>
                 <directory>src/main/resources</directory>
                 <filtering>true</filtering>
+                <excludes>
+                    <exclude>generatorConfig.xml</exclude>
+                </excludes>
             </resource>
         </resources>
     </build>
@@ -209,30 +212,6 @@
             <properties>
                 <profile-active>test</profile-active>
             </properties>
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>org.springframework.boot</groupId>
-                        <artifactId>spring-boot-maven-plugin</artifactId>
-                        <version>2.1.4.RELEASE</version>
-                        <executions>
-                            <execution>
-                                <goals>
-                                    <goal>repackage</goal>
-                                </goals>
-                            </execution>
-                        </executions>
-                    </plugin>
-                </plugins>
-                <resources>
-                    <resource>
-                        <directory>src/main/resources</directory>
-                        <excludes>
-                            <exclude>generatorConfig.xml</exclude>
-                        </excludes>
-                    </resource>
-                </resources>
-            </build>
         </profile>
     </profiles>
 

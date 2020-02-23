@@ -13,8 +13,8 @@
 
     <dependencies>
         <dependency>
-            <groupId>org.springframework.cloud</groupId>
-            <artifactId>spring-cloud-starter-gateway</artifactId>
+            <groupId>com.weweibuy</groupId>
+            <artifactId>gateway-common</artifactId>
         </dependency>
     </dependencies>
 
