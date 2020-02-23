@@ -13,6 +13,8 @@ public class RoutePredicate {
 
     private Integer predicatePriority;
 
+    private Boolean isDelete;
+
     private LocalDateTime createTime;
 
     private LocalDateTime updateTime;
@@ -55,6 +57,14 @@ public class RoutePredicate {
 
     public void setPredicatePriority(Integer predicatePriority) {
         this.predicatePriority = predicatePriority;
+    }
+
+    public Boolean getIsDelete() {
+        return isDelete;
+    }
+
+    public void setIsDelete(Boolean isDelete) {
+        this.isDelete = isDelete;
     }
 
     public LocalDateTime getCreateTime() {

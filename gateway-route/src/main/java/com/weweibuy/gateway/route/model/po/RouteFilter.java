@@ -13,6 +13,8 @@ public class RouteFilter {
 
     private Integer filterPriority;
 
+    private Boolean isDelete;
+
     private LocalDateTime createTime;
 
     private LocalDateTime updateTime;
@@ -55,6 +57,14 @@ public class RouteFilter {
 
     public void setFilterPriority(Integer filterPriority) {
         this.filterPriority = filterPriority;
+    }
+
+    public Boolean getIsDelete() {
+        return isDelete;
+    }
+
+    public void setIsDelete(Boolean isDelete) {
+        this.isDelete = isDelete;
     }
 
     public LocalDateTime getCreateTime() {

@@ -13,6 +13,8 @@ public class RoutePredicateArgs {
 
     private String argsValue;
 
+    private Boolean isDelete;
+
     private LocalDateTime createTime;
 
     private LocalDateTime updateTime;
@@ -55,6 +57,14 @@ public class RoutePredicateArgs {
 
     public void setArgsValue(String argsValue) {
         this.argsValue = argsValue == null ? null : argsValue.trim();
+    }
+
+    public Boolean getIsDelete() {
+        return isDelete;
+    }
+
+    public void setIsDelete(Boolean isDelete) {
+        this.isDelete = isDelete;
     }
 
     public LocalDateTime getCreateTime() {

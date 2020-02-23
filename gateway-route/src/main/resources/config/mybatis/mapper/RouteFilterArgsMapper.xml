@@ -7,6 +7,7 @@
     <result column="filter_args_id" jdbcType="VARCHAR" property="filterArgsId" />
     <result column="args_name" jdbcType="VARCHAR" property="argsName" />
     <result column="args_value" jdbcType="VARCHAR" property="argsValue" />
+    <result column="is_delete" jdbcType="BIT" property="isDelete" />
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
     <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
   </resultMap>
@@ -69,7 +70,7 @@
     </where>
   </sql>
   <sql id="Base_Column_List">
-    id, filter_id, filter_args_id, args_name, args_value, create_time, update_time
+    id, filter_id, filter_args_id, args_name, args_value, is_delete, create_time, update_time
   </sql>
   <select id="selectByExample" parameterType="com.weweibuy.gateway.route.model.po.RouteFilterArgsExample" resultMap="BaseResultMap">
     select
@@ -103,11 +104,11 @@
   </delete>
   <insert id="insert" parameterType="com.weweibuy.gateway.route.model.po.RouteFilterArgs">
     insert into route_filter_args (id, filter_id, filter_args_id, 
-      args_name, args_value, create_time, 
-      update_time)
+      args_name, args_value, is_delete, 
+      create_time, update_time)
     values (#{id,jdbcType=BIGINT}, #{filterId,jdbcType=VARCHAR}, #{filterArgsId,jdbcType=VARCHAR}, 
-      #{argsName,jdbcType=VARCHAR}, #{argsValue,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
-      #{updateTime,jdbcType=TIMESTAMP})
+      #{argsName,jdbcType=VARCHAR}, #{argsValue,jdbcType=VARCHAR}, #{isDelete,jdbcType=BIT}, 
+      #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP})
   </insert>
   <insert id="insertSelective" parameterType="com.weweibuy.gateway.route.model.po.RouteFilterArgs">
     insert into route_filter_args
@@ -126,6 +127,9 @@
       </if>
       <if test="argsValue != null">
         args_value,
+      </if>
+      <if test="isDelete != null">
+        is_delete,
       </if>
       <if test="createTime != null">
         create_time,
@@ -149,6 +153,9 @@
       </if>
       <if test="argsValue != null">
         #{argsValue,jdbcType=VARCHAR},
+      </if>
+      <if test="isDelete != null">
+        #{isDelete,jdbcType=BIT},
       </if>
       <if test="createTime != null">
         #{createTime,jdbcType=TIMESTAMP},
@@ -182,6 +189,9 @@
       <if test="record.argsValue != null">
         args_value = #{record.argsValue,jdbcType=VARCHAR},
       </if>
+      <if test="record.isDelete != null">
+        is_delete = #{record.isDelete,jdbcType=BIT},
+      </if>
       <if test="record.createTime != null">
         create_time = #{record.createTime,jdbcType=TIMESTAMP},
       </if>
@@ -200,6 +210,7 @@
       filter_args_id = #{record.filterArgsId,jdbcType=VARCHAR},
       args_name = #{record.argsName,jdbcType=VARCHAR},
       args_value = #{record.argsValue,jdbcType=VARCHAR},
+      is_delete = #{record.isDelete,jdbcType=BIT},
       create_time = #{record.createTime,jdbcType=TIMESTAMP},
       update_time = #{record.updateTime,jdbcType=TIMESTAMP}
     <if test="_parameter != null">
@@ -221,6 +232,9 @@
       <if test="argsValue != null">
         args_value = #{argsValue,jdbcType=VARCHAR},
       </if>
+      <if test="isDelete != null">
+        is_delete = #{isDelete,jdbcType=BIT},
+      </if>
       <if test="createTime != null">
         create_time = #{createTime,jdbcType=TIMESTAMP},
       </if>
@@ -236,6 +250,7 @@
       filter_args_id = #{filterArgsId,jdbcType=VARCHAR},
       args_name = #{argsName,jdbcType=VARCHAR},
       args_value = #{argsValue,jdbcType=VARCHAR},
+      is_delete = #{isDelete,jdbcType=BIT},
       create_time = #{createTime,jdbcType=TIMESTAMP},
       update_time = #{updateTime,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=BIGINT}

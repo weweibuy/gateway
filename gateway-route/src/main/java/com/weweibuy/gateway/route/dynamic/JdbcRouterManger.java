@@ -47,7 +47,8 @@ public class JdbcRouterManger {
                 .map(router -> {
                     String routerId = router.getRouteId();
                     predicateExample.createCriteria()
-                            .andRouteIdEqualTo(routerId);
+                            .andRouteIdEqualTo(routerId)
+                            .andIsDeleteEqualTo(false);
 
                     // 断言
                     List<RoutePredicate> routerPredicates = predicateMapper.selectByExample(predicateExample);
@@ -58,7 +59,9 @@ public class JdbcRouterManger {
                     List<PredicateVo> predicateVoList = routerPredicates.stream()
                             .map(predicate -> {
                                 predicateArgsExample.createCriteria()
-                                        .andPredicateIdEqualTo(predicate.getPredicateId());
+                                        .andPredicateIdEqualTo(predicate.getPredicateId())
+                                        .andIsDeleteEqualTo(false);
+
                                 // 断言参数
                                 List<RoutePredicateArgs> predicateArgs = predicateArgsMapper.selectByExample(predicateArgsExample);
                                 predicateArgsExample.clear();
@@ -71,7 +74,8 @@ public class JdbcRouterManger {
 
                     RouteFilterExample routerFilterExample = new RouteFilterExample();
                     routerFilterExample.createCriteria()
-                            .andRouteIdEqualTo(routerId);
+                            .andRouteIdEqualTo(routerId)
+                            .andIsDeleteEqualTo(false);
 
                     // 过滤器
                     List<RouteFilter> routerFilters = routerFilterMapper.selectByExample(routerFilterExample);
@@ -81,7 +85,9 @@ public class JdbcRouterManger {
                     List<FilterVo> filterVoList = routerFilters.stream()
                             .map(filter -> {
                                 filterArgsExample.createCriteria()
-                                        .andFilterIdEqualTo(filter.getFilterId());
+                                        .andFilterIdEqualTo(filter.getFilterId())
+                                        .andIsDeleteEqualTo(false);
+
                                 List<RouteFilterArgs> filterArgs = filterArgsMapper.selectByExample(filterArgsExample);
                                 filterArgsExample.clear();
 

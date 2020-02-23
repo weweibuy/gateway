@@ -48,4 +48,9 @@ public interface ExchangeAttributeConstant {
      */
     String TRACE_ID_ATTR = "trace_id";
 
+    /**
+     * 当前服务的 Key
+     */
+    String SERVICE_KEY = "service_key";
+
 }
