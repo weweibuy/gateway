@@ -1,6 +1,16 @@
-app:
-  id: ${spring.application.name}
-apollo:
-  meta: http://106.12.15.87:9080
-  bootstrap:
-    namespaces: application,sentinel
+#app:
+#  id: ${spring.application.name}
+#apollo:
+#  meta: http://106.12.15.87:9080
+#  bootstrap:
+#    namespaces: application,sentinel
+
+eureka:
+  client:
+    register-with-eureka: true
+    service-url:
+      defaultZone: http://admin:ak402507979@122.51.171.126:7001/eureka
+  instance:
+    instance-id: ${spring.application.name}:${eureka.instance.ip-address}:${server.port}  #必须唯一
+    prefer-ip-address: true     #访问路径可以显示IP地址,此为内网ip,如果server和client不在同一网段使用ip-address:配置
+    ip-address: 127.0.0.1
