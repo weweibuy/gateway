@@ -10,8 +10,10 @@ public enum CommonResponseEum implements ResponseCodeAndMsg {
 
     SUCCESS("0", "成功"),
     BAD_REQUEST_PARAM("-400", "请求参数错误"),
-    SYSTEM_UNKNOWN_EXCEPTION("999999999", "网关服务未知系统异常"),
-    SERVICE_FALL_BACK("999999998", "网关服务暂时不可用"),
+    UNAUTHORIZED("-401", "认证失败"),
+    FORBIDDEN("-403", "没有权限"),
+    TOO_MANY_REQUESTS("-429", "请求限流"),
+    UNKNOWN_EXCEPTION("-500", "系统异常"),
     ;
 
     private String code;

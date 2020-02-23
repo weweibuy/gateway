@@ -29,9 +29,10 @@ public class SentinelExceptionMatchHandler implements ExceptionMatchHandler {
         if (MediaTypeUtils.acceptsHtml(exchange)) {
             return htmlErrorResponse(ex);
         }
+
         return ServerResponse.status(HttpStatus.TOO_MANY_REQUESTS)
                 .contentType(MediaType.APPLICATION_JSON_UTF8)
-                .body(fromObject(CommonCodeJsonResponse.fallback()));
+                .body(fromObject(CommonCodeJsonResponse.requestLimit()));
     }
 
     private Mono<ServerResponse> htmlErrorResponse(Throwable ex) {

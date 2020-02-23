@@ -7,7 +7,6 @@
 <configuration  scan="true" scanPeriod="10 seconds">
 
     <springProperty scope="context" name="app_name" source="spring.application.name" />
-    <springProperty scope="context" name="instance_id" source="eureka.instance.instance-id" />
 
     <contextName>logback</contextName>
 

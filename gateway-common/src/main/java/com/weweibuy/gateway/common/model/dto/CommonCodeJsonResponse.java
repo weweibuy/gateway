@@ -29,16 +29,23 @@ public class CommonCodeJsonResponse {
     }
 
     public static CommonCodeJsonResponse unknownException() {
-        return new CommonCodeJsonResponse(CommonResponseEum.SYSTEM_UNKNOWN_EXCEPTION);
+        return new CommonCodeJsonResponse(CommonResponseEum.UNKNOWN_EXCEPTION);
     }
 
-    public static CommonCodeJsonResponse fallback() {
-        return new CommonCodeJsonResponse(CommonResponseEum.SERVICE_FALL_BACK);
+    public static CommonCodeJsonResponse requestLimit() {
+        return new CommonCodeJsonResponse(CommonResponseEum.TOO_MANY_REQUESTS);
     }
-
 
     public static CommonCodeJsonResponse badRequestParam() {
         return new CommonCodeJsonResponse(CommonResponseEum.BAD_REQUEST_PARAM);
+    }
+
+    public static CommonCodeJsonResponse unauthorized() {
+        return new CommonCodeJsonResponse(CommonResponseEum.UNAUTHORIZED);
+    }
+
+    public static CommonCodeJsonResponse forbidden() {
+        return new CommonCodeJsonResponse(CommonResponseEum.FORBIDDEN);
     }
 
     public static CommonCodeJsonResponse response(String code, String msg) {
