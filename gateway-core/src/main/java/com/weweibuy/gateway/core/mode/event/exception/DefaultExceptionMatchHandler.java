@@ -3,6 +3,7 @@ package com.weweibuy.gateway.core.mode.event.exception;
 import com.weweibuy.gateway.common.exception.BusinessException;
 import com.weweibuy.gateway.common.exception.SystemException;
 import com.weweibuy.gateway.common.model.dto.CommonCodeJsonResponse;
+import com.weweibuy.gateway.core.mode.event.response.ResponseWriter;
 import com.weweibuy.gateway.core.mode.event.utils.MediaTypeUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -10,14 +11,17 @@ import org.springframework.web.reactive.function.server.ServerResponse;
 import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
 
-import static org.springframework.web.reactive.function.BodyInserters.fromObject;
-
 /**
  * @author durenhao
  * @date 2020/2/23 19:15
  **/
 public class DefaultExceptionMatchHandler implements ExceptionMatchHandler {
 
+    private ResponseWriter responseWriter;
+
+    public DefaultExceptionMatchHandler(ResponseWriter responseWriter) {
+        this.responseWriter = responseWriter;
+    }
 
     @Override
     public boolean match(ServerWebExchange exchange, Throwable ex) {
@@ -34,9 +38,8 @@ public class DefaultExceptionMatchHandler implements ExceptionMatchHandler {
 
 
     private Mono<ServerResponse> htmlErrorResponse(Throwable ex) {
-        return ServerResponse.status(HttpStatus.TOO_MANY_REQUESTS)
-                .contentType(MediaType.TEXT_PLAIN)
-                .syncBody("服务暂时不可用: " + ex.getClass().getSimpleName());
+        // TODO 字符集问题
+        return responseWriter.buildResponse(HttpStatus.TOO_MANY_REQUESTS, MediaType.TEXT_PLAIN, "服务暂时不可用: " + ex.getClass().getSimpleName());
     }
 
 
@@ -64,9 +67,7 @@ public class DefaultExceptionMatchHandler implements ExceptionMatchHandler {
     }
 
     private Mono<ServerResponse> toServerResponse(HttpStatus httpStatus, Object body) {
-        return ServerResponse.status(httpStatus)
-                .contentType(MediaType.APPLICATION_JSON_UTF8)
-                .body(fromObject(body));
+        return responseWriter.buildResponse(httpStatus, MediaType.APPLICATION_JSON_UTF8, body);
     }
 
 

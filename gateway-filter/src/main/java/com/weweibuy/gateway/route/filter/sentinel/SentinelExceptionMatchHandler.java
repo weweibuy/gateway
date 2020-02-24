@@ -3,6 +3,7 @@ package com.weweibuy.gateway.route.filter.sentinel;
 import com.alibaba.csp.sentinel.slots.block.BlockException;
 import com.weweibuy.gateway.common.model.dto.CommonCodeJsonResponse;
 import com.weweibuy.gateway.core.mode.event.exception.ExceptionMatchHandler;
+import com.weweibuy.gateway.core.mode.event.response.ResponseWriter;
 import com.weweibuy.gateway.core.mode.event.utils.MediaTypeUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -10,14 +11,17 @@ import org.springframework.web.reactive.function.server.ServerResponse;
 import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
 
-import static org.springframework.web.reactive.function.BodyInserters.fromObject;
-
 /**
  * @author durenhao
  * @date 2020/2/23 18:47
  **/
 public class SentinelExceptionMatchHandler implements ExceptionMatchHandler {
 
+    private ResponseWriter responseWriter;
+
+    public SentinelExceptionMatchHandler(ResponseWriter responseWriter) {
+        this.responseWriter = responseWriter;
+    }
 
     @Override
     public boolean match(ServerWebExchange exchange, Throwable ex) {
@@ -29,10 +33,7 @@ public class SentinelExceptionMatchHandler implements ExceptionMatchHandler {
         if (MediaTypeUtils.acceptsHtml(exchange)) {
             return htmlErrorResponse(ex);
         }
-
-        return ServerResponse.status(HttpStatus.TOO_MANY_REQUESTS)
-                .contentType(MediaType.APPLICATION_JSON_UTF8)
-                .body(fromObject(CommonCodeJsonResponse.requestLimit()));
+        return responseWriter.buildResponse(HttpStatus.TOO_MANY_REQUESTS, MediaType.APPLICATION_JSON_UTF8, CommonCodeJsonResponse.requestLimit());
     }
 
     private Mono<ServerResponse> htmlErrorResponse(Throwable ex) {

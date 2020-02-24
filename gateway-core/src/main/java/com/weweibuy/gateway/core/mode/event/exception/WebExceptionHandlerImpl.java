@@ -1,19 +1,13 @@
 package com.weweibuy.gateway.core.mode.event.exception;
 
+import com.weweibuy.gateway.core.mode.event.response.ResponseWriter;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
-import org.springframework.http.codec.HttpMessageWriter;
-import org.springframework.http.codec.ServerCodecConfigurer;
 import org.springframework.web.reactive.function.server.ServerResponse;
-import org.springframework.web.reactive.result.view.ViewResolver;
 import org.springframework.web.server.ServerWebExchange;
 import org.springframework.web.server.WebExceptionHandler;
 import reactor.core.publisher.Mono;
-
-import java.util.Collections;
-import java.util.List;
 
 /**
  * @author durenhao
@@ -23,16 +17,14 @@ import java.util.List;
 @Order(Ordered.HIGHEST_PRECEDENCE)
 public class WebExceptionHandlerImpl implements WebExceptionHandler {
 
-    private List<ViewResolver> viewResolvers;
 
-    private List<HttpMessageWriter<?>> messageWriters;
+    private ResponseWriter responseWriter;
 
     private ExceptionMatchHandlerComposite composite;
 
-    public WebExceptionHandlerImpl(ObjectProvider<List<ViewResolver>> viewResolversProvider,
-                                   ServerCodecConfigurer serverCodecConfigurer, ExceptionMatchHandlerComposite composite) {
-        this.viewResolvers = viewResolversProvider.getIfAvailable(Collections::emptyList);
-        this.messageWriters = serverCodecConfigurer.getWriters();
+    public WebExceptionHandlerImpl(ResponseWriter responseWriter,
+                                   ExceptionMatchHandlerComposite composite) {
+        this.responseWriter = responseWriter;
         this.composite = composite;
     }
 
@@ -41,14 +33,10 @@ public class WebExceptionHandlerImpl implements WebExceptionHandler {
         if (exchange.getResponse().isCommitted()) {
             return Mono.error(ex);
         }
-
-        Mono<ServerResponse> responseMono = composite.getExceptionHandler(exchange, ex).handler(exchange, ex);
-
-        return responseMono
+        return composite.getExceptionHandler(exchange, ex)
+                .handler(exchange, ex)
                 .doOnNext(response -> log(response, exchange, ex))
-                .flatMap(response -> writeResponse(response, exchange));
-
-
+                .flatMap(response -> responseWriter.write(response, exchange));
     }
 
 
@@ -56,22 +44,5 @@ public class WebExceptionHandlerImpl implements WebExceptionHandler {
         log.warn("发生异常: {}", ex);
     }
 
-    private Mono<Void> writeResponse(ServerResponse response, ServerWebExchange exchange) {
-        return response.writeTo(exchange, new ResponseContext());
-    }
-
-    private class ResponseContext implements ServerResponse.Context {
-
-        @Override
-        public List<HttpMessageWriter<?>> messageWriters() {
-            return WebExceptionHandlerImpl.this.messageWriters;
-        }
-
-        @Override
-        public List<ViewResolver> viewResolvers() {
-            return WebExceptionHandlerImpl.this.viewResolvers;
-        }
-
-    }
 
 }

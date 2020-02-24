@@ -4,10 +4,12 @@ import com.alibaba.csp.sentinel.context.Context;
 import com.alibaba.csp.sentinel.context.ContextUtil;
 import com.alibaba.fastjson.JSONObject;
 import com.weweibuy.gateway.common.model.dto.CommonCodeJsonResponse;
+import com.weweibuy.gateway.core.mode.event.response.ResponseWriter;
 import com.weweibuy.gateway.route.filter.constant.AuthenticationHeaderConstant;
 import com.weweibuy.gateway.route.filter.constant.ExchangeAttributeConstant;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.gateway.filter.GatewayFilter;
 import org.springframework.cloud.gateway.filter.factory.AbstractGatewayFilterFactory;
 import org.springframework.cloud.gateway.route.Route;
@@ -17,7 +19,6 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.server.reactive.ServerHttpResponse;
 import org.springframework.stereotype.Component;
-import reactor.core.publisher.Flux;
 
 /**
  * @author durenhao
@@ -27,6 +28,9 @@ import reactor.core.publisher.Flux;
 @Component
 public class AuthenticationGatewayFilterFactory extends AbstractGatewayFilterFactory {
 
+    @Autowired
+    private ResponseWriter responseWriter;
+
     @Override
     public GatewayFilter apply(Object config) {
         return (exchange, chain) -> {
@@ -35,10 +39,7 @@ public class AuthenticationGatewayFilterFactory extends AbstractGatewayFilterFac
             HttpHeaders headers = exchange.getRequest().getHeaders();
             String appKey = headers.getFirst(AuthenticationHeaderConstant.APP_KEY_HEADER);
             if (StringUtils.isBlank(appKey)) {
-                exchange.getResponse().setStatusCode(HttpStatus.UNAUTHORIZED);
-                exchange.getResponse().getHeaders().add("Content-Type", "application/json;charset=UTF-8");
-                return exchange.getResponse().writeWith(Flux.just(getBodyBuffer(exchange.getResponse(),
-                        CommonCodeJsonResponse.unauthorized())));
+                return responseWriter.buildAndWriteJson(HttpStatus.UNAUTHORIZED, CommonCodeJsonResponse.unauthorized(), exchange);
             }
 
             Context enter = ContextUtil.enter(route.getId(), exchange.getRequest().getRemoteAddress().getHostString());
