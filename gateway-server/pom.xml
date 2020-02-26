@@ -41,7 +41,7 @@
         <profile>
             <id>test</id>
             <properties>
-                <profile-active>test</profile-active>
+                <profileActive>test</profileActive>
             </properties>
             <build>
                 <plugins>

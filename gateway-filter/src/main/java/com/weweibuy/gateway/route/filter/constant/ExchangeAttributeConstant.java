@@ -28,15 +28,16 @@ public interface ExchangeAttributeConstant {
      */
     String REQUEST_URL_ATTR = "request_url";
 
-    /**
-     * app_id
-     */
-    String APP_ID_ATTR = "app_id";
 
     /**
      * app_key
      */
     String APP_KEY_ATTR = "app_key";
+
+    /**
+     * AppSecret
+     */
+    String APP_KEY_SECRET = "app_secret";
 
     /**
      * app_name

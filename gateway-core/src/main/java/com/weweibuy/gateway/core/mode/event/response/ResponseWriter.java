@@ -55,8 +55,8 @@ public class ResponseWriter {
      * @return
      */
     public Mono<ServerResponse> buildResponse(HttpStatus status, MediaType contentType, Object body) {
-        return ServerResponse.status(HttpStatus.TOO_MANY_REQUESTS)
-                .contentType(MediaType.APPLICATION_JSON_UTF8)
+        return ServerResponse.status(status)
+                .contentType(contentType)
                 .body(fromObject(body));
     }
 

@@ -6,3 +6,7 @@
 
 4.FilteringWebHandler.handler   ---> 进入过滤器链
 
+5. NettyRoutingFilter 请求发起  NettyWriteResponseFilter 输出响应
+
+6. ForwardRoutingFilter
+
