@@ -40,6 +40,14 @@ public class CommonCodeJsonResponse {
         return new CommonCodeJsonResponse(CommonResponseEum.BAD_REQUEST_PARAM);
     }
 
+    public static CommonCodeJsonResponse badRequestParam(String msg) {
+        return new CommonCodeJsonResponse(CommonResponseEum.BAD_REQUEST_PARAM.getCode(), msg);
+    }
+
+    public static CommonCodeJsonResponse badSystemRequestParam() {
+        return new CommonCodeJsonResponse(CommonResponseEum.BAD_SYSTEM_REQUEST_PARAM);
+    }
+
     public static CommonCodeJsonResponse unauthorized() {
         return new CommonCodeJsonResponse(CommonResponseEum.UNAUTHORIZED);
     }

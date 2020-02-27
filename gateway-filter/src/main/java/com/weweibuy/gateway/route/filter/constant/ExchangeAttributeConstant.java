@@ -37,7 +37,17 @@ public interface ExchangeAttributeConstant {
     /**
      * AppSecret
      */
-    String APP_KEY_SECRET = "app_secret";
+    String APP_SECRET_ATTR = "app_secret";
+
+    String SING_TIMESTAMP_ATTR = "sing_timestamp";
+
+    String SING_NONCE_ATTR = "sing_nonce";
+
+    String SING_SIGNATURE_ATTR = "sing_signature";
+
+    String SING_SIGN_TYPE_ATTR = "sing_sign_type";
+
+    String SYSTEM_REQUEST_PARAM = "system_request_param";
 
     /**
      * app_name

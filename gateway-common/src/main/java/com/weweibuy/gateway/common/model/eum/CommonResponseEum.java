@@ -14,6 +14,10 @@ public enum CommonResponseEum implements ResponseCodeAndMsg {
     FORBIDDEN("-403", "没有权限"),
     TOO_MANY_REQUESTS("-429", "请求限流"),
     UNKNOWN_EXCEPTION("-500", "系统异常"),
+
+    BAD_SYSTEM_REQUEST_PARAM("101010101", "系统级输入参数错误"),
+
+
     ;
 
     private String code;

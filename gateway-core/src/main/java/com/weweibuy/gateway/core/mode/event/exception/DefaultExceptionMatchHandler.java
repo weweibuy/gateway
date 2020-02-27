@@ -3,7 +3,7 @@ package com.weweibuy.gateway.core.mode.event.exception;
 import com.weweibuy.gateway.common.exception.BusinessException;
 import com.weweibuy.gateway.common.exception.SystemException;
 import com.weweibuy.gateway.common.model.dto.CommonCodeJsonResponse;
-import com.weweibuy.gateway.core.mode.event.response.ResponseWriter;
+import com.weweibuy.gateway.core.mode.event.http.ReactorHttpHelper;
 import com.weweibuy.gateway.core.mode.event.utils.MediaTypeUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -16,12 +16,6 @@ import reactor.core.publisher.Mono;
  * @date 2020/2/23 19:15
  **/
 public class DefaultExceptionMatchHandler implements ExceptionMatchHandler {
-
-    private ResponseWriter responseWriter;
-
-    public DefaultExceptionMatchHandler(ResponseWriter responseWriter) {
-        this.responseWriter = responseWriter;
-    }
 
     @Override
     public boolean match(ServerWebExchange exchange, Throwable ex) {
@@ -39,7 +33,7 @@ public class DefaultExceptionMatchHandler implements ExceptionMatchHandler {
 
     private Mono<ServerResponse> htmlErrorResponse(Throwable ex) {
         // TODO 字符集问题
-        return responseWriter.buildResponse(HttpStatus.TOO_MANY_REQUESTS, MediaType.TEXT_PLAIN, "服务暂时不可用: " + ex.getClass().getSimpleName());
+        return ReactorHttpHelper.buildResponse(HttpStatus.TOO_MANY_REQUESTS, MediaType.TEXT_PLAIN, "服务暂时不可用: " + ex.getClass().getSimpleName());
     }
 
 
@@ -67,7 +61,7 @@ public class DefaultExceptionMatchHandler implements ExceptionMatchHandler {
     }
 
     private Mono<ServerResponse> toServerResponse(HttpStatus httpStatus, Object body) {
-        return responseWriter.buildResponse(httpStatus, MediaType.APPLICATION_JSON_UTF8, body);
+        return ReactorHttpHelper.buildResponse(httpStatus, MediaType.APPLICATION_JSON_UTF8, body);
     }
 
 

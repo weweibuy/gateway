@@ -1,6 +1,6 @@
 package com.weweibuy.gateway.core.mode.event.exception;
 
-import com.weweibuy.gateway.core.mode.event.response.ResponseWriter;
+import com.weweibuy.gateway.core.mode.event.http.ReactorHttpHelper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
@@ -18,13 +18,9 @@ import reactor.core.publisher.Mono;
 public class WebExceptionHandlerImpl implements WebExceptionHandler {
 
 
-    private ResponseWriter responseWriter;
-
     private ExceptionMatchHandlerComposite composite;
 
-    public WebExceptionHandlerImpl(ResponseWriter responseWriter,
-                                   ExceptionMatchHandlerComposite composite) {
-        this.responseWriter = responseWriter;
+    public WebExceptionHandlerImpl(ExceptionMatchHandlerComposite composite) {
         this.composite = composite;
     }
 
@@ -36,7 +32,7 @@ public class WebExceptionHandlerImpl implements WebExceptionHandler {
         return composite.getExceptionHandler(exchange, ex)
                 .handler(exchange, ex)
                 .doOnNext(response -> log(response, exchange, ex))
-                .flatMap(response -> responseWriter.write(response, exchange));
+                .flatMap(response -> ReactorHttpHelper.write(response, exchange));
     }
 
 

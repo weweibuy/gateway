@@ -3,7 +3,7 @@ package com.weweibuy.gateway.route.filter.sentinel;
 import com.alibaba.csp.sentinel.slots.block.BlockException;
 import com.weweibuy.gateway.common.model.dto.CommonCodeJsonResponse;
 import com.weweibuy.gateway.core.mode.event.exception.ExceptionMatchHandler;
-import com.weweibuy.gateway.core.mode.event.response.ResponseWriter;
+import com.weweibuy.gateway.core.mode.event.http.ReactorHttpHelper;
 import com.weweibuy.gateway.core.mode.event.utils.MediaTypeUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -17,11 +17,7 @@ import reactor.core.publisher.Mono;
  **/
 public class SentinelExceptionMatchHandler implements ExceptionMatchHandler {
 
-    private ResponseWriter responseWriter;
 
-    public SentinelExceptionMatchHandler(ResponseWriter responseWriter) {
-        this.responseWriter = responseWriter;
-    }
 
     @Override
     public boolean match(ServerWebExchange exchange, Throwable ex) {
@@ -33,7 +29,7 @@ public class SentinelExceptionMatchHandler implements ExceptionMatchHandler {
         if (MediaTypeUtils.acceptsHtml(exchange)) {
             return htmlErrorResponse(ex);
         }
-        return responseWriter.buildResponse(HttpStatus.TOO_MANY_REQUESTS, MediaType.APPLICATION_JSON_UTF8, CommonCodeJsonResponse.requestLimit());
+        return ReactorHttpHelper.buildResponse(HttpStatus.TOO_MANY_REQUESTS, MediaType.APPLICATION_JSON_UTF8, CommonCodeJsonResponse.requestLimit());
     }
 
     private Mono<ServerResponse> htmlErrorResponse(Throwable ex) {

@@ -3,7 +3,6 @@ package com.weweibuy.gateway.core.mode.event.config;
 import com.weweibuy.gateway.core.mode.event.exception.DefaultExceptionMatchHandler;
 import com.weweibuy.gateway.core.mode.event.exception.ExceptionMatchHandlerComposite;
 import com.weweibuy.gateway.core.mode.event.exception.WebExceptionHandlerImpl;
-import com.weweibuy.gateway.core.mode.event.response.ResponseWriter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -24,8 +23,6 @@ public class CoreWebConfigurer {
     @Autowired(required = false)
     private List<WebConfigurer> webConfigurerList;
 
-    @Autowired
-    private ResponseWriter responseWriter;
 
     @Bean
     @Order(Ordered.HIGHEST_PRECEDENCE)
@@ -34,8 +31,8 @@ public class CoreWebConfigurer {
         if (!CollectionUtils.isEmpty(webConfigurerList)) {
             webConfigurerList.forEach(c -> c.addExceptionMatchHandler(composite));
         }
-        composite.addHandler(new DefaultExceptionMatchHandler(responseWriter));
-        return new WebExceptionHandlerImpl(responseWriter, composite);
+        composite.addHandler(new DefaultExceptionMatchHandler());
+        return new WebExceptionHandlerImpl( composite);
     }
 
 
