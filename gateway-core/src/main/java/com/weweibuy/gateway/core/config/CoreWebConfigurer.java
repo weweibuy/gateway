@@ -1,8 +1,8 @@
-package com.weweibuy.gateway.core.mode.event.config;
+package com.weweibuy.gateway.core.config;
 
-import com.weweibuy.gateway.core.mode.event.exception.DefaultExceptionMatchHandler;
-import com.weweibuy.gateway.core.mode.event.exception.ExceptionMatchHandlerComposite;
-import com.weweibuy.gateway.core.mode.event.exception.WebExceptionHandlerImpl;
+import com.weweibuy.gateway.core.advice.DefaultExceptionMatchHandler;
+import com.weweibuy.gateway.core.advice.ExceptionMatchHandlerComposite;
+import com.weweibuy.gateway.core.advice.WebExceptionHandlerImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

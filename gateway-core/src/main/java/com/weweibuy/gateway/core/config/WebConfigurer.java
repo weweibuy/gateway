@@ -1,6 +1,7 @@
-package com.weweibuy.gateway.core.mode.event.config;
+package com.weweibuy.gateway.core.config;
 
-import com.weweibuy.gateway.core.mode.event.exception.ExceptionMatchHandlerComposite;
+
+import com.weweibuy.gateway.core.advice.ExceptionMatchHandlerComposite;
 
 /**
  * @author durenhao

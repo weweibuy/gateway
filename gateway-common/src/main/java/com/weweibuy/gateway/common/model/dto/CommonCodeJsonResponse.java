@@ -40,6 +40,10 @@ public class CommonCodeJsonResponse {
         return new CommonCodeJsonResponse(CommonResponseEum.BAD_REQUEST_PARAM);
     }
 
+    public static CommonCodeJsonResponse UnSupportedMediaType() {
+        return new CommonCodeJsonResponse(CommonResponseEum.UNSUPPORTED_MEDIA_TYPE);
+    }
+
     public static CommonCodeJsonResponse badRequestParam(String msg) {
         return new CommonCodeJsonResponse(CommonResponseEum.BAD_REQUEST_PARAM.getCode(), msg);
     }

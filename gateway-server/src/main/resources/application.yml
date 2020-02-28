@@ -6,6 +6,14 @@ spring:
     active: ${profileActive}
   application:
     name: gateway-server
+  redis:
+    host: 122.51.171.126
+    password: ak402507979
+    port: 6379
+    timeout: 5000
+    lettuce:
+      pool:
+        max-idle: 5
 
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver

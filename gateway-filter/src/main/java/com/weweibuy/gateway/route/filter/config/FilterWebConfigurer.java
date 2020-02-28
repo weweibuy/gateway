@@ -1,7 +1,7 @@
 package com.weweibuy.gateway.route.filter.config;
 
-import com.weweibuy.gateway.core.mode.event.config.WebConfigurer;
-import com.weweibuy.gateway.core.mode.event.exception.ExceptionMatchHandlerComposite;
+import com.weweibuy.gateway.core.advice.ExceptionMatchHandlerComposite;
+import com.weweibuy.gateway.core.config.WebConfigurer;
 import com.weweibuy.gateway.route.filter.sentinel.SentinelExceptionMatchHandler;
 import org.springframework.stereotype.Component;
 

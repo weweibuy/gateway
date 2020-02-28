@@ -1,6 +1,6 @@
-package com.weweibuy.gateway.core.mode.event.http;
+package com.weweibuy.gateway.core.http;
 
-import com.weweibuy.gateway.core.mode.event.utils.JackJsonUtils;
+import com.weweibuy.gateway.core.utils.JackJsonUtils;
 import io.netty.handler.codec.http.HttpMethod;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.ObjectProvider;

@@ -1,4 +1,4 @@
-package com.weweibuy.gateway.core.mode.event.utils;
+package com.weweibuy.gateway.core.utils;
 
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;

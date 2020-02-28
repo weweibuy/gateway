@@ -1,4 +1,4 @@
-package com.weweibuy.gateway.core.mode.event.exception;
+package com.weweibuy.gateway.core.advice;
 
 import org.springframework.web.server.ServerWebExchange;
 

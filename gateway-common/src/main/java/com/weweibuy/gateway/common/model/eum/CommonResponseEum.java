@@ -12,6 +12,7 @@ public enum CommonResponseEum implements ResponseCodeAndMsg {
     BAD_REQUEST_PARAM("-400", "请求参数错误"),
     UNAUTHORIZED("-401", "认证失败"),
     FORBIDDEN("-403", "没有权限"),
+    UNSUPPORTED_MEDIA_TYPE("-415", "不支持的请求格式"),
     TOO_MANY_REQUESTS("-429", "请求限流"),
     UNKNOWN_EXCEPTION("-500", "系统异常"),
 

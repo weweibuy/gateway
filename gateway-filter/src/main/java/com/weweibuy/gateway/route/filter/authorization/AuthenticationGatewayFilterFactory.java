@@ -1,7 +1,8 @@
 package com.weweibuy.gateway.route.filter.authorization;
 
 import com.weweibuy.gateway.common.model.dto.CommonCodeJsonResponse;
-import com.weweibuy.gateway.core.mode.event.http.ReactorHttpHelper;
+import com.weweibuy.gateway.common.model.dto.CommonDataJsonResponse;
+import com.weweibuy.gateway.core.http.ReactorHttpHelper;
 import com.weweibuy.gateway.route.filter.authorization.model.AuthorizationRe;
 import com.weweibuy.gateway.route.filter.constant.ExchangeAttributeConstant;
 import com.weweibuy.gateway.route.filter.sign.SystemRequestParam;
@@ -47,18 +48,19 @@ public class AuthenticationGatewayFilterFactory extends AbstractGatewayFilterFac
             AuthorizationRe authorizationRe = new AuthorizationRe(appKey, service, exchange.getRequest());
 
             return ReactorHttpHelper.getForJson(AUTH_HOST,
-                    null, CommonCodeJsonResponse.class)
+                    null, CommonDataJsonResponse.class)
                     .flatMap(res -> hashAuthentication(res, chain, exchange));
         };
     }
 
 
-    private Mono<Void> hashAuthentication(ResponseEntity<CommonCodeJsonResponse> responseEntity,
+    private Mono<Void> hashAuthentication(ResponseEntity<CommonDataJsonResponse> responseEntity,
                                           GatewayFilterChain chain, ServerWebExchange exchange) {
         int value = responseEntity.getStatusCode().value();
         if (value == 200) {
+            String appSecret = (String) responseEntity.getBody().getData();
             // 设置app 信息
-            exchange.getAttributes().put(ExchangeAttributeConstant.APP_SECRET_ATTR, "");
+            exchange.getAttributes().put(ExchangeAttributeConstant.APP_SECRET_ATTR, appSecret);
             return chain.filter(exchange);
         }
         return ReactorHttpHelper.buildAndWriteJson(HttpStatus.UNAUTHORIZED, CommonCodeJsonResponse.unauthorized(), exchange);

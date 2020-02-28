@@ -1,4 +1,4 @@
-package com.weweibuy.gateway.core.mode.event.utils;
+package com.weweibuy.gateway.core.utils;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;

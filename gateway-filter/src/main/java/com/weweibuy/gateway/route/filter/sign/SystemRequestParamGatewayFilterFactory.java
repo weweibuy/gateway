@@ -1,7 +1,7 @@
 package com.weweibuy.gateway.route.filter.sign;
 
 import com.weweibuy.gateway.common.model.dto.CommonCodeJsonResponse;
-import com.weweibuy.gateway.core.mode.event.http.ReactorHttpHelper;
+import com.weweibuy.gateway.core.http.ReactorHttpHelper;
 import com.weweibuy.gateway.route.filter.constant.ExchangeAttributeConstant;
 import com.weweibuy.gateway.route.filter.constant.RequestHeaderConstant;
 import lombok.extern.slf4j.Slf4j;
@@ -11,6 +11,7 @@ import org.springframework.cloud.gateway.filter.GatewayFilter;
 import org.springframework.cloud.gateway.filter.factory.AbstractGatewayFilterFactory;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 
 import java.util.Map;
@@ -39,6 +40,14 @@ public class SystemRequestParamGatewayFilterFactory extends AbstractGatewayFilte
                 return ReactorHttpHelper.buildAndWriteJson(HttpStatus.BAD_REQUEST, CommonCodeJsonResponse.badSystemRequestParam(), exchange);
             }
 
+            String contentType = exchange.getRequest().getHeaders().getFirst(HttpHeaders.CONTENT_TYPE);
+
+            MediaType mediaType = MediaType.valueOf(contentType);
+
+            if(!mediaType.isCompatibleWith(MediaType.APPLICATION_FORM_URLENCODED) || mediaType.isCompatibleWith(MediaType.APPLICATION_JSON)){
+                return ReactorHttpHelper.buildAndWriteJson(HttpStatus.BAD_REQUEST, CommonCodeJsonResponse.UnSupportedMediaType(), exchange);
+            }
+
             SystemRequestParam systemRequestParam = SystemRequestParam.builder()
                     .appKey(appKey)
                     .nonce(nonce)
@@ -52,6 +61,7 @@ public class SystemRequestParamGatewayFilterFactory extends AbstractGatewayFilte
             return chain.filter(exchange);
         };
     }
+
 
 
 }
