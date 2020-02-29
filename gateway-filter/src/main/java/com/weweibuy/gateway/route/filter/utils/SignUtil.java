@@ -1,6 +1,7 @@
 package com.weweibuy.gateway.route.filter.utils;
 
 import com.weweibuy.gateway.common.constant.CommonConstant;
+import com.weweibuy.gateway.core.utils.JackJsonUtils;
 import com.weweibuy.gateway.route.filter.sign.SystemRequestParam;
 import org.springframework.util.DigestUtils;
 import org.springframework.util.MultiValueMap;
@@ -69,8 +70,14 @@ public class SignUtil {
             MultiValueMap<String, String> multiValueMap = (MultiValueMap<String, String>) map;
             multiValueMap.forEach((k, v) -> treeMap.put(k, v.get(0)));
         } else {
-            Map<String, String> stringMap = map;
-            stringMap.forEach((k, v) -> treeMap.put(k, v));
+            Map<String, Object> stringMap = map;
+            stringMap.forEach((k, v) -> {
+                if (v instanceof String) {
+                    treeMap.put(k, (String) v);
+                } else {
+                    treeMap.put(k, JackJsonUtils.write(v));
+                }
+            });
         }
 
     }

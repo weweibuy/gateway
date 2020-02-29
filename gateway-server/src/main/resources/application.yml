@@ -22,7 +22,7 @@ spring:
     username: user01
     password: ak402507979
     hikari:
-      idle-timeout: 30000
+      maxLifetime: 30000
 
 
 logging:

@@ -1,5 +1,6 @@
 package com.weweibuy.gateway.core.http;
 
+import com.fasterxml.jackson.databind.JavaType;
 import com.weweibuy.gateway.core.utils.JackJsonUtils;
 import io.netty.handler.codec.http.HttpMethod;
 import lombok.extern.slf4j.Slf4j;
@@ -76,6 +77,13 @@ public class ReactorHttpHelper {
         return responseEntity(send, returnType);
     }
 
+    public static <T> Mono<ResponseEntity<T>> getForJson(String url, Map<String, String> queryMap, JavaType javaType) {
+        HttpClient.ResponseReceiver<?> send = httpClient
+                .get()
+                .uri(url + toQueryString(queryMap));
+        return responseEntity(send, javaType);
+    }
+
     /**
      * 处理请求  Rest 接口
      *
@@ -98,6 +106,16 @@ public class ReactorHttpHelper {
         return responseEntity(send, returnType);
     }
 
+    public static <T> Mono<ResponseEntity<T>> executeForJson(HttpMethod method, String url, Map<String, String> queryMap, Object body, JavaType javaType) {
+        HttpClient.ResponseReceiver<?> send = httpClient
+                .request(method)
+                .uri(url + toQueryString(queryMap))
+                .send((req, nettyOutbound) -> {
+                    req.addHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_UTF8_VALUE);
+                    return nettyOutbound.send(ByteBufFlux.fromString(Mono.just(JackJsonUtils.write(body))));
+                });
+        return responseEntity(send, javaType);
+    }
 
     /**
      * 写出响应
@@ -167,6 +185,18 @@ public class ReactorHttpHelper {
                     .map(s -> new ResponseEntity(s, headers, HttpStatus.valueOf(res.status().hashCode())));
         });
     }
+
+    private static <T> Mono<ResponseEntity<T>> responseEntity(HttpClient.ResponseReceiver<?> send, JavaType javaType) {
+        return send.responseSingle((res, receiver) -> {
+            HttpHeaders headers = new HttpHeaders();
+            res.responseHeaders().forEach(
+                    entry -> headers.add(entry.getKey(), entry.getValue()));
+            return receiver.asByteArray()
+                    .map(s -> JackJsonUtils.<T>readValue(s, javaType))
+                    .map(s -> new ResponseEntity(s, headers, HttpStatus.valueOf(res.status().hashCode())));
+        });
+    }
+
 
     private static String toQueryString(Map<String, String> map) {
         if (CollectionUtils.isEmpty(map)) {

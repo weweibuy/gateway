@@ -2,8 +2,8 @@ package com.weweibuy.gateway.route.filter.sign;
 
 import com.weweibuy.gateway.common.exception.BadSignatureException;
 import com.weweibuy.gateway.common.model.dto.CommonCodeJsonResponse;
-import com.weweibuy.gateway.common.utils.DateUtils;
 import com.weweibuy.gateway.core.http.ReactorHttpHelper;
+import com.weweibuy.gateway.route.filter.config.VerifySignatureProperties;
 import com.weweibuy.gateway.route.filter.constant.ExchangeAttributeConstant;
 import com.weweibuy.gateway.route.filter.constant.RedisConstant;
 import com.weweibuy.gateway.route.filter.utils.SignUtil;
@@ -36,7 +36,6 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.time.Duration;
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 
@@ -48,8 +47,6 @@ import java.util.Map;
 @Slf4j
 public class VerifySignatureGatewayFilterFactory extends AbstractGatewayFilterFactory {
 
-    private static final Long MAX_TIME_INTERVAL_S = 120L;
-
     private final List<HttpMessageReader<?>> messageReaders;
 
     private static final ParameterizedTypeReference MULTIPART_DATA_TYPE;
@@ -59,12 +56,15 @@ public class VerifySignatureGatewayFilterFactory extends AbstractGatewayFilterFa
     @Autowired
     private ReactiveRedisTemplate<String, String> redisTemplate;
 
+    @Autowired
+    private VerifySignatureProperties verifySignatureProperties;
+
 
     static {
         MULTIPART_DATA_TYPE = ParameterizedTypeReference.forType(ResolvableType.forClassWithGenerics(
                 MultiValueMap.class, String.class, String.class).getType());
         JSON_DATA_TYPE = ParameterizedTypeReference.forType(ResolvableType.forClassWithGenerics(
-                Map.class, String.class, String.class).getType());
+                Map.class, String.class, Object.class).getType());
     }
 
     public VerifySignatureGatewayFilterFactory() {
@@ -76,13 +76,6 @@ public class VerifySignatureGatewayFilterFactory extends AbstractGatewayFilterFa
     public GatewayFilter apply(Object config) {
         return (exchange, chain) -> {
             SystemRequestParam systemRequestParam = (SystemRequestParam) exchange.getAttributes().get(ExchangeAttributeConstant.SYSTEM_REQUEST_PARAM);
-
-            Long timestamp = systemRequestParam.getTimestamp();
-
-            if (DateUtils.localDateTimeToTimestampSecond(LocalDateTime.now()) - timestamp > MAX_TIME_INTERVAL_S) {
-                return ReactorHttpHelper.buildAndWriteJson(HttpStatus.BAD_REQUEST,
-                        CommonCodeJsonResponse.badRequestParam("请求时间戳错误"), exchange);
-            }
 
 
             String contentType = exchange.getRequest().getHeaders().getFirst(HttpHeaders.CONTENT_TYPE);
@@ -99,8 +92,10 @@ public class VerifySignatureGatewayFilterFactory extends AbstractGatewayFilterFa
                 return ReactorHttpHelper.buildAndWriteJson(HttpStatus.UNSUPPORTED_MEDIA_TYPE, CommonCodeJsonResponse.UnSupportedMediaType(), exchange);
             }
 
+
             HttpHeaders headers = new HttpHeaders();
             headers.putAll(exchange.getRequest().getHeaders());
+            headers.remove(HttpHeaders.CONTENT_LENGTH);
 
             ServerRequest serverRequest = new DefaultServerRequest(exchange,
                     this.messageReaders);
@@ -118,6 +113,19 @@ public class VerifySignatureGatewayFilterFactory extends AbstractGatewayFilterFa
                     .then(Mono.defer(() -> {
                         ServerHttpRequestDecorator decorator = new ServerHttpRequestDecorator(
                                 exchange.getRequest()) {
+
+                            @Override
+                            public HttpHeaders getHeaders() {
+                                long contentLength = headers.getContentLength();
+                                HttpHeaders httpHeaders = new HttpHeaders();
+                                httpHeaders.putAll(super.getHeaders());
+                                if (contentLength > 0) {
+                                    httpHeaders.setContentLength(contentLength);
+                                } else {
+                                    httpHeaders.set(HttpHeaders.TRANSFER_ENCODING, "chunked");
+                                }
+                                return httpHeaders;
+                            }
 
                             @Override
                             public Flux<DataBuffer> getBody() {
@@ -166,10 +174,14 @@ public class VerifySignatureGatewayFilterFactory extends AbstractGatewayFilterFa
 
 
     private Mono<Boolean> verifyNonce(SystemRequestParam systemRequestParam) {
+        if (!verifySignatureProperties.getNonceCheck()) {
+            return Mono.just(true);
+        }
         String appKey = systemRequestParam.getAppKey();
         return redisTemplate.opsForValue()
                 .setIfAbsent(RedisConstant.KEY_PREFIX + appKey + "_" + systemRequestParam.getNonce(), systemRequestParam.getTimestamp() + "",
                         Duration.ofSeconds(125));
     }
+
 
 }

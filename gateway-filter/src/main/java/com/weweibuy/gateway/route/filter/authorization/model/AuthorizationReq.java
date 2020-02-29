@@ -9,7 +9,7 @@ import org.springframework.http.server.reactive.ServerHttpRequest;
  * @date 2020/2/24 21:24
  **/
 @Data
-public class AuthorizationRe {
+public class AuthorizationReq {
 
     private String appKey;
 
@@ -19,17 +19,17 @@ public class AuthorizationRe {
 
     private String service;
 
-    public AuthorizationRe() {
+    public AuthorizationReq() {
     }
 
-    public AuthorizationRe(String appKey, HttpMethod httpMethod, String path, String service) {
+    public AuthorizationReq(String appKey, HttpMethod httpMethod, String path, String service) {
         this.appKey = appKey;
         this.httpMethod = httpMethod;
         this.path = path;
         this.service = service;
     }
 
-    public AuthorizationRe(String appKey, String service, ServerHttpRequest request) {
+    public AuthorizationReq(String appKey, String service, ServerHttpRequest request) {
         this.service = service;
         this.appKey = appKey;
         this.httpMethod = request.getMethod();

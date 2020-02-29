@@ -1,6 +1,7 @@
 package com.weweibuy.gateway.core.utils;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -32,9 +33,25 @@ public class JackJsonUtils {
         }
     }
 
+    public static <T> T readValue(String json, JavaType javaType) {
+        try {
+            return objectMapper.readValue(json, javaType);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     public static <T> T readValue(byte[] json, Class<? extends T> clazz) {
         try {
             return objectMapper.readValue(json, clazz);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public static <T> T readValue(byte[] json, JavaType javaType) {
+        try {
+            return objectMapper.readValue(json, javaType);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
