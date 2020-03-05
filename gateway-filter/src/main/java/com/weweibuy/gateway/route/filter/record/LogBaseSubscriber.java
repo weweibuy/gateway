@@ -1,8 +1,8 @@
 package com.weweibuy.gateway.route.filter.record;
 
 import com.weweibuy.gateway.common.utils.DateUtils;
-import com.weweibuy.gateway.route.filter.constant.ExchangeAttributeConstant;
-import com.weweibuy.gateway.route.filter.utils.RequestIpUtil;
+import com.weweibuy.gateway.core.constant.ExchangeAttributeConstant;
+import com.weweibuy.gateway.core.utils.RequestIpUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.reactivestreams.Subscriber;
 import org.reactivestreams.Subscription;
@@ -41,7 +41,7 @@ public class LogBaseSubscriber extends BaseSubscriber {
 
     @Override
     protected void hookOnComplete() {
-        log(exchange);
+        recordLog(exchange);
         actual.onComplete();
     }
 
@@ -54,13 +54,12 @@ public class LogBaseSubscriber extends BaseSubscriber {
     @Override
     protected void hookOnError(Throwable t) {
         actual.onError(t);
+        recordLog(exchange);
     }
 
-    private void log(ServerWebExchange exchange) {
 
+    static void recordLog(ServerWebExchange exchange) {
         Route route = exchange.getAttribute(ServerWebExchangeUtils.GATEWAY_ROUTE_ATTR);
-
-
         LocalDateTime requestTimestamp = (LocalDateTime) exchange.getAttribute(ExchangeAttributeConstant.REQUEST_TIMESTAMP);
         LocalDateTime now = LocalDateTime.now();
         ServerHttpRequest request = exchange.getRequest();
@@ -73,8 +72,6 @@ public class LogBaseSubscriber extends BaseSubscriber {
                 request.getURI().getPath(),
                 exchange.getResponse().getStatusCode().value(),
                 Duration.between(requestTimestamp, now).toMillis());
-
     }
-
 
 }

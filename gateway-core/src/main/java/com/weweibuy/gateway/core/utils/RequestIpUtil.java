@@ -1,4 +1,4 @@
-package com.weweibuy.gateway.route.filter.utils;
+package com.weweibuy.gateway.core.utils;
 
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;

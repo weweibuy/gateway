@@ -1,6 +1,6 @@
 package com.weweibuy.gateway.route.filter.record;
 
-import com.weweibuy.gateway.route.filter.constant.ExchangeAttributeConstant;
+import com.weweibuy.gateway.core.constant.ExchangeAttributeConstant;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cloud.gateway.filter.GatewayFilterChain;
 import org.springframework.cloud.gateway.filter.GlobalFilter;

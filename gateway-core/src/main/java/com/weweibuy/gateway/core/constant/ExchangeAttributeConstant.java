@@ -1,4 +1,4 @@
-package com.weweibuy.gateway.route.filter.constant;
+package com.weweibuy.gateway.core.constant;
 
 /**
  * 请求属性常量
