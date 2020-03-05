@@ -1,9 +1,13 @@
 package com.weweibuy.gateway.route.filter.record;
 
 import com.weweibuy.gateway.common.utils.DateUtils;
+import com.weweibuy.gateway.route.filter.constant.ExchangeAttributeConstant;
+import com.weweibuy.gateway.route.filter.utils.RequestIpUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.reactivestreams.Subscriber;
 import org.reactivestreams.Subscription;
+import org.springframework.cloud.gateway.route.Route;
+import org.springframework.cloud.gateway.support.ServerWebExchangeUtils;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.web.server.ServerWebExchange;
@@ -29,6 +33,12 @@ public class LogBaseSubscriber extends BaseSubscriber {
         this.exchange = exchange;
     }
 
+
+    @Override
+    protected void hookOnNext(Object value) {
+        actual.onNext(value);
+    }
+
     @Override
     protected void hookOnComplete() {
         log(exchange);
@@ -43,19 +53,28 @@ public class LogBaseSubscriber extends BaseSubscriber {
 
     @Override
     protected void hookOnError(Throwable t) {
-        log(exchange);
         actual.onError(t);
     }
 
     private void log(ServerWebExchange exchange) {
+
+        Route route = exchange.getAttribute(ServerWebExchangeUtils.GATEWAY_ROUTE_ATTR);
+
+
+        LocalDateTime requestTimestamp = (LocalDateTime) exchange.getAttribute(ExchangeAttributeConstant.REQUEST_TIMESTAMP);
         LocalDateTime now = LocalDateTime.now();
         ServerHttpRequest request = exchange.getRequest();
         HttpHeaders headers = request.getHeaders();
-        String ip = headers.getFirst("x-forwarded-for");
-        log.info("{} {} {} {} {} {} {}", ip, DateUtils.toDateFormat(now), headers.get("Host"),
-                request.getMethod(), request.getURI().getPath(),
-                Duration.between(now, LocalDateTime.now()).toMillis(),
-                exchange.getResponse().getStatusCode().value());
+        log.info("{} {} {} {} {} {} {} {}ms",
+                RequestIpUtil.getIp(request),
+                DateUtils.toDateFormat(now), headers.get("Host"),
+                request.getMethod(),
+                route.getUri(),
+                request.getURI().getPath(),
+                exchange.getResponse().getStatusCode().value(),
+                Duration.between(requestTimestamp, now).toMillis());
+
     }
+
 
 }

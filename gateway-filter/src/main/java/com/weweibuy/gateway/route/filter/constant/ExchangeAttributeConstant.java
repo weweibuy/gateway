@@ -64,4 +64,7 @@ public interface ExchangeAttributeConstant {
      */
     String SERVICE_KEY = "service_key";
 
+    String REQUEST_TIMESTAMP = "request_timestamp";
+
+
 }
