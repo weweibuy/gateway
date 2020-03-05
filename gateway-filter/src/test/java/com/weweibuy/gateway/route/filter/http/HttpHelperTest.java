@@ -227,7 +227,7 @@ public class HttpHelperTest {
 				                                             .publishOn(Schedulers.single())
 				                                             .doOnNext(s -> serverRes.incrementAndGet())
 				                                             .map(it -> it + ' ' + req.param("param") + '!')
-				                                             .log("server-reply")));
+				                                             .record("server-reply")));
 				          }))
 				          .wiretap(true)
 				          .bindNow(Duration.ofSeconds(5));
@@ -243,11 +243,11 @@ public class HttpHelperTest {
 		                 .options(c -> c.flushOnEach())
 		                 .sendWebsocket()
 		                 .sendString(Flux.range(1, 1000)
-		                                 .log("client-send")
+		                                 .record("client-send")
 		                                 .map(i -> "" + i)))
 		          .responseContent()
 		          .asString()
-		          .log("client-received")
+		          .record("client-received")
 		          .publishOn(Schedulers.parallel())
 		          .doOnNext(s -> clientRes.incrementAndGet())
 		          .take(1000)

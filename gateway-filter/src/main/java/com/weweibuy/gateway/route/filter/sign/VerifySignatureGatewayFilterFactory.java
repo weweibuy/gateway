@@ -1,8 +1,8 @@
 package com.weweibuy.gateway.route.filter.sign;
 
-import com.weweibuy.gateway.common.exception.BadSignatureException;
 import com.weweibuy.gateway.common.model.dto.CommonCodeJsonResponse;
 import com.weweibuy.gateway.core.http.ReactorHttpHelper;
+import com.weweibuy.gateway.core.support.ObjectWrapper;
 import com.weweibuy.gateway.route.filter.config.VerifySignatureProperties;
 import com.weweibuy.gateway.route.filter.constant.ExchangeAttributeConstant;
 import com.weweibuy.gateway.route.filter.constant.RedisConstant;
@@ -27,7 +27,6 @@ import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.http.server.reactive.ServerHttpRequestDecorator;
 import org.springframework.stereotype.Component;
 import org.springframework.util.MultiValueMap;
-import org.springframework.web.reactive.function.BodyInserter;
 import org.springframework.web.reactive.function.BodyInserters;
 import org.springframework.web.reactive.function.server.HandlerStrategies;
 import org.springframework.web.reactive.function.server.ServerRequest;
@@ -73,6 +72,7 @@ public class VerifySignatureGatewayFilterFactory extends AbstractGatewayFilterFa
 
 
     @Override
+    @SuppressWarnings("unchecked")
     public GatewayFilter apply(Object config) {
         return (exchange, chain) -> {
             SystemRequestParam systemRequestParam = (SystemRequestParam) exchange.getAttributes().get(ExchangeAttributeConstant.SYSTEM_REQUEST_PARAM);
@@ -91,7 +91,7 @@ public class VerifySignatureGatewayFilterFactory extends AbstractGatewayFilterFa
             } else {
                 return ReactorHttpHelper.buildAndWriteJson(HttpStatus.UNSUPPORTED_MEDIA_TYPE, CommonCodeJsonResponse.UnSupportedMediaType(), exchange);
             }
-
+            ObjectWrapper<ParameterizedTypeReference> objectWrapper = new ObjectWrapper<>(typeReference);
 
             HttpHeaders headers = new HttpHeaders();
             headers.putAll(exchange.getRequest().getHeaders());
@@ -100,60 +100,52 @@ public class VerifySignatureGatewayFilterFactory extends AbstractGatewayFilterFa
             ServerRequest serverRequest = new DefaultServerRequest(exchange,
                     this.messageReaders);
 
-            Mono<?> modifiedBody = serverRequest.bodyToMono(typeReference)
-                    .doOnNext(o -> verifySignature(systemRequestParam, exchange, (Map) o));
+            return serverRequest.bodyToMono(typeReference)
+                    .flatMap(o -> verifySignature(systemRequestParam, exchange, (Map) o)
+                            .flatMap(b -> {
+                                if (b) {
+                                    CachedBodyOutputMessage outputMessage = new CachedBodyOutputMessage(exchange, headers);
+                                    return BodyInserters.fromPublisher(Mono.just(o), objectWrapper.getObject())
+                                            .insert(outputMessage, new BodyInserterContext())
+                                            .then(Mono.defer(() -> {
+                                                ServerHttpRequestDecorator decorator = new ServerHttpRequestDecorator(
+                                                        exchange.getRequest()) {
 
-            BodyInserter bodyInserter = BodyInserters.fromPublisher(modifiedBody,
-                    typeReference);
+                                                    @Override
+                                                    public HttpHeaders getHeaders() {
+                                                        long contentLength = headers.getContentLength();
+                                                        HttpHeaders httpHeaders = new HttpHeaders();
+                                                        httpHeaders.putAll(super.getHeaders());
+                                                        if (contentLength > 0) {
+                                                            httpHeaders.setContentLength(contentLength);
+                                                        } else {
+                                                            httpHeaders.set(HttpHeaders.TRANSFER_ENCODING, "chunked");
+                                                        }
+                                                        return httpHeaders;
+                                                    }
 
-            CachedBodyOutputMessage outputMessage = new CachedBodyOutputMessage(exchange, headers);
+                                                    @Override
+                                                    public Flux<DataBuffer> getBody() {
+                                                        return outputMessage.getBody();
+                                                    }
+                                                };
+                                                return chain.filter(exchange.mutate().request(decorator).build());
+                                            }));
 
-
-            return bodyInserter.insert(outputMessage, new BodyInserterContext())
-                    .then(Mono.defer(() -> {
-                        ServerHttpRequestDecorator decorator = new ServerHttpRequestDecorator(
-                                exchange.getRequest()) {
-
-                            @Override
-                            public HttpHeaders getHeaders() {
-                                long contentLength = headers.getContentLength();
-                                HttpHeaders httpHeaders = new HttpHeaders();
-                                httpHeaders.putAll(super.getHeaders());
-                                if (contentLength > 0) {
-                                    httpHeaders.setContentLength(contentLength);
                                 } else {
-                                    httpHeaders.set(HttpHeaders.TRANSFER_ENCODING, "chunked");
+                                    return ReactorHttpHelper.buildAndWriteJson(HttpStatus.BAD_REQUEST, CommonCodeJsonResponse.badRequestParam("签名错误"), exchange);
                                 }
-                                return httpHeaders;
-                            }
-
-                            @Override
-                            public Flux<DataBuffer> getBody() {
-                                return outputMessage.getBody();
-                            }
-                        };
-                        return verifyNonce(systemRequestParam)
-                                .flatMap(b -> {
-                                    if (b) {
-                                        return chain.filter(exchange.mutate().request(decorator).build());
-                                    }
-                                    return ReactorHttpHelper.buildAndWriteJson(HttpStatus.BAD_REQUEST,
-                                            CommonCodeJsonResponse.badRequestParam("重复请求"), exchange);
-                                });
-                    }));
-
+                            }));
 
         };
     }
 
 
-    private void verifySignature(SystemRequestParam systemRequestParam, ServerWebExchange exchange, Map body) {
+    private Mono<Boolean> verifySignature(SystemRequestParam systemRequestParam, ServerWebExchange exchange, Map body) {
         SignTypeEum signType = systemRequestParam.getSignType();
         String appSecret = (String) exchange.getAttributes().get(ExchangeAttributeConstant.APP_SECRET_ATTR);
-
         ServerHttpRequest httpRequest = exchange.getRequest();
         MultiValueMap<String, String> queryParams = httpRequest.getQueryParams();
-
         String sign = null;
         switch (signType) {
             case MD5:
@@ -167,9 +159,12 @@ public class VerifySignatureGatewayFilterFactory extends AbstractGatewayFilterFa
         }
 
         if (StringUtils.isBlank(sign) || !sign.equals(systemRequestParam.getSignature())) {
-            throw new BadSignatureException("签名错误");
+            return Mono.just(false);
         }
-
+        if (!verifySignatureProperties.getNonceCheck()) {
+            return Mono.just(true);
+        }
+        return verifyNonce(systemRequestParam);
     }
 
 

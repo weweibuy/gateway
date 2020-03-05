@@ -31,7 +31,9 @@ public class LoadBalancerHelper {
             return url;
         }
         ServiceInstance choose = loadBalancer.choose(url.getHost());
-
+        if (choose == null) {
+            return url;
+        }
         String overrideScheme = choose.isSecure() ? "https" : "http";
         if (schemePrefix != null) {
             overrideScheme = url.getScheme();

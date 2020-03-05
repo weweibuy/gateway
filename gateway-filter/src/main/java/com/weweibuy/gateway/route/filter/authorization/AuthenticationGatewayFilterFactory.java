@@ -76,7 +76,6 @@ public class AuthenticationGatewayFilterFactory extends AbstractGatewayFilterFac
         int status = responseEntity.getStatusCode().value();
         if (status == 200 && "0".equals(responseEntity.getBody().getCode())) {
             CommonDataJsonResponse<AuthorizationResp> body = responseEntity.getBody();
-
             // 设置app 信息
             exchange.getAttributes().put(ExchangeAttributeConstant.APP_SECRET_ATTR, body.getData().getAppSecret());
             return chain.filter(exchange);

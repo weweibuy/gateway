@@ -55,8 +55,11 @@ public class SystemRequestParamGatewayFilterFactory extends AbstractGatewayFilte
             }
 
             String contentType = exchange.getRequest().getHeaders().getFirst(HttpHeaders.CONTENT_TYPE);
+            if (StringUtils.isBlank(contentType)) {
+                return ReactorHttpHelper.buildAndWriteJson(HttpStatus.BAD_REQUEST, CommonCodeJsonResponse.UnSupportedMediaType(), exchange);
+            }
 
-            MediaType mediaType = MediaType.valueOf(contentType);
+            MediaType mediaType = MediaType.parseMediaType(contentType);
 
             if (!(mediaType.isCompatibleWith(MediaType.APPLICATION_FORM_URLENCODED) || mediaType.isCompatibleWith(MediaType.APPLICATION_JSON))) {
                 return ReactorHttpHelper.buildAndWriteJson(HttpStatus.BAD_REQUEST, CommonCodeJsonResponse.UnSupportedMediaType(), exchange);
