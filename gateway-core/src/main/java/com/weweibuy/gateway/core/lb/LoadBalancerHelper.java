@@ -20,6 +20,8 @@ public class LoadBalancerHelper {
     private LoadBalancerClient loadBalancer;
 
     public URI toLbUrl(String lb) {
+
+
         URI url = null;
         try {
             url = new URI(lb);

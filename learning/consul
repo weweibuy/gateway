@@ -1,0 +1,3 @@
+
+1. 刷新服务
+   PollingServerListUpdater 每隔 30 秒查询服务列表
