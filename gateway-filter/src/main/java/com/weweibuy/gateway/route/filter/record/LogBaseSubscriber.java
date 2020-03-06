@@ -64,9 +64,10 @@ public class LogBaseSubscriber extends BaseSubscriber {
         LocalDateTime now = LocalDateTime.now();
         ServerHttpRequest request = exchange.getRequest();
         HttpHeaders headers = request.getHeaders();
-        log.info("{} {} {} {} {} {} {} {}ms",
+        log.info("{} [{}] {} {} {} {} {} {}ms",
                 RequestIpUtil.getIp(request),
-                DateUtils.toDateFormat(now), headers.get("Host"),
+                DateUtils.toDateFormat(now),
+                headers.get("Host"),
                 request.getMethod(),
                 route.getUri(),
                 request.getURI().getPath(),
