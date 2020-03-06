@@ -1,4 +1,3 @@
-drop table if exists gateway_route;
 
 /*==============================================================*/
 /* Table: gateway_route                                         */
@@ -20,7 +19,6 @@ create table gateway_route
 
 alter table gateway_route comment '路由表';
 
-drop table if exists route_predicate;
 
 /*==============================================================*/
 /* Table: route_predicate                                       */
@@ -41,7 +39,6 @@ create table route_predicate
 
 alter table route_predicate comment '路由断言表';
 
-drop table if exists route_predicate_args;
 
 /*==============================================================*/
 /* Table: route_predicate_args                                  */
@@ -62,7 +59,6 @@ create table route_predicate_args
 
 alter table route_predicate_args comment '断言参数表';
 
-drop table if exists route_filter;
 
 /*==============================================================*/
 /* Table: route_filter                                          */
@@ -83,7 +79,6 @@ create table route_filter
 
 alter table route_filter comment '路由过滤器表';
 
-drop table if exists route_filter_args;
 
 /*==============================================================*/
 /* Table: route_filter_args                                     */
