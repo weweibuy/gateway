@@ -6,6 +6,7 @@
 <generatorConfiguration>
 	<context id="testTables" targetRuntime="MyBatis3">
 		<plugin type="com.itfsw.mybatis.generator.plugins.SelectOneByExamplePlugin"/>
+		<plugin type="com.itfsw.mybatis.generator.plugins.LombokPlugin"/>
 		<commentGenerator>
 			<!-- 是否去除自动生成的注释 true：是 ： false:否 -->
 			<property name="suppressAllComments" value="true" />
