@@ -3,10 +3,7 @@ package com.weweibuy.gateway.common.utils;
 import com.weweibuy.gateway.common.constant.CommonConstant;
 
 import java.text.SimpleDateFormat;
-import java.time.Instant;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.time.ZoneOffset;
+import java.time.*;
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
@@ -58,6 +55,10 @@ public class DateUtils {
 
     public static boolean isCurrentTimeOverInterval(LocalDateTime localDateTime, long interval) {
         return System.currentTimeMillis() - localDateTimeToTimestampMilli(localDateTime) > interval;
+    }
+
+    public static Duration between(LocalDateTime start, LocalDateTime end) {
+        return Duration.between(start, end);
     }
 
 
