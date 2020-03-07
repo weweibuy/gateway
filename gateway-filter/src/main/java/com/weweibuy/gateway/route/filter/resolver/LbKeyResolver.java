@@ -1,6 +1,6 @@
 package com.weweibuy.gateway.route.filter.resolver;
 
-import com.weweibuy.gateway.route.filter.constant.ExchangeAttributeConstant;
+import com.weweibuy.gateway.core.constant.ExchangeAttributeConstant;
 import com.weweibuy.gateway.route.filter.utils.RouteToRequestUrlUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cloud.client.ServiceInstance;

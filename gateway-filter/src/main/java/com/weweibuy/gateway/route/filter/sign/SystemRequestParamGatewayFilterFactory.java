@@ -2,9 +2,9 @@ package com.weweibuy.gateway.route.filter.sign;
 
 import com.weweibuy.gateway.common.model.dto.CommonCodeJsonResponse;
 import com.weweibuy.gateway.common.utils.DateUtils;
+import com.weweibuy.gateway.core.constant.ExchangeAttributeConstant;
 import com.weweibuy.gateway.core.http.ReactorHttpHelper;
 import com.weweibuy.gateway.route.filter.config.VerifySignatureProperties;
-import com.weweibuy.gateway.route.filter.constant.ExchangeAttributeConstant;
 import com.weweibuy.gateway.route.filter.constant.RequestHeaderConstant;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;

@@ -1,6 +1,6 @@
 package com.weweibuy.gateway.route.filter.path;
 
-import com.weweibuy.gateway.route.filter.constant.ExchangeAttributeConstant;
+import com.weweibuy.gateway.core.constant.ExchangeAttributeConstant;
 import org.springframework.cloud.gateway.filter.GatewayFilter;
 import org.springframework.cloud.gateway.filter.factory.AbstractGatewayFilterFactory;
 import org.springframework.http.server.reactive.ServerHttpRequest;

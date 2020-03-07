@@ -1,6 +1,6 @@
 package com.weweibuy.gateway.route.filter.resolver;
 
-import com.weweibuy.gateway.route.filter.constant.ExchangeAttributeConstant;
+import com.weweibuy.gateway.core.constant.ExchangeAttributeConstant;
 import com.weweibuy.gateway.route.filter.utils.RouteToRequestUrlUtil;
 import org.springframework.cloud.gateway.filter.ratelimit.KeyResolver;
 import org.springframework.stereotype.Component;
