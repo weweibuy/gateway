@@ -35,10 +35,11 @@ spring:
         health-check-critical-timeout: 10s
         health-check-interval: 3s
 
-
 logging:
   config: classpath:config/logback/logback-spring.xml
 
 mybatis:
   mapper-locations: classpath*:config/mybatis/mapper/**/*.xml
 
+rocket-mq:
+  name-server: 122.51.171.126:9876
