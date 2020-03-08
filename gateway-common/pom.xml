@@ -19,10 +19,16 @@
             <artifactId>spring-cloud-starter-gateway</artifactId>
         </dependency>
 
-        <!--<dependency>-->
-            <!--<groupId>com.google.guava</groupId>-->
-            <!--<artifactId>guava</artifactId>-->
-        <!--</dependency>-->
+        <dependency>
+            <groupId>com.weweibuy</groupId>
+            <artifactId>webuy-common</artifactId>
+            <exclusions>
+                <exclusion>
+                    <artifactId>spring-boot-starter-json</artifactId>
+                    <groupId>org.springframework.boot</groupId>
+                </exclusion>
+            </exclusions>
+        </dependency>
 
         <dependency>
             <groupId>org.apache.commons</groupId>

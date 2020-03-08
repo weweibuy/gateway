@@ -1,7 +1,7 @@
 package com.weweibuy.gateway.core.http;
 
 import com.fasterxml.jackson.databind.JavaType;
-import com.weweibuy.gateway.core.utils.JackJsonUtils;
+import com.weweibuy.webuy.common.utils.JackJsonUtils;
 import io.netty.handler.codec.http.HttpMethod;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.ObjectProvider;

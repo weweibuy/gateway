@@ -1,11 +1,11 @@
 package com.weweibuy.gateway.route.filter.sign;
 
-import com.weweibuy.gateway.common.model.dto.CommonCodeJsonResponse;
-import com.weweibuy.gateway.common.utils.DateUtils;
 import com.weweibuy.gateway.core.constant.ExchangeAttributeConstant;
 import com.weweibuy.gateway.core.http.ReactorHttpHelper;
 import com.weweibuy.gateway.route.filter.config.VerifySignatureProperties;
 import com.weweibuy.gateway.route.filter.constant.RequestHeaderConstant;
+import com.weweibuy.webuy.common.model.dto.CommonCodeJsonResponse;
+import com.weweibuy.webuy.common.utils.DateTimeUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.math.NumberUtils;
@@ -49,7 +49,7 @@ public class SystemRequestParamGatewayFilterFactory extends AbstractGatewayFilte
 
             Long timestampL = Long.valueOf(timestamp);
 
-            if (DateUtils.localDateTimeToTimestampSecond(LocalDateTime.now()) - timestampL > verifySignatureProperties.getTimestampIntervalSecond()) {
+            if (DateTimeUtils.localDateTimeToTimestampSecond(LocalDateTime.now()) - timestampL > verifySignatureProperties.getTimestampIntervalSecond()) {
                 return ReactorHttpHelper.buildAndWriteJson(HttpStatus.BAD_REQUEST,
                         CommonCodeJsonResponse.badRequestParam("请求时间戳错误"), exchange);
             }

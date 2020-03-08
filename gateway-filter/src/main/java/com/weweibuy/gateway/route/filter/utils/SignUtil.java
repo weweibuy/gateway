@@ -1,8 +1,10 @@
 package com.weweibuy.gateway.route.filter.utils;
 
 import com.weweibuy.gateway.common.constant.CommonConstant;
-import com.weweibuy.gateway.core.utils.JackJsonUtils;
 import com.weweibuy.gateway.route.filter.sign.SystemRequestParam;
+import com.weweibuy.webuy.common.utils.JackJsonUtils;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 import org.springframework.util.DigestUtils;
 import org.springframework.util.MultiValueMap;
 
@@ -17,6 +19,7 @@ import java.util.TreeMap;
  * @author durenhao
  * @date 2020/2/27 21:32
  **/
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class SignUtil {
 
     public static String hmacSha256Sign(String appSecret, Map<String, List<String>> queryMap,
@@ -49,14 +52,13 @@ public class SignUtil {
 
     private static String buildArgsToString(String appSecret, Map queryMap,
                                             Map bodyMap, SystemRequestParam requestParam) {
-        Map<String, String> treeMap = new TreeMap<String, String>();
+        Map<String, String> treeMap = new TreeMap<>();
         convertMapAddPut(treeMap, queryMap);
         convertMapAddPut(treeMap, bodyMap);
 
         StringBuilder builder = new StringBuilder();
-        treeMap.forEach((k, v) -> {
-            builder.append(k).append("=").append(v).append("&");
-        });
+        treeMap.forEach((k, v) ->
+                builder.append(k).append("=").append(v).append("&"));
         builder.append("app_key").append("=").append(requestParam.getAppKey()).append("&")
                 .append("app_secret").append("=").append(appSecret).append("&")
                 .append("nonce").append("=").append(requestParam.getNonce()).append("&")

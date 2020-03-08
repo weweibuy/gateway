@@ -1,19 +1,19 @@
 package com.weweibuy.gateway.route.filter.sign;
 
-import com.weweibuy.gateway.common.model.dto.CommonCodeJsonResponse;
 import com.weweibuy.gateway.core.constant.ExchangeAttributeConstant;
 import com.weweibuy.gateway.core.http.ReactorHttpHelper;
 import com.weweibuy.gateway.core.support.ObjectWrapper;
 import com.weweibuy.gateway.route.filter.config.VerifySignatureProperties;
 import com.weweibuy.gateway.route.filter.constant.RedisConstant;
 import com.weweibuy.gateway.route.filter.utils.SignUtil;
+import com.weweibuy.webuy.common.model.dto.CommonCodeJsonResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.gateway.filter.GatewayFilter;
 import org.springframework.cloud.gateway.filter.factory.AbstractGatewayFilterFactory;
+import org.springframework.cloud.gateway.filter.factory.rewrite.CachedBodyOutputMessage;
 import org.springframework.cloud.gateway.support.BodyInserterContext;
-import org.springframework.cloud.gateway.support.CachedBodyOutputMessage;
 import org.springframework.cloud.gateway.support.DefaultServerRequest;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.core.ResolvableType;

@@ -1,10 +1,10 @@
 package com.weweibuy.gateway.route.filter.sentinel;
 
 import com.alibaba.csp.sentinel.slots.block.BlockException;
-import com.weweibuy.gateway.common.model.dto.CommonCodeJsonResponse;
 import com.weweibuy.gateway.core.advice.ExceptionMatchHandler;
 import com.weweibuy.gateway.core.http.ReactorHttpHelper;
 import com.weweibuy.gateway.core.utils.MediaTypeUtils;
+import com.weweibuy.webuy.common.model.dto.CommonCodeJsonResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.reactive.function.server.ServerResponse;

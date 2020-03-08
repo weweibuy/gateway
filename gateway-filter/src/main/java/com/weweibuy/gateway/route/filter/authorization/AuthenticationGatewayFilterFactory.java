@@ -2,8 +2,6 @@ package com.weweibuy.gateway.route.filter.authorization;
 
 import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.weweibuy.gateway.common.model.dto.CommonCodeJsonResponse;
-import com.weweibuy.gateway.common.model.dto.CommonDataJsonResponse;
 import com.weweibuy.gateway.core.constant.ExchangeAttributeConstant;
 import com.weweibuy.gateway.core.http.ReactorHttpHelper;
 import com.weweibuy.gateway.core.lb.LoadBalancerHelper;
@@ -11,6 +9,8 @@ import com.weweibuy.gateway.route.filter.authorization.model.AuthorizationReq;
 import com.weweibuy.gateway.route.filter.authorization.model.AuthorizationResp;
 import com.weweibuy.gateway.route.filter.config.AuthenticationProperties;
 import com.weweibuy.gateway.route.filter.sign.SystemRequestParam;
+import com.weweibuy.webuy.common.model.dto.CommonCodeJsonResponse;
+import com.weweibuy.webuy.common.model.dto.CommonDataJsonResponse;
 import io.netty.handler.codec.http.HttpMethod;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;

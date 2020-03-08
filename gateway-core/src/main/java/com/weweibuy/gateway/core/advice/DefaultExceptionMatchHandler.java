@@ -1,11 +1,10 @@
 package com.weweibuy.gateway.core.advice;
 
-import com.weweibuy.gateway.common.exception.BadSignatureException;
-import com.weweibuy.gateway.common.exception.BusinessException;
-import com.weweibuy.gateway.common.exception.SystemException;
-import com.weweibuy.gateway.common.model.dto.CommonCodeJsonResponse;
 import com.weweibuy.gateway.core.http.ReactorHttpHelper;
 import com.weweibuy.gateway.core.utils.MediaTypeUtils;
+import com.weweibuy.webuy.common.exception.BusinessException;
+import com.weweibuy.webuy.common.exception.SystemException;
+import com.weweibuy.webuy.common.model.dto.CommonCodeJsonResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.reactive.function.server.ServerResponse;
@@ -52,10 +51,6 @@ public class DefaultExceptionMatchHandler implements ExceptionMatchHandler {
                         CommonCodeJsonResponse.response(((BusinessException) cause).getCodeAndMsg()));
             }
 
-            if ((cause instanceof BadSignatureException)) {
-                return toServerResponse(HttpStatus.BAD_REQUEST,
-                        CommonCodeJsonResponse.badRequestParam(((BadSignatureException) cause).getMessage()));
-            }
 
             if ((cause instanceof SystemException)) {
                 return toServerResponse(HttpStatus.INTERNAL_SERVER_ERROR,
