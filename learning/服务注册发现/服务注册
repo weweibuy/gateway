@@ -1,0 +1,15 @@
+ =========   consul  ===========
+
+
+1. 自动配置:  ConsulServiceRegistryAutoConfiguration
+    向spring容器注册:
+        ConsulServiceRegistry
+        HeartbeatProperties
+        ConsulDiscoveryProperties
+
+1.1 ConsulServiceRegistry 实现SpringCloud ServiceRegistry接口(服务注册接口)
+    ConsulServiceRegistry#register 调用 consulClient 进行服务注册
+    ConsulAutoServiceRegistrationListener 持有 ConsulAutoServiceRegistration 实例, 并监听
+      WebServerInitializedEvent事件,当servlet容器初始化完成后, 进行服务注册
+
+2. ConsulAutoServiceRegistrationAutoConfiguration 在 ConsulServiceRegistryAutoConfiguration 配置完成后生效

@@ -1,7 +1,7 @@
 package com.weweibuy.gateway.common.validator;
 
 
-import com.weweibuy.webuy.common.model.eum.ValueEum;
+import com.weweibuy.framework.common.core.model.eum.ValueEum;
 
 /**
  * 枚举值验证器
@@ -18,7 +18,6 @@ public class EumValueValidator {
             }
         }
         return false;
-
     }
 
 

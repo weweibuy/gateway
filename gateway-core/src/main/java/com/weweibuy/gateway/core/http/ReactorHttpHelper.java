@@ -1,7 +1,7 @@
 package com.weweibuy.gateway.core.http;
 
 import com.fasterxml.jackson.databind.JavaType;
-import com.weweibuy.webuy.common.utils.JackJsonUtils;
+import com.weweibuy.framework.common.core.utils.JackJsonUtils;
 import io.netty.handler.codec.http.HttpMethod;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.ObjectProvider;
@@ -27,6 +27,7 @@ import java.util.List;
 import java.util.Map;
 
 import static org.springframework.web.reactive.function.BodyInserters.fromObject;
+import static org.springframework.web.reactive.function.BodyInserters.fromValue;
 
 /**
  * https://github.com/reactor/reactor-netty
@@ -100,7 +101,7 @@ public class ReactorHttpHelper {
                 .request(method)
                 .uri(url + toQueryString(queryMap))
                 .send((req, nettyOutbound) -> {
-                    req.addHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_UTF8_VALUE);
+                    req.addHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE);
                     return nettyOutbound.send(ByteBufFlux.fromString(Mono.just(JackJsonUtils.write(body))));
                 });
         return responseEntity(send, returnType);
@@ -111,7 +112,7 @@ public class ReactorHttpHelper {
                 .request(method)
                 .uri(url + toQueryString(queryMap))
                 .send((req, nettyOutbound) -> {
-                    req.addHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_UTF8_VALUE);
+                    req.addHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE);
                     return nettyOutbound.send(ByteBufFlux.fromString(Mono.just(JackJsonUtils.write(body))));
                 });
         return responseEntity(send, javaType);
@@ -139,7 +140,7 @@ public class ReactorHttpHelper {
     public static Mono<ServerResponse> buildResponse(HttpStatus status, MediaType contentType, Object body) {
         return ServerResponse.status(status)
                 .contentType(contentType)
-                .body(fromObject(body));
+                .body(fromValue(body));
     }
 
     /**
@@ -165,7 +166,7 @@ public class ReactorHttpHelper {
      * @return
      */
     public static Mono<Void> buildAndWriteJson(HttpStatus status, Object body, ServerWebExchange exchange) {
-        return buildResponse(status, MediaType.APPLICATION_JSON_UTF8, body)
+        return buildResponse(status, MediaType.APPLICATION_JSON, body)
                 .flatMap(response -> write(response, exchange));
     }
 

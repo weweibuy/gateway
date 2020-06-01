@@ -40,9 +40,8 @@ public class LoadBalancerHelper {
         if (schemePrefix != null) {
             overrideScheme = url.getScheme();
         }
-        URI requestUrl = loadBalancer.reconstructURI(
+        return loadBalancer.reconstructURI(
                 new LoadBalancerHelper.DelegatingServiceInstance(choose, overrideScheme), url);
-        return requestUrl;
     }
 
 

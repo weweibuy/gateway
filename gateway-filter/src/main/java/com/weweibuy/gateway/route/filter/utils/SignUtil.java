@@ -1,8 +1,8 @@
 package com.weweibuy.gateway.route.filter.utils;
 
+import com.weweibuy.framework.common.core.utils.JackJsonUtils;
 import com.weweibuy.gateway.common.constant.CommonConstant;
 import com.weweibuy.gateway.route.filter.sign.SystemRequestParam;
-import com.weweibuy.webuy.common.utils.JackJsonUtils;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import org.springframework.util.DigestUtils;

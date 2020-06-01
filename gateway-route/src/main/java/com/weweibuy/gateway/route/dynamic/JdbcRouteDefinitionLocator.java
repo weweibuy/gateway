@@ -11,7 +11,6 @@ import org.springframework.cloud.gateway.route.RouteDefinition;
 import org.springframework.cloud.gateway.route.RouteDefinitionLocator;
 import org.springframework.context.ApplicationListener;
 import org.springframework.core.annotation.AnnotationAwareOrderComparator;
-import org.springframework.stereotype.Component;
 import org.springframework.web.util.UriComponentsBuilder;
 import reactor.cache.CacheFlux;
 import reactor.core.publisher.Flux;

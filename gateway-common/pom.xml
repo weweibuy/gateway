@@ -19,20 +19,16 @@
             <artifactId>spring-cloud-starter-gateway</artifactId>
         </dependency>
 
+
         <dependency>
-            <groupId>com.weweibuy</groupId>
-            <artifactId>webuy-common</artifactId>
+            <groupId>com.weweibuy.framework</groupId>
+            <artifactId>common-core</artifactId>
             <exclusions>
                 <exclusion>
                     <artifactId>spring-boot-starter-json</artifactId>
                     <groupId>org.springframework.boot</groupId>
                 </exclusion>
             </exclusions>
-        </dependency>
-
-        <dependency>
-            <groupId>org.apache.commons</groupId>
-            <artifactId>commons-lang3</artifactId>
         </dependency>
 
     </dependencies>

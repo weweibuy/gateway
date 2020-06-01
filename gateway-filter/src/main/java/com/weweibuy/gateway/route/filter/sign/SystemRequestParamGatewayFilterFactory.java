@@ -1,11 +1,11 @@
 package com.weweibuy.gateway.route.filter.sign;
 
+import com.weweibuy.framework.common.core.model.dto.CommonCodeJsonResponse;
+import com.weweibuy.framework.common.core.utils.DateTimeUtils;
 import com.weweibuy.gateway.core.constant.ExchangeAttributeConstant;
 import com.weweibuy.gateway.core.http.ReactorHttpHelper;
 import com.weweibuy.gateway.route.filter.config.VerifySignatureProperties;
 import com.weweibuy.gateway.route.filter.constant.RequestHeaderConstant;
-import com.weweibuy.webuy.common.model.dto.CommonCodeJsonResponse;
-import com.weweibuy.webuy.common.utils.DateTimeUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.math.NumberUtils;
@@ -56,13 +56,13 @@ public class SystemRequestParamGatewayFilterFactory extends AbstractGatewayFilte
 
             String contentType = exchange.getRequest().getHeaders().getFirst(HttpHeaders.CONTENT_TYPE);
             if (StringUtils.isBlank(contentType)) {
-                return ReactorHttpHelper.buildAndWriteJson(HttpStatus.BAD_REQUEST, CommonCodeJsonResponse.UnSupportedMediaType(), exchange);
+                return ReactorHttpHelper.buildAndWriteJson(HttpStatus.BAD_REQUEST, CommonCodeJsonResponse.unSupportedMediaType(), exchange);
             }
 
             MediaType mediaType = MediaType.parseMediaType(contentType);
 
             if (!(mediaType.isCompatibleWith(MediaType.APPLICATION_FORM_URLENCODED) || mediaType.isCompatibleWith(MediaType.APPLICATION_JSON))) {
-                return ReactorHttpHelper.buildAndWriteJson(HttpStatus.BAD_REQUEST, CommonCodeJsonResponse.UnSupportedMediaType(), exchange);
+                return ReactorHttpHelper.buildAndWriteJson(HttpStatus.BAD_REQUEST, CommonCodeJsonResponse.unSupportedMediaType(), exchange);
             }
 
             SystemRequestParam systemRequestParam = SystemRequestParam.builder()

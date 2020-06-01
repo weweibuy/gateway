@@ -141,9 +141,9 @@
             </dependency>
 
             <dependency>
-                <groupId>com.weweibuy</groupId>
-                <artifactId>webuy-common</artifactId>
-                <version>${webuy-common.version}</version>
+                <groupId>com.weweibuy.framework</groupId>
+                <artifactId>common-core</artifactId>
+                <version>${weweibuy.framework.version}</version>
             </dependency>
 
         </dependencies>

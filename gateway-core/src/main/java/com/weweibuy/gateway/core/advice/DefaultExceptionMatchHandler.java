@@ -1,10 +1,10 @@
 package com.weweibuy.gateway.core.advice;
 
+import com.weweibuy.framework.common.core.exception.BusinessException;
+import com.weweibuy.framework.common.core.exception.SystemException;
+import com.weweibuy.framework.common.core.model.dto.CommonCodeJsonResponse;
 import com.weweibuy.gateway.core.http.ReactorHttpHelper;
 import com.weweibuy.gateway.core.utils.MediaTypeUtils;
-import com.weweibuy.webuy.common.exception.BusinessException;
-import com.weweibuy.webuy.common.exception.SystemException;
-import com.weweibuy.webuy.common.model.dto.CommonCodeJsonResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.reactive.function.server.ServerResponse;
@@ -63,7 +63,7 @@ public class DefaultExceptionMatchHandler implements ExceptionMatchHandler {
     }
 
     private Mono<ServerResponse> toServerResponse(HttpStatus httpStatus, Object body) {
-        return ReactorHttpHelper.buildResponse(httpStatus, MediaType.APPLICATION_JSON_UTF8, body);
+        return ReactorHttpHelper.buildResponse(httpStatus, MediaType.APPLICATION_JSON, body);
     }
 
 

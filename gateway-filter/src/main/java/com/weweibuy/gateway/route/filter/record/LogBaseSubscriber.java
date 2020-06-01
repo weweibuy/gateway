@@ -59,7 +59,7 @@ public class LogBaseSubscriber extends BaseSubscriber {
 
     static void recordLog(ServerWebExchange exchange) {
         Route route = exchange.getAttribute(ServerWebExchangeUtils.GATEWAY_ROUTE_ATTR);
-        LocalDateTime requestTimestamp = (LocalDateTime) exchange.getAttribute(ExchangeAttributeConstant.REQUEST_TIMESTAMP);
+        LocalDateTime requestTimestamp = exchange.getAttribute(ExchangeAttributeConstant.REQUEST_TIMESTAMP);
         LocalDateTime now = LocalDateTime.now();
         ServerHttpRequest request = exchange.getRequest();
         HttpHeaders headers = request.getHeaders();
