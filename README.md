@@ -5,6 +5,8 @@
  动态路由  
  日志  
  流控,降级  
+
+### 先下载 https://github.com/weweibuy/weweibuy-framework  mvn install
  
 ### 1. 授权:
   参考: [AuthenticationGatewayFilterFactory](gateway-filter/src/main/java/com/weweibuy/gateway/route/filter/authorization/AuthenticationGatewayFilterFactory.java)
