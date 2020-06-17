@@ -9,7 +9,6 @@ import com.weweibuy.framework.rocketmq.annotation.RocketListener;
 import com.weweibuy.gateway.mq.message.ServerChangeMessage;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.rocketmq.common.protocol.heartbeat.MessageModel;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.netflix.ribbon.SpringClientFactory;
 import org.springframework.stereotype.Component;
 
@@ -24,8 +23,11 @@ import java.util.List;
 @RocketListener(topic = "SERVER_CHANGE_TOPIC", group = "SERVER_CHANGE_GW_C_GROUP", messageModel = MessageModel.BROADCASTING, threadMax = 1, threadMin = 1)
 public class RocketServerChangeListener  {
 
-    @Autowired
-    private SpringClientFactory springClientFactory;
+    private final SpringClientFactory springClientFactory;
+
+    public RocketServerChangeListener(SpringClientFactory springClientFactory) {
+        this.springClientFactory = springClientFactory;
+    }
 
     @RocketConsumerHandler
     public void update(@Payload ServerChangeMessage changeMessage) {
@@ -36,6 +38,7 @@ public class RocketServerChangeListener  {
         if (loadBalancer instanceof DynamicServerListLoadBalancer) {
             DynamicServerListLoadBalancer dynamicServerListLoadBalancer = (DynamicServerListLoadBalancer) loadBalancer;
             dynamicServerListLoadBalancer.updateListOfServers();
+            log.info("更新服务信息成功");
         }
     }
 
