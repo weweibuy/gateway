@@ -29,7 +29,7 @@
 ### 5. 流控,降级
   参考: [Sentinel](https://github.com/alibaba/Sentinel/wiki/%E7%BD%91%E5%85%B3%E9%99%90%E6%B5%81)
 
-### 5. 负载均衡
+### 6. 负载均衡
   ILoadBalancer对服务有自己的缓存,定时(默认30s)到注册中心更新缓存的服务信息. 当服务下线时,如果本地缓存不清除,将导致将请求转发到一个不可用的服务上,直到下次定时更新服务.
   可以通过注册中心监听服务健康状态(例如consul的watches),通知一个MQ服务,gateway监听MQ消息刷新本地缓存服务信息
   参考:  [RocketServerChangeListener](gateway-lb/src/main/java/com/weweibuy/gateway/lb/mq/RocketServerChangeListener.java)  
