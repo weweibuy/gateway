@@ -1,4 +1,4 @@
-package com.weweibuy.gateway.mq.message;
+package com.weweibuy.gateway.lb.mq.message;
 
 import lombok.Data;
 

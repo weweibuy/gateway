@@ -1,4 +1,4 @@
-package com.weweibuy.gateway.config;
+package com.weweibuy.gateway.lb.config;
 
 import com.weweibuy.framework.rocketmq.annotation.EnableRocketConsumer;
 import org.springframework.context.annotation.Configuration;
