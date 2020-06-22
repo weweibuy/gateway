@@ -2,7 +2,6 @@ package com.weweibuy.gateway.lb.mq;
 
 import com.netflix.loadbalancer.DynamicServerListLoadBalancer;
 import com.netflix.loadbalancer.ILoadBalancer;
-import com.netflix.loadbalancer.Server;
 import com.weweibuy.framework.rocketmq.annotation.Payload;
 import com.weweibuy.framework.rocketmq.annotation.RocketConsumerHandler;
 import com.weweibuy.framework.rocketmq.annotation.RocketListener;
@@ -12,8 +11,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.rocketmq.common.protocol.heartbeat.MessageModel;
 import org.springframework.cloud.netflix.ribbon.SpringClientFactory;
 import org.springframework.stereotype.Component;
-
-import java.util.List;
 
 /**
  * @author durenhao
@@ -38,8 +35,6 @@ public class RocketServerChangeListener {
         }
         log.info("接受到服务: {} 变更消息", name);
         ILoadBalancer loadBalancer = springClientFactory.getLoadBalancer(name);
-        List<Server> allServers = loadBalancer.getAllServers();
-        List<Server> reachableServers = loadBalancer.getReachableServers();
         if (loadBalancer instanceof DynamicServerListLoadBalancer) {
             DynamicServerListLoadBalancer dynamicServerListLoadBalancer = (DynamicServerListLoadBalancer) loadBalancer;
             dynamicServerListLoadBalancer.updateListOfServers();
