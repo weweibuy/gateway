@@ -9,7 +9,6 @@
     <packaging>pom</packaging>
     <version>1.0-SNAPSHOT</version>
     <modules>
-        <module>gateway-common</module>
         <module>gateway-server</module>
         <module>gateway-route</module>
         <module>gateway-core</module>
