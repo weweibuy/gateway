@@ -15,9 +15,8 @@ create table gateway_route
    update_time          timestamp not null default CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP comment '更新时间',
    primary key (id),
    unique key uk_route_id (route_id)
-);
+) ENGINE=INNODB DEFAULT CHARSET=utf8mb4 COMMENT='路由表';
 
-alter table gateway_route comment '路由表';
 
 
 /*==============================================================*/
@@ -35,9 +34,8 @@ create table route_predicate
    update_time          timestamp not null default CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP comment '更新时间',
    primary key (id),
    unique key uk_predicate_id (predicate_id)
-);
+)ENGINE=INNODB DEFAULT CHARSET=utf8mb4 COMMENT='路由断言表';
 
-alter table route_predicate comment '路由断言表';
 
 
 /*==============================================================*/
@@ -55,9 +53,8 @@ create table route_predicate_args
    update_time          timestamp not null default CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP comment '更新时间',
    primary key (id),
    unique key uk_predicate_arg_id (predicate_arg_id)
-);
+)ENGINE=INNODB DEFAULT CHARSET=utf8mb4 COMMENT='断言参数表';
 
-alter table route_predicate_args comment '断言参数表';
 
 
 /*==============================================================*/
@@ -75,9 +72,9 @@ create table route_filter
    update_time          timestamp not null default CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP comment '更新时间',
    primary key (id),
    unique key uk_filter_id (filter_id)
-);
+)ENGINE=INNODB DEFAULT CHARSET=utf8mb4 COMMENT='路由过滤器表';
 
-alter table route_filter comment '路由过滤器表';
+
 
 
 /*==============================================================*/
@@ -95,9 +92,9 @@ create table route_filter_args
    update_time          timestamp not null default CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP comment '更新时间',
    primary key (id),
    unique key uk_filter_args_id (filter_args_id)
-);
+)ENGINE=INNODB DEFAULT CHARSET=utf8mb4 COMMENT='路由过滤器参数表';
 
-alter table route_filter_args comment '路由过滤器参数表';
+
 
 
 
