@@ -1,5 +1,7 @@
 package com.weweibuy.gateway.core.advice;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.server.ServerWebExchange;
 
 import java.util.LinkedList;
@@ -34,6 +36,13 @@ public class ExceptionMatchHandlerComposite {
      * @return
      */
     public ExceptionMatchHandler getExceptionHandler(ServerWebExchange exchange, Throwable ex) {
+
+
+        if (ex instanceof ResponseStatusException) {
+            ResponseStatusException statusException = (ResponseStatusException) ex;
+            HttpStatus status = statusException.getStatus();
+        }
+
         Class<? extends Throwable> clazz = ex.getClass();
         ExceptionMatchHandler result = this.handlerCache.get(ex.getClass());
         if (result == null) {

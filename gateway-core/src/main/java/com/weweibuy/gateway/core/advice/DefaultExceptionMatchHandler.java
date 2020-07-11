@@ -3,11 +3,13 @@ package com.weweibuy.gateway.core.advice;
 import com.weweibuy.framework.common.core.exception.BusinessException;
 import com.weweibuy.framework.common.core.exception.SystemException;
 import com.weweibuy.framework.common.core.model.dto.CommonCodeJsonResponse;
+import com.weweibuy.framework.common.core.model.eum.CommonHttpResponseEum;
 import com.weweibuy.gateway.core.http.ReactorHttpHelper;
 import com.weweibuy.gateway.core.utils.MediaTypeUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.reactive.function.server.ServerResponse;
+import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
 
@@ -26,6 +28,13 @@ public class DefaultExceptionMatchHandler implements ExceptionMatchHandler {
     public Mono<ServerResponse> handler(ServerWebExchange exchange, Throwable ex) {
         if (MediaTypeUtils.acceptsHtml(exchange)) {
             return htmlErrorResponse(ex);
+        }
+        if (ex instanceof ResponseStatusException) {
+            ResponseStatusException statusException = (ResponseStatusException) ex;
+            HttpStatus status = statusException.getStatus();
+            if (HttpStatus.NOT_FOUND.equals(status)) {
+                return toServerResponse(HttpStatus.NOT_FOUND, CommonCodeJsonResponse.response(CommonHttpResponseEum.NOT_FOUND));
+            }
         }
         return toServerResponse(ex);
     }
