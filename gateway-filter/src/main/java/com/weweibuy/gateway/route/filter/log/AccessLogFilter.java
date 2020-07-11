@@ -1,5 +1,6 @@
-package com.weweibuy.gateway.route.filter.record;
+package com.weweibuy.gateway.route.filter.log;
 
+import com.weweibuy.framework.common.core.utils.IdWorker;
 import com.weweibuy.gateway.core.constant.ExchangeAttributeConstant;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cloud.gateway.filter.GatewayFilterChain;
@@ -23,6 +24,8 @@ public class AccessLogFilter implements GlobalFilter, Ordered {
     @Override
     public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
         exchange.getAttributes().put(ExchangeAttributeConstant.REQUEST_TIMESTAMP, LocalDateTime.now());
+        exchange.getAttributes().put(ExchangeAttributeConstant.TRACE_ID_ATTR, IdWorker.nextStringId());
+
         return chain.filter(exchange).transform(p ->
                 actual ->
                         p.subscribe(new LogBaseSubscriber(actual, exchange)));

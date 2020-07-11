@@ -1,4 +1,4 @@
-package com.weweibuy.gateway.route.filter.record;
+package com.weweibuy.gateway.route.filter.log;
 
 import com.weweibuy.gateway.core.constant.ExchangeAttributeConstant;
 import com.weweibuy.gateway.core.utils.RequestIpUtil;
@@ -60,15 +60,17 @@ public class LogBaseSubscriber extends BaseSubscriber {
     static void recordLog(ServerWebExchange exchange) {
         Route route = exchange.getAttribute(ServerWebExchangeUtils.GATEWAY_ROUTE_ATTR);
         LocalDateTime requestTimestamp = exchange.getAttribute(ExchangeAttributeConstant.REQUEST_TIMESTAMP);
+        String traceId = exchange.getAttribute(ExchangeAttributeConstant.TRACE_ID_ATTR);
         LocalDateTime now = LocalDateTime.now();
         ServerHttpRequest request = exchange.getRequest();
         HttpHeaders headers = request.getHeaders();
-        log.info("{} {} {} {} {} {} {}ms",
+        log.info("{} {} {} {} {} {} {} {}ms",
                 RequestIpUtil.getIp(request),
                 headers.get("Host"),
                 request.getMethod(),
                 route.getUri(),
                 request.getURI().getPath(),
+                traceId,
                 exchange.getResponse().getStatusCode().value(),
                 Duration.between(requestTimestamp, now).toMillis());
     }

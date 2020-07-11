@@ -12,7 +12,6 @@
 # Mobile Tools for Java (J2ME)
 .mtj.tmp/
 .idea
-log
 target
 applog
 # Package Files #

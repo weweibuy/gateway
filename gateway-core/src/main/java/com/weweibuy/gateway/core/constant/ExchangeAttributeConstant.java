@@ -59,12 +59,15 @@ public interface ExchangeAttributeConstant {
      */
     String TRACE_ID_ATTR = "trace_id";
 
+    String USER_ID_ATTR = "user_id";
+
     /**
      * 当前服务的 Key
      */
     String SERVICE_KEY = "service_key";
 
     String REQUEST_TIMESTAMP = "request_timestamp";
+
 
 
 }

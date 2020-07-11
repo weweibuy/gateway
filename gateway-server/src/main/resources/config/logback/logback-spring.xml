@@ -231,7 +231,7 @@
             <appender-ref ref="ERROR_FILE"/>
             <appender-ref ref="WARN_FILE"/>
         </root>
-        <logger name="com.weweibuy.gateway.route.filter.record.LogBaseSubscriber">
+        <logger name="com.weweibuy.gateway.route.filter.log.LogBaseSubscriber">
             <appender-ref ref="GW_ACCESS_FILE"/>
         </logger>
     </springProfile>
