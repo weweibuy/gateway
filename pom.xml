@@ -31,7 +31,6 @@
         <spring-boot-admin.version>2.0.1</spring-boot-admin.version>
         <sentinel.version>1.6.2</sentinel.version>
         <weweibuy.framework.version>1.0-SNAPSHOT</weweibuy.framework.version>
-        <webuy-common.version>1.0-SNAPSHOT</webuy-common.version>
     </properties>
 
     <dependencyManagement>
@@ -49,12 +48,6 @@
                 <version>${spring-boot.version}</version>
                 <type>pom</type>
                 <scope>import</scope>
-            </dependency>
-
-            <dependency>
-                <groupId>com.weweibuy</groupId>
-                <artifactId>gateway-common</artifactId>
-                <version>${project.version}</version>
             </dependency>
 
             <dependency>
