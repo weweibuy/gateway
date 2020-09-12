@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.weweibuy.framework.common.core.model.dto.CommonCodeJsonResponse;
 import com.weweibuy.framework.common.core.model.dto.CommonDataJsonResponse;
-import com.weweibuy.framework.common.core.model.eum.CommonHttpResponseEum;
+import com.weweibuy.framework.common.core.model.eum.CommonErrorCodeEum;
 import com.weweibuy.gateway.core.constant.ExchangeAttributeConstant;
 import com.weweibuy.gateway.core.http.ReactorHttpHelper;
 import com.weweibuy.gateway.core.lb.LoadBalancerHelper;
@@ -75,7 +75,7 @@ public class AuthenticationGatewayFilterFactory extends AbstractGatewayFilterFac
 
 
         int status = responseEntity.getStatusCode().value();
-        if (status == 200 && CommonHttpResponseEum.SUCCESS.getCode().equals(responseEntity.getBody().getCode())) {
+        if (status == 200 && CommonErrorCodeEum.SUCCESS.getCode().equals(responseEntity.getBody().getCode())) {
             CommonDataJsonResponse<AuthorizationResp> body = responseEntity.getBody();
             // 设置app 信息
             exchange.getAttributes().put(ExchangeAttributeConstant.APP_SECRET_ATTR, body.getData().getAppSecret());
