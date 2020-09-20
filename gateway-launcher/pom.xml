@@ -42,9 +42,9 @@
 
     <profiles>
         <profile>
-            <id>test</id>
+            <id>rel</id>
             <properties>
-                <profileActive>test</profileActive>
+                <profileActive>rel</profileActive>
             </properties>
             <build>
                 <plugins>

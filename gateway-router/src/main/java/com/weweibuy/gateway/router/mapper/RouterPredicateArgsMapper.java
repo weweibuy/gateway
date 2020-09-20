@@ -3,8 +3,10 @@ package com.weweibuy.gateway.router.mapper;
 import com.weweibuy.gateway.router.model.example.RouterPredicateArgsExample;
 import com.weweibuy.gateway.router.model.po.RouterPredicateArgs;
 import java.util.List;
+import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
+@Mapper
 public interface RouterPredicateArgsMapper {
     long countByExample(RouterPredicateArgsExample example);
 
