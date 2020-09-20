@@ -1,0 +1,270 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.weweibuy.gateway.route.mapper.RouterFilterArgsMapper">
+  <resultMap id="BaseResultMap" type="com.weweibuy.gateway.route.model.po.RouterFilterArgs">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="filter_id" jdbcType="VARCHAR" property="filterId" />
+    <result column="filter_args_id" jdbcType="VARCHAR" property="filterArgsId" />
+    <result column="args_name" jdbcType="VARCHAR" property="argsName" />
+    <result column="args_value" jdbcType="VARCHAR" property="argsValue" />
+    <result column="is_delete" jdbcType="BIT" property="isDelete" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    id, filter_id, filter_args_id, args_name, args_value, is_delete, create_time, update_time
+  </sql>
+  <select id="selectByExample" parameterType="com.weweibuy.gateway.route.model.example.RouterFilterArgsExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from gw_router_filter_args
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from gw_router_filter_args
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from gw_router_filter_args
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.weweibuy.gateway.route.model.example.RouterFilterArgsExample">
+    delete from gw_router_filter_args
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.weweibuy.gateway.route.model.po.RouterFilterArgs">
+    insert into gw_router_filter_args (id, filter_id, filter_args_id, 
+      args_name, args_value, is_delete, 
+      create_time, update_time)
+    values (#{id,jdbcType=BIGINT}, #{filterId,jdbcType=VARCHAR}, #{filterArgsId,jdbcType=VARCHAR}, 
+      #{argsName,jdbcType=VARCHAR}, #{argsValue,jdbcType=VARCHAR}, #{isDelete,jdbcType=BIT}, 
+      #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.weweibuy.gateway.route.model.po.RouterFilterArgs">
+    insert into gw_router_filter_args
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="filterId != null">
+        filter_id,
+      </if>
+      <if test="filterArgsId != null">
+        filter_args_id,
+      </if>
+      <if test="argsName != null">
+        args_name,
+      </if>
+      <if test="argsValue != null">
+        args_value,
+      </if>
+      <if test="isDelete != null">
+        is_delete,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="updateTime != null">
+        update_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="filterId != null">
+        #{filterId,jdbcType=VARCHAR},
+      </if>
+      <if test="filterArgsId != null">
+        #{filterArgsId,jdbcType=VARCHAR},
+      </if>
+      <if test="argsName != null">
+        #{argsName,jdbcType=VARCHAR},
+      </if>
+      <if test="argsValue != null">
+        #{argsValue,jdbcType=VARCHAR},
+      </if>
+      <if test="isDelete != null">
+        #{isDelete,jdbcType=BIT},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null">
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.weweibuy.gateway.route.model.example.RouterFilterArgsExample" resultType="java.lang.Long">
+    select count(*) from gw_router_filter_args
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    update gw_router_filter_args
+    <set>
+      <if test="record.id != null">
+        id = #{record.id,jdbcType=BIGINT},
+      </if>
+      <if test="record.filterId != null">
+        filter_id = #{record.filterId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.filterArgsId != null">
+        filter_args_id = #{record.filterArgsId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.argsName != null">
+        args_name = #{record.argsName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.argsValue != null">
+        args_value = #{record.argsValue,jdbcType=VARCHAR},
+      </if>
+      <if test="record.isDelete != null">
+        is_delete = #{record.isDelete,jdbcType=BIT},
+      </if>
+      <if test="record.createTime != null">
+        create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.updateTime != null">
+        update_time = #{record.updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update gw_router_filter_args
+    set id = #{record.id,jdbcType=BIGINT},
+      filter_id = #{record.filterId,jdbcType=VARCHAR},
+      filter_args_id = #{record.filterArgsId,jdbcType=VARCHAR},
+      args_name = #{record.argsName,jdbcType=VARCHAR},
+      args_value = #{record.argsValue,jdbcType=VARCHAR},
+      is_delete = #{record.isDelete,jdbcType=BIT},
+      create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      update_time = #{record.updateTime,jdbcType=TIMESTAMP}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.weweibuy.gateway.route.model.po.RouterFilterArgs">
+    update gw_router_filter_args
+    <set>
+      <if test="filterId != null">
+        filter_id = #{filterId,jdbcType=VARCHAR},
+      </if>
+      <if test="filterArgsId != null">
+        filter_args_id = #{filterArgsId,jdbcType=VARCHAR},
+      </if>
+      <if test="argsName != null">
+        args_name = #{argsName,jdbcType=VARCHAR},
+      </if>
+      <if test="argsValue != null">
+        args_value = #{argsValue,jdbcType=VARCHAR},
+      </if>
+      <if test="isDelete != null">
+        is_delete = #{isDelete,jdbcType=BIT},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null">
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.weweibuy.gateway.route.model.po.RouterFilterArgs">
+    update gw_router_filter_args
+    set filter_id = #{filterId,jdbcType=VARCHAR},
+      filter_args_id = #{filterArgsId,jdbcType=VARCHAR},
+      args_name = #{argsName,jdbcType=VARCHAR},
+      args_value = #{argsValue,jdbcType=VARCHAR},
+      is_delete = #{isDelete,jdbcType=BIT},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_time = #{updateTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <select id="selectOneByExample" parameterType="com.weweibuy.gateway.route.model.example.RouterFilterArgsExample" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from gw_router_filter_args
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+    limit 1
+  </select>
+</mapper>

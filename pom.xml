@@ -9,8 +9,8 @@
     <packaging>pom</packaging>
     <version>1.0-SNAPSHOT</version>
     <modules>
-        <module>gateway-server</module>
-        <module>gateway-route</module>
+        <module>gateway-launcher</module>
+        <module>gateway-router</module>
         <module>gateway-core</module>
         <module>gateway-filter</module>
         <module>gateway-lb</module>
@@ -58,7 +58,7 @@
 
             <dependency>
                 <groupId>com.weweibuy</groupId>
-                <artifactId>gateway-route</artifactId>
+                <artifactId>gateway-router</artifactId>
                 <version>${project.version}</version>
             </dependency>
 
@@ -198,7 +198,7 @@
                         <version>1.3.7</version>
                         <configuration>
                             <!-- 配置文件 -->
-                            <configurationFile>src/main/resources/generatorConfig.xml</configurationFile>
+                            <configurationFile>src/main/resources/generator/generatorConfig.xml</configurationFile>
                             <!-- 允许移动和修改 -->
                             <verbose>true</verbose>
                             <overwrite>true</overwrite>
@@ -214,6 +214,13 @@
                                 <artifactId>mybatis-generator-plugin</artifactId>
                                 <version>1.3.2</version>
                             </dependency>
+
+                            <dependency>
+                                <groupId>com.weweibuy.framework</groupId>
+                                <artifactId>mybatis-plugin</artifactId>
+                                <version>1.0-SNAPSHOT</version>
+                            </dependency>
+
                         </dependencies>
                     </plugin>
                 </plugins>
@@ -221,9 +228,9 @@
         </profile>
         <!--测试环境-->
         <profile>
-            <id>test</id>
+            <id>rel</id>
             <properties>
-                <profileActive>test</profileActive>
+                <profileActive>rel</profileActive>
             </properties>
         </profile>
     </profiles>
