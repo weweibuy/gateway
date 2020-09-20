@@ -1,7 +1,7 @@
-package com.weweibuy.gateway.route.mapper;
+package com.weweibuy.gateway.router.mapper;
 
-import com.weweibuy.gateway.route.model.example.RouterPredicateArgsExample;
-import com.weweibuy.gateway.route.model.po.RouterPredicateArgs;
+import com.weweibuy.gateway.router.model.example.RouterPredicateArgsExample;
+import com.weweibuy.gateway.router.model.po.RouterPredicateArgs;
 import java.util.List;
 import org.apache.ibatis.annotations.Param;
 

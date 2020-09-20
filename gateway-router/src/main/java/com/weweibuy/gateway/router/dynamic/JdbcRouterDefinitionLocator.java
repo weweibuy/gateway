@@ -1,8 +1,8 @@
-package com.weweibuy.gateway.route.dynamic;
+package com.weweibuy.gateway.router.dynamic;
 
 import com.weweibuy.gateway.core.mode.event.CustomRefreshRoutesEvent;
-import com.weweibuy.gateway.route.model.vo.FilterVo;
-import com.weweibuy.gateway.route.model.vo.PredicateVo;
+import com.weweibuy.gateway.router.model.vo.FilterVo;
+import com.weweibuy.gateway.router.model.vo.PredicateVo;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.gateway.filter.FilterDefinition;
@@ -26,7 +26,7 @@ import java.util.stream.Collectors;
  * @date 2019/5/20 22:28
  **/
 @Slf4j
-public class JdbcRouteDefinitionLocator implements RouteDefinitionLocator, ApplicationListener<CustomRefreshRoutesEvent> {
+public class JdbcRouterDefinitionLocator implements RouteDefinitionLocator, ApplicationListener<CustomRefreshRoutesEvent> {
 
     @Autowired
     private JdbcRouterManger jdbcRouterManger;
@@ -35,7 +35,7 @@ public class JdbcRouteDefinitionLocator implements RouteDefinitionLocator, Appli
 
     private final Map<String, List> cache = new HashMap<>();
 
-    public JdbcRouteDefinitionLocator() {
+    public JdbcRouterDefinitionLocator() {
         routeDefinition = CacheFlux.lookup(cache, "routeDefinitions", RouteDefinition.class)
                 .onCacheMissResume(() -> loadFormDB()
                         .sort(AnnotationAwareOrderComparator.INSTANCE));

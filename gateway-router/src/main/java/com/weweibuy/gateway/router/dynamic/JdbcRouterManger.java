@@ -1,11 +1,11 @@
-package com.weweibuy.gateway.route.dynamic;
+package com.weweibuy.gateway.router.dynamic;
 
-import com.weweibuy.gateway.route.mapper.*;
-import com.weweibuy.gateway.route.model.example.*;
-import com.weweibuy.gateway.route.model.po.*;
-import com.weweibuy.gateway.route.model.vo.FilterVo;
-import com.weweibuy.gateway.route.model.vo.PredicateVo;
-import com.weweibuy.gateway.route.model.vo.RouterVo;
+import com.weweibuy.gateway.router.mapper.*;
+import com.weweibuy.gateway.router.model.example.*;
+import com.weweibuy.gateway.router.model.po.*;
+import com.weweibuy.gateway.router.model.vo.FilterVo;
+import com.weweibuy.gateway.router.model.vo.PredicateVo;
+import com.weweibuy.gateway.router.model.vo.RouterVo;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 

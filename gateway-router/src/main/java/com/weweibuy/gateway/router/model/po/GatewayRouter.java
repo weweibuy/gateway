@@ -1,34 +1,39 @@
-package com.weweibuy.gateway.route.model.po;
+package com.weweibuy.gateway.router.model.po;
 
 import java.time.LocalDateTime;
 import lombok.Data;
 
 @Data
-public class RouterPredicate {
+public class GatewayRouter {
     /**
      * id
      */
     private Long id;
 
     /**
-     * route_id 关联路由表
+     * 路由id
      */
     private String routerId;
 
     /**
-     * 断言id
+     * 路由系统id
      */
-    private String predicateId;
+    private String systemId;
 
     /**
-     * 断言名称
+     * 路由系统名称
      */
-    private String predicateName;
+    private String systemName;
 
     /**
-     * 断言优先级
+     * uri
      */
-    private Integer predicatePriority;
+    private String routerUri;
+
+    /**
+     * 优先级
+     */
+    private Integer routerPriority;
 
     /**
      * 是否删除

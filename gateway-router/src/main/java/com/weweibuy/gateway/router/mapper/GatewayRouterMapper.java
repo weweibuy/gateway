@@ -1,8 +1,9 @@
-package com.weweibuy.gateway.route.mapper;
+package com.weweibuy.gateway.router.mapper;
 
-import com.weweibuy.gateway.route.model.example.GatewayRouterExample;
-import com.weweibuy.gateway.route.model.po.GatewayRouter;
+import com.weweibuy.gateway.router.model.example.GatewayRouterExample;
+import com.weweibuy.gateway.router.model.po.GatewayRouter;
 import java.util.List;
+
 import org.apache.ibatis.annotations.Param;
 
 public interface GatewayRouterMapper {

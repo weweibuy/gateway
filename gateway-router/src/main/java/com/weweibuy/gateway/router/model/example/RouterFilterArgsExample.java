@@ -1,17 +1,17 @@
-package com.weweibuy.gateway.route.model.example;
+package com.weweibuy.gateway.router.model.example;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-public class GatewayRouterExample {
+public class RouterFilterArgsExample {
     protected String orderByClause;
 
     protected boolean distinct;
 
     protected List<Criteria> oredCriteria;
 
-    public GatewayRouterExample() {
+    public RouterFilterArgsExample() {
         oredCriteria = new ArrayList<Criteria>();
     }
 
@@ -165,343 +165,283 @@ public class GatewayRouterExample {
             return (Criteria) this;
         }
 
-        public Criteria andRouterIdIsNull() {
-            addCriterion("router_id is null");
+        public Criteria andFilterIdIsNull() {
+            addCriterion("filter_id is null");
             return (Criteria) this;
         }
 
-        public Criteria andRouterIdIsNotNull() {
-            addCriterion("router_id is not null");
+        public Criteria andFilterIdIsNotNull() {
+            addCriterion("filter_id is not null");
             return (Criteria) this;
         }
 
-        public Criteria andRouterIdEqualTo(String value) {
-            addCriterion("router_id =", value, "routerId");
+        public Criteria andFilterIdEqualTo(String value) {
+            addCriterion("filter_id =", value, "filterId");
             return (Criteria) this;
         }
 
-        public Criteria andRouterIdNotEqualTo(String value) {
-            addCriterion("router_id <>", value, "routerId");
+        public Criteria andFilterIdNotEqualTo(String value) {
+            addCriterion("filter_id <>", value, "filterId");
             return (Criteria) this;
         }
 
-        public Criteria andRouterIdGreaterThan(String value) {
-            addCriterion("router_id >", value, "routerId");
+        public Criteria andFilterIdGreaterThan(String value) {
+            addCriterion("filter_id >", value, "filterId");
             return (Criteria) this;
         }
 
-        public Criteria andRouterIdGreaterThanOrEqualTo(String value) {
-            addCriterion("router_id >=", value, "routerId");
+        public Criteria andFilterIdGreaterThanOrEqualTo(String value) {
+            addCriterion("filter_id >=", value, "filterId");
             return (Criteria) this;
         }
 
-        public Criteria andRouterIdLessThan(String value) {
-            addCriterion("router_id <", value, "routerId");
+        public Criteria andFilterIdLessThan(String value) {
+            addCriterion("filter_id <", value, "filterId");
             return (Criteria) this;
         }
 
-        public Criteria andRouterIdLessThanOrEqualTo(String value) {
-            addCriterion("router_id <=", value, "routerId");
+        public Criteria andFilterIdLessThanOrEqualTo(String value) {
+            addCriterion("filter_id <=", value, "filterId");
             return (Criteria) this;
         }
 
-        public Criteria andRouterIdLike(String value) {
-            addCriterion("router_id like", value, "routerId");
+        public Criteria andFilterIdLike(String value) {
+            addCriterion("filter_id like", value, "filterId");
             return (Criteria) this;
         }
 
-        public Criteria andRouterIdNotLike(String value) {
-            addCriterion("router_id not like", value, "routerId");
+        public Criteria andFilterIdNotLike(String value) {
+            addCriterion("filter_id not like", value, "filterId");
             return (Criteria) this;
         }
 
-        public Criteria andRouterIdIn(List<String> values) {
-            addCriterion("router_id in", values, "routerId");
+        public Criteria andFilterIdIn(List<String> values) {
+            addCriterion("filter_id in", values, "filterId");
             return (Criteria) this;
         }
 
-        public Criteria andRouterIdNotIn(List<String> values) {
-            addCriterion("router_id not in", values, "routerId");
+        public Criteria andFilterIdNotIn(List<String> values) {
+            addCriterion("filter_id not in", values, "filterId");
             return (Criteria) this;
         }
 
-        public Criteria andRouterIdBetween(String value1, String value2) {
-            addCriterion("router_id between", value1, value2, "routerId");
+        public Criteria andFilterIdBetween(String value1, String value2) {
+            addCriterion("filter_id between", value1, value2, "filterId");
             return (Criteria) this;
         }
 
-        public Criteria andRouterIdNotBetween(String value1, String value2) {
-            addCriterion("router_id not between", value1, value2, "routerId");
+        public Criteria andFilterIdNotBetween(String value1, String value2) {
+            addCriterion("filter_id not between", value1, value2, "filterId");
             return (Criteria) this;
         }
 
-        public Criteria andSystemIdIsNull() {
-            addCriterion("system_id is null");
+        public Criteria andFilterArgsIdIsNull() {
+            addCriterion("filter_args_id is null");
             return (Criteria) this;
         }
 
-        public Criteria andSystemIdIsNotNull() {
-            addCriterion("system_id is not null");
+        public Criteria andFilterArgsIdIsNotNull() {
+            addCriterion("filter_args_id is not null");
             return (Criteria) this;
         }
 
-        public Criteria andSystemIdEqualTo(String value) {
-            addCriterion("system_id =", value, "systemId");
+        public Criteria andFilterArgsIdEqualTo(String value) {
+            addCriterion("filter_args_id =", value, "filterArgsId");
             return (Criteria) this;
         }
 
-        public Criteria andSystemIdNotEqualTo(String value) {
-            addCriterion("system_id <>", value, "systemId");
+        public Criteria andFilterArgsIdNotEqualTo(String value) {
+            addCriterion("filter_args_id <>", value, "filterArgsId");
             return (Criteria) this;
         }
 
-        public Criteria andSystemIdGreaterThan(String value) {
-            addCriterion("system_id >", value, "systemId");
+        public Criteria andFilterArgsIdGreaterThan(String value) {
+            addCriterion("filter_args_id >", value, "filterArgsId");
             return (Criteria) this;
         }
 
-        public Criteria andSystemIdGreaterThanOrEqualTo(String value) {
-            addCriterion("system_id >=", value, "systemId");
+        public Criteria andFilterArgsIdGreaterThanOrEqualTo(String value) {
+            addCriterion("filter_args_id >=", value, "filterArgsId");
             return (Criteria) this;
         }
 
-        public Criteria andSystemIdLessThan(String value) {
-            addCriterion("system_id <", value, "systemId");
+        public Criteria andFilterArgsIdLessThan(String value) {
+            addCriterion("filter_args_id <", value, "filterArgsId");
             return (Criteria) this;
         }
 
-        public Criteria andSystemIdLessThanOrEqualTo(String value) {
-            addCriterion("system_id <=", value, "systemId");
+        public Criteria andFilterArgsIdLessThanOrEqualTo(String value) {
+            addCriterion("filter_args_id <=", value, "filterArgsId");
             return (Criteria) this;
         }
 
-        public Criteria andSystemIdLike(String value) {
-            addCriterion("system_id like", value, "systemId");
+        public Criteria andFilterArgsIdLike(String value) {
+            addCriterion("filter_args_id like", value, "filterArgsId");
             return (Criteria) this;
         }
 
-        public Criteria andSystemIdNotLike(String value) {
-            addCriterion("system_id not like", value, "systemId");
+        public Criteria andFilterArgsIdNotLike(String value) {
+            addCriterion("filter_args_id not like", value, "filterArgsId");
             return (Criteria) this;
         }
 
-        public Criteria andSystemIdIn(List<String> values) {
-            addCriterion("system_id in", values, "systemId");
+        public Criteria andFilterArgsIdIn(List<String> values) {
+            addCriterion("filter_args_id in", values, "filterArgsId");
             return (Criteria) this;
         }
 
-        public Criteria andSystemIdNotIn(List<String> values) {
-            addCriterion("system_id not in", values, "systemId");
+        public Criteria andFilterArgsIdNotIn(List<String> values) {
+            addCriterion("filter_args_id not in", values, "filterArgsId");
             return (Criteria) this;
         }
 
-        public Criteria andSystemIdBetween(String value1, String value2) {
-            addCriterion("system_id between", value1, value2, "systemId");
+        public Criteria andFilterArgsIdBetween(String value1, String value2) {
+            addCriterion("filter_args_id between", value1, value2, "filterArgsId");
             return (Criteria) this;
         }
 
-        public Criteria andSystemIdNotBetween(String value1, String value2) {
-            addCriterion("system_id not between", value1, value2, "systemId");
+        public Criteria andFilterArgsIdNotBetween(String value1, String value2) {
+            addCriterion("filter_args_id not between", value1, value2, "filterArgsId");
             return (Criteria) this;
         }
 
-        public Criteria andSystemNameIsNull() {
-            addCriterion("system_name is null");
+        public Criteria andArgsNameIsNull() {
+            addCriterion("args_name is null");
             return (Criteria) this;
         }
 
-        public Criteria andSystemNameIsNotNull() {
-            addCriterion("system_name is not null");
+        public Criteria andArgsNameIsNotNull() {
+            addCriterion("args_name is not null");
             return (Criteria) this;
         }
 
-        public Criteria andSystemNameEqualTo(String value) {
-            addCriterion("system_name =", value, "systemName");
+        public Criteria andArgsNameEqualTo(String value) {
+            addCriterion("args_name =", value, "argsName");
             return (Criteria) this;
         }
 
-        public Criteria andSystemNameNotEqualTo(String value) {
-            addCriterion("system_name <>", value, "systemName");
+        public Criteria andArgsNameNotEqualTo(String value) {
+            addCriterion("args_name <>", value, "argsName");
             return (Criteria) this;
         }
 
-        public Criteria andSystemNameGreaterThan(String value) {
-            addCriterion("system_name >", value, "systemName");
+        public Criteria andArgsNameGreaterThan(String value) {
+            addCriterion("args_name >", value, "argsName");
             return (Criteria) this;
         }
 
-        public Criteria andSystemNameGreaterThanOrEqualTo(String value) {
-            addCriterion("system_name >=", value, "systemName");
+        public Criteria andArgsNameGreaterThanOrEqualTo(String value) {
+            addCriterion("args_name >=", value, "argsName");
             return (Criteria) this;
         }
 
-        public Criteria andSystemNameLessThan(String value) {
-            addCriterion("system_name <", value, "systemName");
+        public Criteria andArgsNameLessThan(String value) {
+            addCriterion("args_name <", value, "argsName");
             return (Criteria) this;
         }
 
-        public Criteria andSystemNameLessThanOrEqualTo(String value) {
-            addCriterion("system_name <=", value, "systemName");
+        public Criteria andArgsNameLessThanOrEqualTo(String value) {
+            addCriterion("args_name <=", value, "argsName");
             return (Criteria) this;
         }
 
-        public Criteria andSystemNameLike(String value) {
-            addCriterion("system_name like", value, "systemName");
+        public Criteria andArgsNameLike(String value) {
+            addCriterion("args_name like", value, "argsName");
             return (Criteria) this;
         }
 
-        public Criteria andSystemNameNotLike(String value) {
-            addCriterion("system_name not like", value, "systemName");
+        public Criteria andArgsNameNotLike(String value) {
+            addCriterion("args_name not like", value, "argsName");
             return (Criteria) this;
         }
 
-        public Criteria andSystemNameIn(List<String> values) {
-            addCriterion("system_name in", values, "systemName");
+        public Criteria andArgsNameIn(List<String> values) {
+            addCriterion("args_name in", values, "argsName");
             return (Criteria) this;
         }
 
-        public Criteria andSystemNameNotIn(List<String> values) {
-            addCriterion("system_name not in", values, "systemName");
+        public Criteria andArgsNameNotIn(List<String> values) {
+            addCriterion("args_name not in", values, "argsName");
             return (Criteria) this;
         }
 
-        public Criteria andSystemNameBetween(String value1, String value2) {
-            addCriterion("system_name between", value1, value2, "systemName");
+        public Criteria andArgsNameBetween(String value1, String value2) {
+            addCriterion("args_name between", value1, value2, "argsName");
             return (Criteria) this;
         }
 
-        public Criteria andSystemNameNotBetween(String value1, String value2) {
-            addCriterion("system_name not between", value1, value2, "systemName");
+        public Criteria andArgsNameNotBetween(String value1, String value2) {
+            addCriterion("args_name not between", value1, value2, "argsName");
             return (Criteria) this;
         }
 
-        public Criteria andRouterUriIsNull() {
-            addCriterion("router_uri is null");
+        public Criteria andArgsValueIsNull() {
+            addCriterion("args_value is null");
             return (Criteria) this;
         }
 
-        public Criteria andRouterUriIsNotNull() {
-            addCriterion("router_uri is not null");
+        public Criteria andArgsValueIsNotNull() {
+            addCriterion("args_value is not null");
             return (Criteria) this;
         }
 
-        public Criteria andRouterUriEqualTo(String value) {
-            addCriterion("router_uri =", value, "routerUri");
+        public Criteria andArgsValueEqualTo(String value) {
+            addCriterion("args_value =", value, "argsValue");
             return (Criteria) this;
         }
 
-        public Criteria andRouterUriNotEqualTo(String value) {
-            addCriterion("router_uri <>", value, "routerUri");
+        public Criteria andArgsValueNotEqualTo(String value) {
+            addCriterion("args_value <>", value, "argsValue");
             return (Criteria) this;
         }
 
-        public Criteria andRouterUriGreaterThan(String value) {
-            addCriterion("router_uri >", value, "routerUri");
+        public Criteria andArgsValueGreaterThan(String value) {
+            addCriterion("args_value >", value, "argsValue");
             return (Criteria) this;
         }
 
-        public Criteria andRouterUriGreaterThanOrEqualTo(String value) {
-            addCriterion("router_uri >=", value, "routerUri");
+        public Criteria andArgsValueGreaterThanOrEqualTo(String value) {
+            addCriterion("args_value >=", value, "argsValue");
             return (Criteria) this;
         }
 
-        public Criteria andRouterUriLessThan(String value) {
-            addCriterion("router_uri <", value, "routerUri");
+        public Criteria andArgsValueLessThan(String value) {
+            addCriterion("args_value <", value, "argsValue");
             return (Criteria) this;
         }
 
-        public Criteria andRouterUriLessThanOrEqualTo(String value) {
-            addCriterion("router_uri <=", value, "routerUri");
+        public Criteria andArgsValueLessThanOrEqualTo(String value) {
+            addCriterion("args_value <=", value, "argsValue");
             return (Criteria) this;
         }
 
-        public Criteria andRouterUriLike(String value) {
-            addCriterion("router_uri like", value, "routerUri");
+        public Criteria andArgsValueLike(String value) {
+            addCriterion("args_value like", value, "argsValue");
             return (Criteria) this;
         }
 
-        public Criteria andRouterUriNotLike(String value) {
-            addCriterion("router_uri not like", value, "routerUri");
+        public Criteria andArgsValueNotLike(String value) {
+            addCriterion("args_value not like", value, "argsValue");
             return (Criteria) this;
         }
 
-        public Criteria andRouterUriIn(List<String> values) {
-            addCriterion("router_uri in", values, "routerUri");
+        public Criteria andArgsValueIn(List<String> values) {
+            addCriterion("args_value in", values, "argsValue");
             return (Criteria) this;
         }
 
-        public Criteria andRouterUriNotIn(List<String> values) {
-            addCriterion("router_uri not in", values, "routerUri");
+        public Criteria andArgsValueNotIn(List<String> values) {
+            addCriterion("args_value not in", values, "argsValue");
             return (Criteria) this;
         }
 
-        public Criteria andRouterUriBetween(String value1, String value2) {
-            addCriterion("router_uri between", value1, value2, "routerUri");
+        public Criteria andArgsValueBetween(String value1, String value2) {
+            addCriterion("args_value between", value1, value2, "argsValue");
             return (Criteria) this;
         }
 
-        public Criteria andRouterUriNotBetween(String value1, String value2) {
-            addCriterion("router_uri not between", value1, value2, "routerUri");
-            return (Criteria) this;
-        }
-
-        public Criteria andRouterPriorityIsNull() {
-            addCriterion("router_priority is null");
-            return (Criteria) this;
-        }
-
-        public Criteria andRouterPriorityIsNotNull() {
-            addCriterion("router_priority is not null");
-            return (Criteria) this;
-        }
-
-        public Criteria andRouterPriorityEqualTo(Integer value) {
-            addCriterion("router_priority =", value, "routerPriority");
-            return (Criteria) this;
-        }
-
-        public Criteria andRouterPriorityNotEqualTo(Integer value) {
-            addCriterion("router_priority <>", value, "routerPriority");
-            return (Criteria) this;
-        }
-
-        public Criteria andRouterPriorityGreaterThan(Integer value) {
-            addCriterion("router_priority >", value, "routerPriority");
-            return (Criteria) this;
-        }
-
-        public Criteria andRouterPriorityGreaterThanOrEqualTo(Integer value) {
-            addCriterion("router_priority >=", value, "routerPriority");
-            return (Criteria) this;
-        }
-
-        public Criteria andRouterPriorityLessThan(Integer value) {
-            addCriterion("router_priority <", value, "routerPriority");
-            return (Criteria) this;
-        }
-
-        public Criteria andRouterPriorityLessThanOrEqualTo(Integer value) {
-            addCriterion("router_priority <=", value, "routerPriority");
-            return (Criteria) this;
-        }
-
-        public Criteria andRouterPriorityIn(List<Integer> values) {
-            addCriterion("router_priority in", values, "routerPriority");
-            return (Criteria) this;
-        }
-
-        public Criteria andRouterPriorityNotIn(List<Integer> values) {
-            addCriterion("router_priority not in", values, "routerPriority");
-            return (Criteria) this;
-        }
-
-        public Criteria andRouterPriorityBetween(Integer value1, Integer value2) {
-            addCriterion("router_priority between", value1, value2, "routerPriority");
-            return (Criteria) this;
-        }
-
-        public Criteria andRouterPriorityNotBetween(Integer value1, Integer value2) {
-            addCriterion("router_priority not between", value1, value2, "routerPriority");
+        public Criteria andArgsValueNotBetween(String value1, String value2) {
+            addCriterion("args_value not between", value1, value2, "argsValue");
             return (Criteria) this;
         }
 

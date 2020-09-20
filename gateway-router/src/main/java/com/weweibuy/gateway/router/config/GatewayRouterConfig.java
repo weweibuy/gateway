@@ -1,7 +1,7 @@
-package com.weweibuy.gateway.route.config;
+package com.weweibuy.gateway.router.config;
 
-import com.weweibuy.gateway.route.dynamic.JdbcRouteDefinitionLocator;
-import com.weweibuy.gateway.route.dynamic.JdbcRouterManger;
+import com.weweibuy.gateway.router.dynamic.JdbcRouterDefinitionLocator;
+import com.weweibuy.gateway.router.dynamic.JdbcRouterManger;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.cloud.gateway.route.RouteDefinitionLocator;
 import org.springframework.context.annotation.Bean;
@@ -13,11 +13,11 @@ import org.springframework.context.annotation.Configuration;
  **/
 @Configuration
 @MapperScan(basePackages = "com.weweibuy.gateway.route.mapper")
-public class GatewayRouteConfig {
+public class GatewayRouterConfig {
 
     @Bean
     public RouteDefinitionLocator jdbcRouteDefinitionLocator() {
-        return new JdbcRouteDefinitionLocator();
+        return new JdbcRouterDefinitionLocator();
     }
 
     @Bean

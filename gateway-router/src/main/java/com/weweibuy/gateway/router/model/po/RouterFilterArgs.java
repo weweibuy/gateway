@@ -1,39 +1,34 @@
-package com.weweibuy.gateway.route.model.po;
+package com.weweibuy.gateway.router.model.po;
 
 import java.time.LocalDateTime;
 import lombok.Data;
 
 @Data
-public class GatewayRouter {
+public class RouterFilterArgs {
     /**
      * id
      */
     private Long id;
 
     /**
-     * 路由id
+     * 关联过滤器表 filter_id
      */
-    private String routerId;
+    private String filterId;
 
     /**
-     * 路由系统id
+     * 过滤器参数id
      */
-    private String systemId;
+    private String filterArgsId;
 
     /**
-     * 路由系统名称
+     * 参数名
      */
-    private String systemName;
+    private String argsName;
 
     /**
-     * uri
+     * 参数值
      */
-    private String routerUri;
-
-    /**
-     * 优先级
-     */
-    private Integer routerPriority;
+    private String argsValue;
 
     /**
      * 是否删除

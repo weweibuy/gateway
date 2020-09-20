@@ -1,5 +1,6 @@
-package com.weweibuy.gateway.route.endpoint;
+package com.weweibuy.gateway.router.endpoint;
 
+import com.weweibuy.framework.common.core.model.dto.CommonCodeJsonResponse;
 import com.weweibuy.gateway.core.mode.event.CustomRefreshRoutesEvent;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.gateway.route.RouteDefinitionLocator;
@@ -15,8 +16,8 @@ import reactor.core.publisher.Mono;
  * @date 2020/2/23 11:11
  **/
 @RestController
-@RequestMapping("/gateway/route")
-public class RouteManagerEndpoint {
+@RequestMapping("/gateway/router")
+public class RouterManagerEndpoint {
 
     @Autowired
     private ApplicationContext applicationContext;
@@ -25,9 +26,9 @@ public class RouteManagerEndpoint {
     private RouteDefinitionLocator routeDefinitionLocator;
 
     @PostMapping
-    public String refreshRoute() {
+    public CommonCodeJsonResponse refreshRoute() {
         applicationContext.publishEvent(new CustomRefreshRoutesEvent(this));
-        return "success";
+        return CommonCodeJsonResponse.success();
     }
 
 

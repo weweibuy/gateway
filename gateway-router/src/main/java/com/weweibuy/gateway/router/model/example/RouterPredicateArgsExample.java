@@ -1,17 +1,17 @@
-package com.weweibuy.gateway.route.model.example;
+package com.weweibuy.gateway.router.model.example;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-public class RouterPredicateExample {
+public class RouterPredicateArgsExample {
     protected String orderByClause;
 
     protected boolean distinct;
 
     protected List<Criteria> oredCriteria;
 
-    public RouterPredicateExample() {
+    public RouterPredicateArgsExample() {
         oredCriteria = new ArrayList<Criteria>();
     }
 
@@ -165,76 +165,6 @@ public class RouterPredicateExample {
             return (Criteria) this;
         }
 
-        public Criteria andRouterIdIsNull() {
-            addCriterion("router_id is null");
-            return (Criteria) this;
-        }
-
-        public Criteria andRouterIdIsNotNull() {
-            addCriterion("router_id is not null");
-            return (Criteria) this;
-        }
-
-        public Criteria andRouterIdEqualTo(String value) {
-            addCriterion("router_id =", value, "routerId");
-            return (Criteria) this;
-        }
-
-        public Criteria andRouterIdNotEqualTo(String value) {
-            addCriterion("router_id <>", value, "routerId");
-            return (Criteria) this;
-        }
-
-        public Criteria andRouterIdGreaterThan(String value) {
-            addCriterion("router_id >", value, "routerId");
-            return (Criteria) this;
-        }
-
-        public Criteria andRouterIdGreaterThanOrEqualTo(String value) {
-            addCriterion("router_id >=", value, "routerId");
-            return (Criteria) this;
-        }
-
-        public Criteria andRouterIdLessThan(String value) {
-            addCriterion("router_id <", value, "routerId");
-            return (Criteria) this;
-        }
-
-        public Criteria andRouterIdLessThanOrEqualTo(String value) {
-            addCriterion("router_id <=", value, "routerId");
-            return (Criteria) this;
-        }
-
-        public Criteria andRouterIdLike(String value) {
-            addCriterion("router_id like", value, "routerId");
-            return (Criteria) this;
-        }
-
-        public Criteria andRouterIdNotLike(String value) {
-            addCriterion("router_id not like", value, "routerId");
-            return (Criteria) this;
-        }
-
-        public Criteria andRouterIdIn(List<String> values) {
-            addCriterion("router_id in", values, "routerId");
-            return (Criteria) this;
-        }
-
-        public Criteria andRouterIdNotIn(List<String> values) {
-            addCriterion("router_id not in", values, "routerId");
-            return (Criteria) this;
-        }
-
-        public Criteria andRouterIdBetween(String value1, String value2) {
-            addCriterion("router_id between", value1, value2, "routerId");
-            return (Criteria) this;
-        }
-
-        public Criteria andRouterIdNotBetween(String value1, String value2) {
-            addCriterion("router_id not between", value1, value2, "routerId");
-            return (Criteria) this;
-        }
-
         public Criteria andPredicateIdIsNull() {
             addCriterion("predicate_id is null");
             return (Criteria) this;
@@ -305,133 +235,213 @@ public class RouterPredicateExample {
             return (Criteria) this;
         }
 
-        public Criteria andPredicateNameIsNull() {
-            addCriterion("predicate_name is null");
+        public Criteria andPredicateArgIdIsNull() {
+            addCriterion("predicate_arg_id is null");
             return (Criteria) this;
         }
 
-        public Criteria andPredicateNameIsNotNull() {
-            addCriterion("predicate_name is not null");
+        public Criteria andPredicateArgIdIsNotNull() {
+            addCriterion("predicate_arg_id is not null");
             return (Criteria) this;
         }
 
-        public Criteria andPredicateNameEqualTo(String value) {
-            addCriterion("predicate_name =", value, "predicateName");
+        public Criteria andPredicateArgIdEqualTo(String value) {
+            addCriterion("predicate_arg_id =", value, "predicateArgId");
             return (Criteria) this;
         }
 
-        public Criteria andPredicateNameNotEqualTo(String value) {
-            addCriterion("predicate_name <>", value, "predicateName");
+        public Criteria andPredicateArgIdNotEqualTo(String value) {
+            addCriterion("predicate_arg_id <>", value, "predicateArgId");
             return (Criteria) this;
         }
 
-        public Criteria andPredicateNameGreaterThan(String value) {
-            addCriterion("predicate_name >", value, "predicateName");
+        public Criteria andPredicateArgIdGreaterThan(String value) {
+            addCriterion("predicate_arg_id >", value, "predicateArgId");
             return (Criteria) this;
         }
 
-        public Criteria andPredicateNameGreaterThanOrEqualTo(String value) {
-            addCriterion("predicate_name >=", value, "predicateName");
+        public Criteria andPredicateArgIdGreaterThanOrEqualTo(String value) {
+            addCriterion("predicate_arg_id >=", value, "predicateArgId");
             return (Criteria) this;
         }
 
-        public Criteria andPredicateNameLessThan(String value) {
-            addCriterion("predicate_name <", value, "predicateName");
+        public Criteria andPredicateArgIdLessThan(String value) {
+            addCriterion("predicate_arg_id <", value, "predicateArgId");
             return (Criteria) this;
         }
 
-        public Criteria andPredicateNameLessThanOrEqualTo(String value) {
-            addCriterion("predicate_name <=", value, "predicateName");
+        public Criteria andPredicateArgIdLessThanOrEqualTo(String value) {
+            addCriterion("predicate_arg_id <=", value, "predicateArgId");
             return (Criteria) this;
         }
 
-        public Criteria andPredicateNameLike(String value) {
-            addCriterion("predicate_name like", value, "predicateName");
+        public Criteria andPredicateArgIdLike(String value) {
+            addCriterion("predicate_arg_id like", value, "predicateArgId");
             return (Criteria) this;
         }
 
-        public Criteria andPredicateNameNotLike(String value) {
-            addCriterion("predicate_name not like", value, "predicateName");
+        public Criteria andPredicateArgIdNotLike(String value) {
+            addCriterion("predicate_arg_id not like", value, "predicateArgId");
             return (Criteria) this;
         }
 
-        public Criteria andPredicateNameIn(List<String> values) {
-            addCriterion("predicate_name in", values, "predicateName");
+        public Criteria andPredicateArgIdIn(List<String> values) {
+            addCriterion("predicate_arg_id in", values, "predicateArgId");
             return (Criteria) this;
         }
 
-        public Criteria andPredicateNameNotIn(List<String> values) {
-            addCriterion("predicate_name not in", values, "predicateName");
+        public Criteria andPredicateArgIdNotIn(List<String> values) {
+            addCriterion("predicate_arg_id not in", values, "predicateArgId");
             return (Criteria) this;
         }
 
-        public Criteria andPredicateNameBetween(String value1, String value2) {
-            addCriterion("predicate_name between", value1, value2, "predicateName");
+        public Criteria andPredicateArgIdBetween(String value1, String value2) {
+            addCriterion("predicate_arg_id between", value1, value2, "predicateArgId");
             return (Criteria) this;
         }
 
-        public Criteria andPredicateNameNotBetween(String value1, String value2) {
-            addCriterion("predicate_name not between", value1, value2, "predicateName");
+        public Criteria andPredicateArgIdNotBetween(String value1, String value2) {
+            addCriterion("predicate_arg_id not between", value1, value2, "predicateArgId");
             return (Criteria) this;
         }
 
-        public Criteria andPredicatePriorityIsNull() {
-            addCriterion("predicate_priority is null");
+        public Criteria andArgsNameIsNull() {
+            addCriterion("args_name is null");
             return (Criteria) this;
         }
 
-        public Criteria andPredicatePriorityIsNotNull() {
-            addCriterion("predicate_priority is not null");
+        public Criteria andArgsNameIsNotNull() {
+            addCriterion("args_name is not null");
             return (Criteria) this;
         }
 
-        public Criteria andPredicatePriorityEqualTo(Integer value) {
-            addCriterion("predicate_priority =", value, "predicatePriority");
+        public Criteria andArgsNameEqualTo(String value) {
+            addCriterion("args_name =", value, "argsName");
             return (Criteria) this;
         }
 
-        public Criteria andPredicatePriorityNotEqualTo(Integer value) {
-            addCriterion("predicate_priority <>", value, "predicatePriority");
+        public Criteria andArgsNameNotEqualTo(String value) {
+            addCriterion("args_name <>", value, "argsName");
             return (Criteria) this;
         }
 
-        public Criteria andPredicatePriorityGreaterThan(Integer value) {
-            addCriterion("predicate_priority >", value, "predicatePriority");
+        public Criteria andArgsNameGreaterThan(String value) {
+            addCriterion("args_name >", value, "argsName");
             return (Criteria) this;
         }
 
-        public Criteria andPredicatePriorityGreaterThanOrEqualTo(Integer value) {
-            addCriterion("predicate_priority >=", value, "predicatePriority");
+        public Criteria andArgsNameGreaterThanOrEqualTo(String value) {
+            addCriterion("args_name >=", value, "argsName");
             return (Criteria) this;
         }
 
-        public Criteria andPredicatePriorityLessThan(Integer value) {
-            addCriterion("predicate_priority <", value, "predicatePriority");
+        public Criteria andArgsNameLessThan(String value) {
+            addCriterion("args_name <", value, "argsName");
             return (Criteria) this;
         }
 
-        public Criteria andPredicatePriorityLessThanOrEqualTo(Integer value) {
-            addCriterion("predicate_priority <=", value, "predicatePriority");
+        public Criteria andArgsNameLessThanOrEqualTo(String value) {
+            addCriterion("args_name <=", value, "argsName");
             return (Criteria) this;
         }
 
-        public Criteria andPredicatePriorityIn(List<Integer> values) {
-            addCriterion("predicate_priority in", values, "predicatePriority");
+        public Criteria andArgsNameLike(String value) {
+            addCriterion("args_name like", value, "argsName");
             return (Criteria) this;
         }
 
-        public Criteria andPredicatePriorityNotIn(List<Integer> values) {
-            addCriterion("predicate_priority not in", values, "predicatePriority");
+        public Criteria andArgsNameNotLike(String value) {
+            addCriterion("args_name not like", value, "argsName");
             return (Criteria) this;
         }
 
-        public Criteria andPredicatePriorityBetween(Integer value1, Integer value2) {
-            addCriterion("predicate_priority between", value1, value2, "predicatePriority");
+        public Criteria andArgsNameIn(List<String> values) {
+            addCriterion("args_name in", values, "argsName");
             return (Criteria) this;
         }
 
-        public Criteria andPredicatePriorityNotBetween(Integer value1, Integer value2) {
-            addCriterion("predicate_priority not between", value1, value2, "predicatePriority");
+        public Criteria andArgsNameNotIn(List<String> values) {
+            addCriterion("args_name not in", values, "argsName");
+            return (Criteria) this;
+        }
+
+        public Criteria andArgsNameBetween(String value1, String value2) {
+            addCriterion("args_name between", value1, value2, "argsName");
+            return (Criteria) this;
+        }
+
+        public Criteria andArgsNameNotBetween(String value1, String value2) {
+            addCriterion("args_name not between", value1, value2, "argsName");
+            return (Criteria) this;
+        }
+
+        public Criteria andArgsValueIsNull() {
+            addCriterion("args_value is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andArgsValueIsNotNull() {
+            addCriterion("args_value is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andArgsValueEqualTo(String value) {
+            addCriterion("args_value =", value, "argsValue");
+            return (Criteria) this;
+        }
+
+        public Criteria andArgsValueNotEqualTo(String value) {
+            addCriterion("args_value <>", value, "argsValue");
+            return (Criteria) this;
+        }
+
+        public Criteria andArgsValueGreaterThan(String value) {
+            addCriterion("args_value >", value, "argsValue");
+            return (Criteria) this;
+        }
+
+        public Criteria andArgsValueGreaterThanOrEqualTo(String value) {
+            addCriterion("args_value >=", value, "argsValue");
+            return (Criteria) this;
+        }
+
+        public Criteria andArgsValueLessThan(String value) {
+            addCriterion("args_value <", value, "argsValue");
+            return (Criteria) this;
+        }
+
+        public Criteria andArgsValueLessThanOrEqualTo(String value) {
+            addCriterion("args_value <=", value, "argsValue");
+            return (Criteria) this;
+        }
+
+        public Criteria andArgsValueLike(String value) {
+            addCriterion("args_value like", value, "argsValue");
+            return (Criteria) this;
+        }
+
+        public Criteria andArgsValueNotLike(String value) {
+            addCriterion("args_value not like", value, "argsValue");
+            return (Criteria) this;
+        }
+
+        public Criteria andArgsValueIn(List<String> values) {
+            addCriterion("args_value in", values, "argsValue");
+            return (Criteria) this;
+        }
+
+        public Criteria andArgsValueNotIn(List<String> values) {
+            addCriterion("args_value not in", values, "argsValue");
+            return (Criteria) this;
+        }
+
+        public Criteria andArgsValueBetween(String value1, String value2) {
+            addCriterion("args_value between", value1, value2, "argsValue");
+            return (Criteria) this;
+        }
+
+        public Criteria andArgsValueNotBetween(String value1, String value2) {
+            addCriterion("args_value not between", value1, value2, "argsValue");
             return (Criteria) this;
         }
 

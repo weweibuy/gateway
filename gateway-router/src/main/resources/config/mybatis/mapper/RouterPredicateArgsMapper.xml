@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.weweibuy.gateway.route.mapper.RouterPredicateArgsMapper">
-  <resultMap id="BaseResultMap" type="com.weweibuy.gateway.route.model.po.RouterPredicateArgs">
+<mapper namespace="com.weweibuy.gateway.router.mapper.RouterPredicateArgsMapper">
+  <resultMap id="BaseResultMap" type="com.weweibuy.gateway.router.model.po.RouterPredicateArgs">
     <id column="id" jdbcType="BIGINT" property="id" />
     <result column="predicate_id" jdbcType="VARCHAR" property="predicateId" />
     <result column="predicate_arg_id" jdbcType="VARCHAR" property="predicateArgId" />
@@ -73,7 +73,7 @@
     id, predicate_id, predicate_arg_id, args_name, args_value, is_delete, create_time, 
     update_time
   </sql>
-  <select id="selectByExample" parameterType="com.weweibuy.gateway.route.model.example.RouterPredicateArgsExample" resultMap="BaseResultMap">
+  <select id="selectByExample" parameterType="com.weweibuy.gateway.router.model.example.RouterPredicateArgsExample" resultMap="BaseResultMap">
     select
     <if test="distinct">
       distinct
@@ -97,13 +97,13 @@
     delete from gw_router_predicate_args
     where id = #{id,jdbcType=BIGINT}
   </delete>
-  <delete id="deleteByExample" parameterType="com.weweibuy.gateway.route.model.example.RouterPredicateArgsExample">
+  <delete id="deleteByExample" parameterType="com.weweibuy.gateway.router.model.example.RouterPredicateArgsExample">
     delete from gw_router_predicate_args
     <if test="_parameter != null">
       <include refid="Example_Where_Clause" />
     </if>
   </delete>
-  <insert id="insert" parameterType="com.weweibuy.gateway.route.model.po.RouterPredicateArgs">
+  <insert id="insert" parameterType="com.weweibuy.gateway.router.model.po.RouterPredicateArgs">
     insert into gw_router_predicate_args (id, predicate_id, predicate_arg_id, 
       args_name, args_value, is_delete, 
       create_time, update_time)
@@ -111,7 +111,7 @@
       #{argsName,jdbcType=VARCHAR}, #{argsValue,jdbcType=VARCHAR}, #{isDelete,jdbcType=BIT}, 
       #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP})
   </insert>
-  <insert id="insertSelective" parameterType="com.weweibuy.gateway.route.model.po.RouterPredicateArgs">
+  <insert id="insertSelective" parameterType="com.weweibuy.gateway.router.model.po.RouterPredicateArgs">
     insert into gw_router_predicate_args
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="id != null">
@@ -166,7 +166,7 @@
       </if>
     </trim>
   </insert>
-  <select id="countByExample" parameterType="com.weweibuy.gateway.route.model.example.RouterPredicateArgsExample" resultType="java.lang.Long">
+  <select id="countByExample" parameterType="com.weweibuy.gateway.router.model.example.RouterPredicateArgsExample" resultType="java.lang.Long">
     select count(*) from gw_router_predicate_args
     <if test="_parameter != null">
       <include refid="Example_Where_Clause" />
@@ -218,7 +218,7 @@
       <include refid="Update_By_Example_Where_Clause" />
     </if>
   </update>
-  <update id="updateByPrimaryKeySelective" parameterType="com.weweibuy.gateway.route.model.po.RouterPredicateArgs">
+  <update id="updateByPrimaryKeySelective" parameterType="com.weweibuy.gateway.router.model.po.RouterPredicateArgs">
     update gw_router_predicate_args
     <set>
       <if test="predicateId != null">
@@ -245,7 +245,7 @@
     </set>
     where id = #{id,jdbcType=BIGINT}
   </update>
-  <update id="updateByPrimaryKey" parameterType="com.weweibuy.gateway.route.model.po.RouterPredicateArgs">
+  <update id="updateByPrimaryKey" parameterType="com.weweibuy.gateway.router.model.po.RouterPredicateArgs">
     update gw_router_predicate_args
     set predicate_id = #{predicateId,jdbcType=VARCHAR},
       predicate_arg_id = #{predicateArgId,jdbcType=VARCHAR},
@@ -256,7 +256,7 @@
       update_time = #{updateTime,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=BIGINT}
   </update>
-  <select id="selectOneByExample" parameterType="com.weweibuy.gateway.route.model.example.RouterPredicateArgsExample" resultMap="BaseResultMap">
+  <select id="selectOneByExample" parameterType="com.weweibuy.gateway.router.model.example.RouterPredicateArgsExample" resultMap="BaseResultMap">
     select
     <include refid="Base_Column_List" />
     from gw_router_predicate_args

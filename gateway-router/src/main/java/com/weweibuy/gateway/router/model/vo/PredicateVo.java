@@ -1,6 +1,6 @@
-package com.weweibuy.gateway.route.model.vo;
+package com.weweibuy.gateway.router.model.vo;
 
-import com.weweibuy.gateway.route.model.po.RouterPredicate;
+import com.weweibuy.gateway.router.model.po.RouterPredicate;
 import lombok.Builder;
 import lombok.Data;
 import org.springframework.beans.BeanUtils;

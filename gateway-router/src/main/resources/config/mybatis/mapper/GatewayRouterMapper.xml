@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.weweibuy.gateway.route.mapper.GatewayRouterMapper">
-  <resultMap id="BaseResultMap" type="com.weweibuy.gateway.route.model.po.GatewayRouter">
+<mapper namespace="com.weweibuy.gateway.router.mapper.GatewayRouterMapper">
+  <resultMap id="BaseResultMap" type="com.weweibuy.gateway.router.model.po.GatewayRouter">
     <id column="id" jdbcType="BIGINT" property="id" />
     <result column="router_id" jdbcType="VARCHAR" property="routerId" />
     <result column="system_id" jdbcType="VARCHAR" property="systemId" />
@@ -74,7 +74,7 @@
     id, router_id, system_id, system_name, router_uri, router_priority, is_delete, create_time, 
     update_time
   </sql>
-  <select id="selectByExample" parameterType="com.weweibuy.gateway.route.model.example.GatewayRouterExample" resultMap="BaseResultMap">
+  <select id="selectByExample" parameterType="com.weweibuy.gateway.router.model.example.GatewayRouterExample" resultMap="BaseResultMap">
     select
     <if test="distinct">
       distinct
@@ -98,13 +98,13 @@
     delete from gw_gateway_router
     where id = #{id,jdbcType=BIGINT}
   </delete>
-  <delete id="deleteByExample" parameterType="com.weweibuy.gateway.route.model.example.GatewayRouterExample">
+  <delete id="deleteByExample" parameterType="com.weweibuy.gateway.router.model.example.GatewayRouterExample">
     delete from gw_gateway_router
     <if test="_parameter != null">
       <include refid="Example_Where_Clause" />
     </if>
   </delete>
-  <insert id="insert" parameterType="com.weweibuy.gateway.route.model.po.GatewayRouter">
+  <insert id="insert" parameterType="com.weweibuy.gateway.router.model.po.GatewayRouter">
     insert into gw_gateway_router (id, router_id, system_id, 
       system_name, router_uri, router_priority, 
       is_delete, create_time, update_time
@@ -114,7 +114,7 @@
       #{isDelete,jdbcType=BIT}, #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}
       )
   </insert>
-  <insert id="insertSelective" parameterType="com.weweibuy.gateway.route.model.po.GatewayRouter">
+  <insert id="insertSelective" parameterType="com.weweibuy.gateway.router.model.po.GatewayRouter">
     insert into gw_gateway_router
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="id != null">
@@ -175,7 +175,7 @@
       </if>
     </trim>
   </insert>
-  <select id="countByExample" parameterType="com.weweibuy.gateway.route.model.example.GatewayRouterExample" resultType="java.lang.Long">
+  <select id="countByExample" parameterType="com.weweibuy.gateway.router.model.example.GatewayRouterExample" resultType="java.lang.Long">
     select count(*) from gw_gateway_router
     <if test="_parameter != null">
       <include refid="Example_Where_Clause" />
@@ -231,7 +231,7 @@
       <include refid="Update_By_Example_Where_Clause" />
     </if>
   </update>
-  <update id="updateByPrimaryKeySelective" parameterType="com.weweibuy.gateway.route.model.po.GatewayRouter">
+  <update id="updateByPrimaryKeySelective" parameterType="com.weweibuy.gateway.router.model.po.GatewayRouter">
     update gw_gateway_router
     <set>
       <if test="routerId != null">
@@ -261,7 +261,7 @@
     </set>
     where id = #{id,jdbcType=BIGINT}
   </update>
-  <update id="updateByPrimaryKey" parameterType="com.weweibuy.gateway.route.model.po.GatewayRouter">
+  <update id="updateByPrimaryKey" parameterType="com.weweibuy.gateway.router.model.po.GatewayRouter">
     update gw_gateway_router
     set router_id = #{routerId,jdbcType=VARCHAR},
       system_id = #{systemId,jdbcType=VARCHAR},
@@ -273,7 +273,7 @@
       update_time = #{updateTime,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=BIGINT}
   </update>
-  <select id="selectOneByExample" parameterType="com.weweibuy.gateway.route.model.example.GatewayRouterExample" resultMap="BaseResultMap">
+  <select id="selectOneByExample" parameterType="com.weweibuy.gateway.router.model.example.GatewayRouterExample" resultMap="BaseResultMap">
     select
     <include refid="Base_Column_List" />
     from gw_gateway_router
