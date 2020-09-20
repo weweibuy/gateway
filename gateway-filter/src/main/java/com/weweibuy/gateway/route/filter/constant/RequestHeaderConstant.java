@@ -14,7 +14,7 @@ public interface RequestHeaderConstant {
 
     String X_CA_NONCE = "X-Ca-Nonce";
 
-    String X_CA_APP_KEY = "X-Ca-Key";
+    String X_CA_APP_KEY = "X-Ca-App-Key";
 
     /**
      * 签名方式 MD5  或 HMAC-SHA256
