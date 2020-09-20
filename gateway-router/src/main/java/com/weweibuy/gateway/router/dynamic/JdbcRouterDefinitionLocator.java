@@ -5,10 +5,12 @@ import com.weweibuy.gateway.router.model.vo.FilterVo;
 import com.weweibuy.gateway.router.model.vo.PredicateVo;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cloud.gateway.event.RefreshRoutesEvent;
 import org.springframework.cloud.gateway.filter.FilterDefinition;
 import org.springframework.cloud.gateway.handler.predicate.PredicateDefinition;
 import org.springframework.cloud.gateway.route.RouteDefinition;
 import org.springframework.cloud.gateway.route.RouteDefinitionLocator;
+import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationListener;
 import org.springframework.core.annotation.AnnotationAwareOrderComparator;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -30,6 +32,9 @@ public class JdbcRouterDefinitionLocator implements RouteDefinitionLocator, Appl
 
     @Autowired
     private JdbcRouterManger jdbcRouterManger;
+
+    @Autowired
+    private ApplicationContext applicationContext;
 
     private final Flux<RouteDefinition> routeDefinition;
 
@@ -95,7 +100,6 @@ public class JdbcRouterDefinitionLocator implements RouteDefinitionLocator, Appl
 
     /**
      * 防止 eureka 的心跳事件不断刷新路由
-     * TODO 有没有更好的办法??
      *
      * @param event
      */
@@ -103,5 +107,6 @@ public class JdbcRouterDefinitionLocator implements RouteDefinitionLocator, Appl
     public void onApplicationEvent(CustomRefreshRoutesEvent event) {
         log.info("【路由刷新】>>> 接收到自定义路由刷新事件");
         this.cache.clear();
+        applicationContext.publishEvent(new RefreshRoutesEvent(this));
     }
 }
