@@ -171,8 +171,12 @@ public class VerifySignatureGatewayFilterFactory extends AbstractGatewayFilterFa
         }
         String appKey = systemRequestParam.getAppKey();
         return redisTemplate.opsForValue()
-                .setIfAbsent(RedisConstant.KEY_PREFIX + appKey + "_" + systemRequestParam.getNonce(), systemRequestParam.getTimestamp() + "",
+                .setIfAbsent(key(appKey, systemRequestParam.getNonce()), systemRequestParam.getTimestamp() + "",
                         Duration.ofSeconds(125));
+    }
+
+    private String key(String appKey, String nonce) {
+        return RedisConstant.KEY_PREFIX + appKey + "_" + nonce;
     }
 
 

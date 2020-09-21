@@ -226,13 +226,6 @@
                 </plugins>
             </build>
         </profile>
-        <!--测试环境-->
-        <profile>
-            <id>rel</id>
-            <properties>
-                <profileActive>rel</profileActive>
-            </properties>
-        </profile>
     </profiles>
 
 

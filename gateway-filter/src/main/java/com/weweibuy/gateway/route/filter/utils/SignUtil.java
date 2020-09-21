@@ -1,5 +1,6 @@
 package com.weweibuy.gateway.route.filter.utils;
 
+import com.weweibuy.framework.common.core.exception.Exceptions;
 import com.weweibuy.framework.common.core.model.constant.CommonConstant;
 import com.weweibuy.framework.common.core.utils.JackJsonUtils;
 import com.weweibuy.gateway.route.filter.sign.SystemRequestParam;
@@ -9,11 +10,14 @@ import org.springframework.util.DigestUtils;
 import org.springframework.util.MultiValueMap;
 
 import javax.crypto.Mac;
+import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
+import java.io.UnsupportedEncodingException;
 import java.util.Base64;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * @author durenhao
@@ -22,12 +26,21 @@ import java.util.TreeMap;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class SignUtil {
 
+    private static final ConcurrentHashMap<String, SecretKey> SECRET_KEY_MAP = new ConcurrentHashMap();
+
     public static String hmacSha256Sign(String appSecret, Map<String, List<String>> queryMap,
                                         Map<String, String> bodyMap, SystemRequestParam requestParam) {
         try {
             Mac hmacSha256 = Mac.getInstance(CommonConstant.SignConstant.HMAC_SHA256);
-            byte[] keyBytes = appSecret.getBytes(CommonConstant.CharsetConstant.UTF8_STR);
-            hmacSha256.init(new SecretKeySpec(keyBytes, 0, keyBytes.length, CommonConstant.SignConstant.HMAC_SHA256));
+            SecretKey secretKey = SECRET_KEY_MAP.computeIfAbsent(appSecret, key -> {
+                try {
+                    byte[] keyBytes = appSecret.getBytes(CommonConstant.CharsetConstant.UTF8_STR);
+                    return new SecretKeySpec(keyBytes, 0, keyBytes.length, CommonConstant.SignConstant.HMAC_SHA256);
+                } catch (UnsupportedEncodingException e) {
+                    throw Exceptions.system(e.getMessage(), e);
+                }
+            });
+            hmacSha256.init(secretKey);
             return base64Encode(
                     hmacSha256.doFinal(buildArgsToString(appSecret, queryMap, bodyMap, requestParam).getBytes(CommonConstant.CharsetConstant.UTF8_STR)));
         } catch (Exception e) {

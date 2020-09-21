@@ -32,9 +32,8 @@ public class CoreWebConfigurer {
             webConfigurerList.forEach(c -> c.addExceptionMatchHandler(composite));
         }
         composite.addHandler(new DefaultExceptionMatchHandler());
-        return new WebExceptionHandlerImpl( composite);
+        return new WebExceptionHandlerImpl(composite);
     }
-
 
 
 }
