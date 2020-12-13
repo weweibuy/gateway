@@ -2,7 +2,7 @@ package com.weweibuy.gateway.core.advice;
 
 import com.weweibuy.framework.common.core.exception.BusinessException;
 import com.weweibuy.framework.common.core.exception.SystemException;
-import com.weweibuy.framework.common.core.model.dto.CommonCodeJsonResponse;
+import com.weweibuy.framework.common.core.model.dto.CommonCodeResponse;
 import com.weweibuy.framework.common.core.model.eum.CommonErrorCodeEum;
 import com.weweibuy.gateway.core.http.ReactorHttpHelper;
 import com.weweibuy.gateway.core.utils.MediaTypeUtils;
@@ -34,7 +34,7 @@ public class DefaultExceptionMatchHandler implements ExceptionMatchHandler {
             HttpStatus status = statusException.getStatus();
             if (HttpStatus.NOT_FOUND.equals(status)) {
                 return toServerResponse(HttpStatus.NOT_FOUND,
-                        CommonCodeJsonResponse.response(CommonErrorCodeEum.NOT_FOUND));
+                        CommonCodeResponse.response(CommonErrorCodeEum.NOT_FOUND));
             }
         }
         return toServerResponse(ex);
@@ -49,7 +49,7 @@ public class DefaultExceptionMatchHandler implements ExceptionMatchHandler {
 
     public Mono<ServerResponse> toServerResponse(Throwable t) {
         if (null == t) {
-            return toServerResponse(HttpStatus.INTERNAL_SERVER_ERROR, CommonCodeJsonResponse.unknownException());
+            return toServerResponse(HttpStatus.INTERNAL_SERVER_ERROR, CommonCodeResponse.unknownException());
         }
 
         int counter = 0;
@@ -58,18 +58,18 @@ public class DefaultExceptionMatchHandler implements ExceptionMatchHandler {
             if ((cause instanceof BusinessException)) {
 
                 return toServerResponse(HttpStatus.BAD_REQUEST,
-                        CommonCodeJsonResponse.response(((BusinessException) cause).getCodeAndMsg()));
+                        CommonCodeResponse.response(((BusinessException) cause).getCodeAndMsg()));
             }
 
 
             if ((cause instanceof SystemException)) {
                 return toServerResponse(HttpStatus.INTERNAL_SERVER_ERROR,
-                        CommonCodeJsonResponse.response(((SystemException) cause).getCodeAndMsg()));
+                        CommonCodeResponse.response(((SystemException) cause).getCodeAndMsg()));
             }
             cause = cause.getCause();
         }
         return toServerResponse(HttpStatus.INTERNAL_SERVER_ERROR,
-                CommonCodeJsonResponse.unknownException());
+                CommonCodeResponse.unknownException());
     }
 
     private Mono<ServerResponse> toServerResponse(HttpStatus httpStatus, Object body) {

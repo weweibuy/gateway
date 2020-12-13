@@ -1,6 +1,6 @@
 package com.weweibuy.gateway.route.filter.sign;
 
-import com.weweibuy.framework.common.core.model.dto.CommonCodeJsonResponse;
+import com.weweibuy.framework.common.core.model.dto.CommonCodeResponse;
 import com.weweibuy.gateway.core.constant.ExchangeAttributeConstant;
 import com.weweibuy.gateway.core.http.ReactorHttpHelper;
 import com.weweibuy.gateway.core.support.ObjectWrapper;
@@ -88,7 +88,7 @@ public class VerifySignatureGatewayFilterFactory extends AbstractGatewayFilterFa
             } else if (mediaType.isCompatibleWith(MediaType.APPLICATION_JSON)) {
                 typeReference = JSON_DATA_TYPE;
             } else {
-                return ReactorHttpHelper.buildAndWriteJson(HttpStatus.UNSUPPORTED_MEDIA_TYPE, CommonCodeJsonResponse.unSupportedMediaType(), exchange);
+                return ReactorHttpHelper.buildAndWriteJson(HttpStatus.UNSUPPORTED_MEDIA_TYPE, CommonCodeResponse.unSupportedMediaType(), exchange);
             }
             ObjectWrapper<ParameterizedTypeReference> objectWrapper = new ObjectWrapper<>(typeReference);
 
@@ -130,7 +130,7 @@ public class VerifySignatureGatewayFilterFactory extends AbstractGatewayFilterFa
                                             }));
 
                                 } else {
-                                    return ReactorHttpHelper.buildAndWriteJson(HttpStatus.BAD_REQUEST, CommonCodeJsonResponse.badRequestParam("签名错误"), exchange);
+                                    return ReactorHttpHelper.buildAndWriteJson(HttpStatus.BAD_REQUEST, CommonCodeResponse.badRequestParam("签名错误"), exchange);
                                 }
                             }));
 

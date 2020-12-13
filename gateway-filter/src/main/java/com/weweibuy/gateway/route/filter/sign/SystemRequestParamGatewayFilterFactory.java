@@ -1,6 +1,6 @@
 package com.weweibuy.gateway.route.filter.sign;
 
-import com.weweibuy.framework.common.core.model.dto.CommonCodeJsonResponse;
+import com.weweibuy.framework.common.core.model.dto.CommonCodeResponse;
 import com.weweibuy.framework.common.core.utils.DateTimeUtils;
 import com.weweibuy.gateway.core.constant.ExchangeAttributeConstant;
 import com.weweibuy.gateway.core.http.ReactorHttpHelper;
@@ -44,25 +44,25 @@ public class SystemRequestParamGatewayFilterFactory extends AbstractGatewayFilte
 
             if (StringUtils.isAnyBlank(appKey, timestamp, nonce, signType, signature) ||
                     !NumberUtils.isCreatable(timestamp) || (signTypeEum = SignTypeEum.getSignType(signType)) == null) {
-                return ReactorHttpHelper.buildAndWriteJson(HttpStatus.BAD_REQUEST, CommonCodeJsonResponse.badSystemRequestParam(), exchange);
+                return ReactorHttpHelper.buildAndWriteJson(HttpStatus.BAD_REQUEST, CommonCodeResponse.badSystemRequestParam(), exchange);
             }
 
             Long timestampL = Long.valueOf(timestamp);
 
             if (DateTimeUtils.localDateTimeToTimestampSecond(LocalDateTime.now()) - timestampL > verifySignatureProperties.getTimestampIntervalSecond()) {
                 return ReactorHttpHelper.buildAndWriteJson(HttpStatus.BAD_REQUEST,
-                        CommonCodeJsonResponse.badRequestParam("请求时间戳错误"), exchange);
+                        CommonCodeResponse.badRequestParam("请求时间戳错误"), exchange);
             }
 
             String contentType = exchange.getRequest().getHeaders().getFirst(HttpHeaders.CONTENT_TYPE);
             if (StringUtils.isBlank(contentType)) {
-                return ReactorHttpHelper.buildAndWriteJson(HttpStatus.BAD_REQUEST, CommonCodeJsonResponse.unSupportedMediaType(), exchange);
+                return ReactorHttpHelper.buildAndWriteJson(HttpStatus.BAD_REQUEST, CommonCodeResponse.unSupportedMediaType(), exchange);
             }
 
             MediaType mediaType = MediaType.parseMediaType(contentType);
 
             if (!(mediaType.isCompatibleWith(MediaType.APPLICATION_FORM_URLENCODED) || mediaType.isCompatibleWith(MediaType.APPLICATION_JSON))) {
-                return ReactorHttpHelper.buildAndWriteJson(HttpStatus.BAD_REQUEST, CommonCodeJsonResponse.unSupportedMediaType(), exchange);
+                return ReactorHttpHelper.buildAndWriteJson(HttpStatus.BAD_REQUEST, CommonCodeResponse.unSupportedMediaType(), exchange);
             }
 
             SystemRequestParam systemRequestParam = SystemRequestParam.builder()

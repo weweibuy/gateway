@@ -2,8 +2,8 @@ package com.weweibuy.gateway.route.filter.authorization;
 
 import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.weweibuy.framework.common.core.model.dto.CommonCodeJsonResponse;
-import com.weweibuy.framework.common.core.model.dto.CommonDataJsonResponse;
+import com.weweibuy.framework.common.core.model.dto.CommonCodeResponse;
+import com.weweibuy.framework.common.core.model.dto.CommonDataResponse;
 import com.weweibuy.framework.common.core.model.eum.CommonErrorCodeEum;
 import com.weweibuy.gateway.core.constant.ExchangeAttributeConstant;
 import com.weweibuy.gateway.core.http.ReactorHttpHelper;
@@ -44,7 +44,7 @@ public class AuthenticationGatewayFilterFactory extends AbstractGatewayFilterFac
     private AuthenticationProperties authenticationProperties;
 
     public AuthenticationGatewayFilterFactory(ObjectMapper objectMapper) {
-        authorizationRespType = objectMapper.getTypeFactory().constructParametricType(CommonDataJsonResponse.class, AuthorizationResp.class);
+        authorizationRespType = objectMapper.getTypeFactory().constructParametricType(CommonDataResponse.class, AuthorizationResp.class);
     }
 
     @Override
@@ -57,36 +57,36 @@ public class AuthenticationGatewayFilterFactory extends AbstractGatewayFilterFac
             String appKey = systemRequestParam.getAppKey();
 
             if (StringUtils.isAnyBlank(appKey, service) || appKey.length() <= 6) {
-                return ReactorHttpHelper.buildAndWriteJson(HttpStatus.UNAUTHORIZED, CommonCodeJsonResponse.unauthorized(), exchange);
+                return ReactorHttpHelper.buildAndWriteJson(HttpStatus.UNAUTHORIZED, CommonCodeResponse.unauthorized(), exchange);
             }
 
             AuthorizationReq authorizationRe = new AuthorizationReq(appKey, service, exchange.getRequest());
 
             URI uri = loadBalancerHelper.toLbUrl(authenticationProperties.getAuthUrl());
-            return ReactorHttpHelper.<CommonDataJsonResponse<AuthorizationResp>>executeForJson(HttpMethod.POST, uri.toString(),
+            return ReactorHttpHelper.<CommonDataResponse<AuthorizationResp>>executeForJson(HttpMethod.POST, uri.toString(),
                     null, authorizationRe, authorizationRespType)
                     .flatMap(res -> hashAuthentication(res, chain, exchange));
         };
     }
 
 
-    private Mono<Void> hashAuthentication(ResponseEntity<CommonDataJsonResponse<AuthorizationResp>> responseEntity,
+    private Mono<Void> hashAuthentication(ResponseEntity<CommonDataResponse<AuthorizationResp>> responseEntity,
                                           GatewayFilterChain chain, ServerWebExchange exchange) {
 
 
         int status = responseEntity.getStatusCode().value();
         if (status == 200 && CommonErrorCodeEum.SUCCESS.getCode().equals(responseEntity.getBody().getCode())) {
-            CommonDataJsonResponse<AuthorizationResp> body = responseEntity.getBody();
+            CommonDataResponse<AuthorizationResp> body = responseEntity.getBody();
             // 设置app 信息
             exchange.getAttributes().put(ExchangeAttributeConstant.APP_SECRET_ATTR, body.getData().getAppSecret());
             exchange.getAttributes().put(ExchangeAttributeConstant.USER_ID_ATTR, body.getData().getAppId());
             return chain.filter(exchange);
         } else if (status >= 400 && status < 500) {
-            return ReactorHttpHelper.buildAndWriteJson(HttpStatus.BAD_REQUEST, CommonCodeJsonResponse.badRequestParam(), exchange);
+            return ReactorHttpHelper.buildAndWriteJson(HttpStatus.BAD_REQUEST, CommonCodeResponse.badRequestParam(), exchange);
         } else if (status >= 500) {
-            return ReactorHttpHelper.buildAndWriteJson(HttpStatus.INTERNAL_SERVER_ERROR, CommonCodeJsonResponse.unknownException(), exchange);
+            return ReactorHttpHelper.buildAndWriteJson(HttpStatus.INTERNAL_SERVER_ERROR, CommonCodeResponse.unknownException(), exchange);
         }
-        return ReactorHttpHelper.buildAndWriteJson(HttpStatus.UNAUTHORIZED, CommonCodeJsonResponse.unauthorized(), exchange);
+        return ReactorHttpHelper.buildAndWriteJson(HttpStatus.UNAUTHORIZED, CommonCodeResponse.unauthorized(), exchange);
     }
 
 

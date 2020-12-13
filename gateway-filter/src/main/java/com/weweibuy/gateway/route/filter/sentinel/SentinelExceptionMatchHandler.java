@@ -1,7 +1,7 @@
 package com.weweibuy.gateway.route.filter.sentinel;
 
 import com.alibaba.csp.sentinel.slots.block.BlockException;
-import com.weweibuy.framework.common.core.model.dto.CommonCodeJsonResponse;
+import com.weweibuy.framework.common.core.model.dto.CommonCodeResponse;
 import com.weweibuy.gateway.core.advice.ExceptionMatchHandler;
 import com.weweibuy.gateway.core.http.ReactorHttpHelper;
 import com.weweibuy.gateway.core.utils.MediaTypeUtils;
@@ -29,7 +29,7 @@ public class SentinelExceptionMatchHandler implements ExceptionMatchHandler {
         if (MediaTypeUtils.acceptsHtml(exchange)) {
             return htmlErrorResponse(ex);
         }
-        return ReactorHttpHelper.buildResponse(HttpStatus.TOO_MANY_REQUESTS, MediaType.APPLICATION_JSON, CommonCodeJsonResponse.requestLimit());
+        return ReactorHttpHelper.buildResponse(HttpStatus.TOO_MANY_REQUESTS, MediaType.APPLICATION_JSON, CommonCodeResponse.requestLimit());
     }
 
     private Mono<ServerResponse> htmlErrorResponse(Throwable ex) {
