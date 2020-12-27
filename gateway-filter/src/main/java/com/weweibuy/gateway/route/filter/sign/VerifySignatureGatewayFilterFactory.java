@@ -38,6 +38,8 @@ import java.util.List;
 import java.util.Map;
 
 /**
+ * 验签过滤器
+ *
  * @author durenhao
  * @date 2020/2/22 19:56
  **/

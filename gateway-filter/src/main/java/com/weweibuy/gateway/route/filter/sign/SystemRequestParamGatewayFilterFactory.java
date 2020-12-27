@@ -21,6 +21,8 @@ import java.time.LocalDateTime;
 import java.util.Map;
 
 /**
+ * 验签 系统级输入参数过滤器
+ *
  * @author durenhao
  * @date 2020/2/27 20:14
  **/

@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
  * @date 2020/2/23 19:06
  **/
 @Component
-@EnableConfigurationProperties({AuthenticationProperties.class, VerifySignatureProperties.class})
+@EnableConfigurationProperties({VerifySignatureProperties.class})
 public class FilterWebConfigurer implements WebConfigurer {
 
     @Override

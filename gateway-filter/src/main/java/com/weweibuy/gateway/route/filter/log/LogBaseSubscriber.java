@@ -16,12 +16,13 @@ import java.time.Duration;
 import java.time.LocalDateTime;
 
 /**
+ * 日志输出 订阅
+ *
  * @author durenhao
  * @date 2020/3/5 11:40
  **/
 @Slf4j
 public class LogBaseSubscriber extends BaseSubscriber {
-
 
     private Subscriber actual;
 

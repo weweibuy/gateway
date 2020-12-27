@@ -5,11 +5,13 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.server.reactive.ServerHttpRequest;
 
 /**
+ * App 鉴权请求
+ *
  * @author durenhao
  * @date 2020/2/24 21:24
  **/
 @Data
-public class AuthorizationReq {
+public class AppAuthorizationReq {
 
     private String appKey;
 
@@ -19,17 +21,17 @@ public class AuthorizationReq {
 
     private String service;
 
-    public AuthorizationReq() {
+    public AppAuthorizationReq() {
     }
 
-    public AuthorizationReq(String appKey, HttpMethod httpMethod, String path, String service) {
+    public AppAuthorizationReq(String appKey, HttpMethod httpMethod, String path, String service) {
         this.appKey = appKey;
         this.httpMethod = httpMethod;
         this.path = path;
         this.service = service;
     }
 
-    public AuthorizationReq(String appKey, String service, ServerHttpRequest request) {
+    public AppAuthorizationReq(String appKey, String service, ServerHttpRequest request) {
         this.service = service;
         this.appKey = appKey;
         this.httpMethod = request.getMethod();
