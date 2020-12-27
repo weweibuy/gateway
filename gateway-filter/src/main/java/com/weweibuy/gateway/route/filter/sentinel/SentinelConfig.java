@@ -13,9 +13,8 @@ import com.alibaba.csp.sentinel.slots.block.degrade.DegradeRule;
 import com.alibaba.csp.sentinel.slots.block.degrade.DegradeRuleManager;
 import com.alibaba.csp.sentinel.slots.block.flow.FlowRule;
 import com.alibaba.csp.sentinel.slots.block.flow.FlowRuleManager;
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.TypeReference;
 import com.ctrip.framework.apollo.core.spi.Ordered;
+import com.weweibuy.framework.common.core.utils.JackJsonUtils;
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.cloud.gateway.filter.GlobalFilter;
 import org.springframework.context.annotation.Bean;
@@ -47,7 +46,7 @@ public class SentinelConfig {
     }
 
     @PostConstruct
-    public void init(){
+    public void init() {
         initCustomizedApis();
         loadRules();
     }
@@ -95,12 +94,11 @@ public class SentinelConfig {
         String defaultDegradeRule = "[]";
 
         ReadableDataSource<String, List<FlowRule>> flowRuleDataSource = new ApolloDataSource<>(namespaceName,
-                flowRuleKey, defaultFlowRules, source -> JSON.parseObject(source, new TypeReference<List<FlowRule>>() {
-        }));
+                flowRuleKey, defaultFlowRules, source -> JackJsonUtils.readValue(source, List.class, FlowRule.class));
 
         ReadableDataSource<String, List<DegradeRule>> degradeRuleDataSource = new ApolloDataSource<>(namespaceName,
-                degradeRuleKey, defaultDegradeRule, source -> JSON.parseObject(source, new TypeReference<List<DegradeRule>>() {
-        }));
+                degradeRuleKey, defaultDegradeRule, source -> JackJsonUtils.readValue(source, List.class, DegradeRule.class));
+
 
         FlowRuleManager.register2Property(flowRuleDataSource.getProperty());
         DegradeRuleManager.register2Property(degradeRuleDataSource.getProperty());
