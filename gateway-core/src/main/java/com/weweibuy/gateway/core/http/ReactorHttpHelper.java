@@ -25,8 +25,8 @@ import javax.annotation.PostConstruct;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
-import static org.springframework.web.reactive.function.BodyInserters.fromObject;
 import static org.springframework.web.reactive.function.BodyInserters.fromValue;
 
 /**
@@ -96,26 +96,48 @@ public class ReactorHttpHelper {
      * @param <T>
      * @return
      */
-    public static <T> Mono<ResponseEntity<T>> executeForJson(HttpMethod method, String url, Map<String, String> queryMap, Object body, Class<? extends T> returnType) {
-        HttpClient.ResponseReceiver<?> send = httpClient
-                .request(method)
-                .uri(url + toQueryString(queryMap))
-                .send((req, nettyOutbound) -> {
-                    req.addHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE);
-                    return nettyOutbound.send(ByteBufFlux.fromString(Mono.just(JackJsonUtils.write(body))));
-                });
+    public static <T> Mono<ResponseEntity<T>> executeForJson(HttpMethod method, String url, Map<String, String> queryMap, Map<String, String> headerMap, Object body, Class<? extends T> returnType) {
+        HttpClient.ResponseReceiver<?> send = sendJsonReq(method, url, queryMap, headerMap, body);
         return responseEntity(send, returnType);
     }
 
+
+    public static <T> Mono<ResponseEntity<T>> executeForJson(HttpMethod method, String url, Object body, Class<? extends T> returnType) {
+        HttpClient.ResponseReceiver<?> send = sendJsonReq(method, url, null, null, body);
+        return responseEntity(send, returnType);
+    }
+
+    public static <T> Mono<ResponseEntity<T>> executeForJson(HttpMethod method, String url, Map<String, String> queryMap, Object body, Class<? extends T> returnType) {
+        HttpClient.ResponseReceiver<?> send = sendJsonReq(method, url, queryMap, null, body);
+        return responseEntity(send, returnType);
+    }
+
+    public static <T> Mono<ResponseEntity<T>> executeForJson(HttpMethod method, String url, Map<String, String> queryMap, Map<String, String> headerMap, Object body, JavaType javaType) {
+        HttpClient.ResponseReceiver<?> send = sendJsonReq(method, url, queryMap, headerMap, body);
+        return responseEntity(send, javaType);
+    }
+
+
     public static <T> Mono<ResponseEntity<T>> executeForJson(HttpMethod method, String url, Map<String, String> queryMap, Object body, JavaType javaType) {
-        HttpClient.ResponseReceiver<?> send = httpClient
+        HttpClient.ResponseReceiver<?> send = sendJsonReq(method, url, queryMap, null, body);
+        return responseEntity(send, javaType);
+    }
+
+    public static <T> Mono<ResponseEntity<T>> executeForJson(HttpMethod method, String url, Object body, JavaType javaType) {
+        HttpClient.ResponseReceiver<?> send = sendJsonReq(method, url, null, null, body);
+        return responseEntity(send, javaType);
+    }
+
+    public static HttpClient.ResponseReceiver<?> sendJsonReq(HttpMethod method, String url, Map<String, String> queryMap, Map<String, String> headerMap, Object body) {
+        return httpClient
                 .request(method)
                 .uri(url + toQueryString(queryMap))
                 .send((req, nettyOutbound) -> {
+                    Optional.ofNullable(headerMap)
+                            .ifPresent(map -> map.forEach((k, v) -> req.addHeader(k, v)));
                     req.addHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE);
                     return nettyOutbound.send(ByteBufFlux.fromString(Mono.just(JackJsonUtils.write(body))));
                 });
-        return responseEntity(send, javaType);
     }
 
     /**

@@ -1,11 +1,13 @@
 package com.weweibuy.gateway.route.filter.authorization;
 
 import com.fasterxml.jackson.databind.JavaType;
+import com.weweibuy.framework.common.core.model.constant.CommonConstant;
 import com.weweibuy.framework.common.core.model.dto.CommonCodeResponse;
 import com.weweibuy.framework.common.core.model.dto.CommonDataResponse;
 import com.weweibuy.framework.common.core.model.eum.CommonErrorCodeEum;
 import com.weweibuy.framework.common.core.utils.HttpRequestUtils;
 import com.weweibuy.framework.common.core.utils.PredicateEnhance;
+import com.weweibuy.gateway.core.constant.ExchangeAttributeConstant;
 import com.weweibuy.gateway.core.http.ReactorHttpHelper;
 import com.weweibuy.gateway.core.lb.LoadBalancerHelper;
 import io.netty.handler.codec.http.HttpMethod;
@@ -21,10 +23,7 @@ import reactor.core.publisher.Mono;
 
 import javax.validation.constraints.NotBlank;
 import java.net.URI;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
 /**
  * 权限过滤器 抽象
@@ -71,9 +70,15 @@ public abstract class AbstractAuthGatewayFilterFactory<C extends AbstractAuthGat
     private Mono<Void> authentication(C config, GatewayFilterChain chain, ServerWebExchange exchange) {
         R r = authReq(config, chain, exchange);
         URI authUri = loadBalancerHelper.strToUri(config.getAuthUrl());
+
+        // 设置 traceCode
+        String traceCode = (String) exchange.getAttributes().get(ExchangeAttributeConstant.TRACE_ID_ATTR);
+        Map<String, String> headerMap = Optional.ofNullable(traceCode)
+                .map(t -> Collections.singletonMap(CommonConstant.LogTraceConstant.HTTP_TRACE_CODE_HEADER, t))
+                .orElse(Collections.emptyMap());
         return loadBalancerHelper.choose(authUri)
                 .flatMap(uri -> ReactorHttpHelper.<CommonDataResponse<P>>executeForJson(HttpMethod.POST, uri.toString() + authUri.getPath(),
-                        null, r, authorizationRespType)
+                        null, headerMap, r, authorizationRespType)
                         .flatMap(res -> hashAuthentication(res, chain, exchange)));
     }
 
