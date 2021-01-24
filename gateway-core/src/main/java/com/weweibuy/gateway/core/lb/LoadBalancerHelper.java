@@ -3,7 +3,12 @@ package com.weweibuy.gateway.core.lb;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.client.ServiceInstance;
 import org.springframework.cloud.client.loadbalancer.LoadBalancerClient;
+import org.springframework.cloud.client.loadbalancer.reactive.Response;
+import org.springframework.cloud.gateway.support.NotFoundException;
+import org.springframework.cloud.loadbalancer.core.ReactorLoadBalancer;
+import org.springframework.cloud.loadbalancer.support.LoadBalancerClientFactory;
 import org.springframework.stereotype.Component;
+import reactor.core.publisher.Mono;
 
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -19,13 +24,21 @@ public class LoadBalancerHelper {
     @Autowired
     private LoadBalancerClient loadBalancer;
 
-    public URI toLbUrl(String lb) {
-        URI url = null;
+    @Autowired
+    private LoadBalancerClientFactory clientFactory;
+
+
+    public URI strToUri(String lb) {
         try {
-            url = new URI(lb);
+            return new URI(lb);
         } catch (URISyntaxException e) {
             throw new IllegalArgumentException(e);
         }
+
+    }
+
+    public URI toLbUrl(String lb) {
+        URI url = strToUri(lb);
         String schemePrefix = url.getScheme();
         if ((!"lb".equals(url.getScheme()) && !"lb".equals(schemePrefix))) {
             return url;
@@ -42,6 +55,23 @@ public class LoadBalancerHelper {
                 new LoadBalancerHelper.DelegatingServiceInstance(choose, overrideScheme), url);
     }
 
+
+    public Mono<URI> choose(String lb) {
+        URI uri = strToUri(lb);
+        return choose(uri);
+    }
+
+    public Mono<URI> choose(URI uri) {
+        ReactorLoadBalancer<ServiceInstance> loadBalancer = this.clientFactory
+                .getInstance(uri.getHost(), ReactorLoadBalancer.class,
+                        ServiceInstance.class);
+        if (loadBalancer == null) {
+            throw new NotFoundException("No loadbalancer available for " + uri.getHost());
+        }
+        return loadBalancer.choose(null)
+                .map(Response::getServer)
+                .map(ServiceInstance::getUri);
+    }
 
     class DelegatingServiceInstance implements ServiceInstance {
 

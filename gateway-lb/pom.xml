@@ -15,12 +15,6 @@
         <dependency>
             <groupId>org.springframework.cloud</groupId>
             <artifactId>spring-cloud-starter-netflix-ribbon</artifactId>
-            <exclusions>
-                <exclusion>
-                    <artifactId>ribbon-httpclient</artifactId>
-                    <groupId>com.netflix.ribbon</groupId>
-                </exclusion>
-            </exclusions>
         </dependency>
 
         <dependency>

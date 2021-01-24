@@ -5,11 +5,10 @@ import com.weweibuy.gateway.core.mode.event.CustomRefreshRoutesEvent;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.gateway.route.RouteDefinitionLocator;
 import org.springframework.context.ApplicationContext;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Mono;
+
+import java.util.Objects;
 
 /**
  * @author durenhao
@@ -35,6 +34,13 @@ public class RouterManagerEndpoint {
     @GetMapping
     public Mono listRoute() {
         return routeDefinitionLocator.getRouteDefinitions()
+                .collectList();
+    }
+
+    @GetMapping("/{id}")
+    public Mono listRoute(@PathVariable String id) {
+        return routeDefinitionLocator.getRouteDefinitions()
+                .filter(r -> Objects.equals(r.getId(), id))
                 .collectList();
     }
 

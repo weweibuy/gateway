@@ -43,3 +43,4 @@ mybatis:
 
 rocket-mq:
   name-server: 122.51.171.126:9876
+

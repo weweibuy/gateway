@@ -70,11 +70,11 @@ public abstract class AbstractAuthGatewayFilterFactory<C extends AbstractAuthGat
 
     private Mono<Void> authentication(C config, GatewayFilterChain chain, ServerWebExchange exchange) {
         R r = authReq(config, chain, exchange);
-        URI uri = loadBalancerHelper.toLbUrl(config.getAuthUrl());
-        return ReactorHttpHelper.<CommonDataResponse<P>>executeForJson(HttpMethod.POST, uri.toString(),
-                null, r, authorizationRespType)
-                .flatMap(res -> hashAuthentication(res, chain, exchange));
-
+        URI authUri = loadBalancerHelper.strToUri(config.getAuthUrl());
+        return loadBalancerHelper.choose(authUri)
+                .flatMap(uri -> ReactorHttpHelper.<CommonDataResponse<P>>executeForJson(HttpMethod.POST, uri.toString() + authUri.getPath(),
+                        null, r, authorizationRespType)
+                        .flatMap(res -> hashAuthentication(res, chain, exchange)));
     }
 
 
