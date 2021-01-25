@@ -106,10 +106,6 @@ public abstract class AbstractAuthGatewayFilterFactory<C extends AbstractAuthGat
         }
 
         if (CommonErrorCodeEum.FORBIDDEN.getCode().equals(code)) {
-            return ReactorHttpHelper.buildAndWriteJson(HttpStatus.UNAUTHORIZED, CommonCodeResponse.unauthorized(), exchange);
-        }
-
-        if (CommonErrorCodeEum.UNAUTHORIZED.getCode().equals(code)) {
             return ReactorHttpHelper.buildAndWriteJson(HttpStatus.FORBIDDEN, CommonCodeResponse.forbidden(), exchange);
         }
 

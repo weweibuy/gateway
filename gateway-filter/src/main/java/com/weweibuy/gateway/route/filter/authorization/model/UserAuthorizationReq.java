@@ -3,6 +3,7 @@ package com.weweibuy.gateway.route.filter.authorization.model;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.http.HttpMethod;
 
 /**
  * 用户鉴权请求
@@ -18,6 +19,8 @@ public class UserAuthorizationReq {
     private String service;
 
     private String path;
+
+    private HttpMethod httpMethod;
 
     private String authorization;
 

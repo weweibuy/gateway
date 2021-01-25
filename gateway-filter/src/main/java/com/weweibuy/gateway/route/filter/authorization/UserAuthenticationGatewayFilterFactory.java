@@ -11,6 +11,8 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.gateway.filter.GatewayFilterChain;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.stereotype.Component;
 import org.springframework.web.server.ServerWebExchange;
 
@@ -43,14 +45,15 @@ public class UserAuthenticationGatewayFilterFactory extends AbstractAuthGatewayF
     protected UserAuthorizationReq authReq(Config config, GatewayFilterChain chain, ServerWebExchange exchange) {
 
         String service = exchange.getAttribute(ExchangeAttributeConstant.SERVICE_KEY);
-        HttpHeaders headers = exchange.getRequest().getHeaders();
-
+        ServerHttpRequest request = exchange.getRequest();
+        HttpHeaders headers = request.getHeaders();
+        HttpMethod method = request.getMethod();
         // token
         String authorization = headers.getFirst(HttpHeaders.AUTHORIZATION);
 
         URI uri = (URI) exchange.getAttributes().get(GATEWAY_REQUEST_URL_ATTR);
 
-        return new UserAuthorizationReq(service, uri.getPath(), authorization);
+        return new UserAuthorizationReq(service, uri.getPath(), method, authorization);
     }
 
     @Override
