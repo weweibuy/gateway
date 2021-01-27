@@ -55,14 +55,12 @@ public class DefaultExceptionMatchHandler implements ExceptionMatchHandler {
         int counter = 0;
         Throwable cause = t;
         while (cause != null && counter++ < 50) {
-            if ((cause instanceof BusinessException)) {
-
+            if (cause instanceof BusinessException) {
                 return toServerResponse(HttpStatus.BAD_REQUEST,
                         CommonCodeResponse.response(((BusinessException) cause).getCodeAndMsg()));
             }
 
-
-            if ((cause instanceof SystemException)) {
+            if (cause instanceof SystemException) {
                 return toServerResponse(HttpStatus.INTERNAL_SERVER_ERROR,
                         CommonCodeResponse.response(((SystemException) cause).getCodeAndMsg()));
             }
