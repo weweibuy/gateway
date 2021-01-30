@@ -11,8 +11,10 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 @ConfigurationProperties(prefix = "gw.filter.sign")
 public class VerifySignatureProperties {
 
+    /**
+     * 请求时间最大 间隔
+     */
     private Long timestampIntervalSecond = 12000000L;
 
-    private Boolean nonceCheck = false;
 
 }

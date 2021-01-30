@@ -1,6 +1,7 @@
 package com.weweibuy.gateway.route.filter.path;
 
 import com.weweibuy.gateway.core.constant.ExchangeAttributeConstant;
+import lombok.Data;
 import org.springframework.cloud.gateway.filter.GatewayFilter;
 import org.springframework.cloud.gateway.filter.factory.AbstractGatewayFilterFactory;
 import org.springframework.http.server.reactive.ServerHttpRequest;
@@ -63,17 +64,10 @@ public class ServiceMatchStripPrefixGatewayFilterFactory extends AbstractGateway
         };
     }
 
+    @Data
     public static class Config {
 
         private int parts;
-
-        public int getParts() {
-            return parts;
-        }
-
-        public void setParts(int parts) {
-            this.parts = parts;
-        }
 
     }
 

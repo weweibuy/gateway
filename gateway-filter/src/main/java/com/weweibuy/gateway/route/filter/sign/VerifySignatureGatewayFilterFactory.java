@@ -1,42 +1,35 @@
 package com.weweibuy.gateway.route.filter.sign;
 
 import com.weweibuy.framework.common.core.model.dto.CommonCodeResponse;
+import com.weweibuy.framework.common.core.utils.PredicateEnhance;
 import com.weweibuy.gateway.core.constant.ExchangeAttributeConstant;
 import com.weweibuy.gateway.core.http.ReactorHttpHelper;
-import com.weweibuy.gateway.core.support.ObjectWrapper;
 import com.weweibuy.gateway.route.filter.authorization.AppAuthenticationGatewayFilterFactory;
 import com.weweibuy.gateway.route.filter.config.VerifySignatureProperties;
 import com.weweibuy.gateway.route.filter.constant.RedisConstant;
 import com.weweibuy.gateway.route.filter.utils.SignUtil;
+import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cloud.gateway.event.EnableBodyCachingEvent;
 import org.springframework.cloud.gateway.filter.GatewayFilter;
 import org.springframework.cloud.gateway.filter.factory.AbstractGatewayFilterFactory;
-import org.springframework.cloud.gateway.filter.factory.rewrite.CachedBodyOutputMessage;
-import org.springframework.cloud.gateway.support.BodyInserterContext;
-import org.springframework.core.ParameterizedTypeReference;
-import org.springframework.core.ResolvableType;
+import org.springframework.cloud.gateway.support.ServerWebExchangeUtils;
+import org.springframework.context.ApplicationContext;
 import org.springframework.core.io.buffer.DataBuffer;
 import org.springframework.data.redis.core.ReactiveRedisTemplate;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
-import org.springframework.http.codec.HttpMessageReader;
 import org.springframework.http.server.reactive.ServerHttpRequest;
-import org.springframework.http.server.reactive.ServerHttpRequestDecorator;
 import org.springframework.stereotype.Component;
 import org.springframework.util.MultiValueMap;
-import org.springframework.web.reactive.function.BodyInserters;
-import org.springframework.web.reactive.function.server.HandlerStrategies;
-import org.springframework.web.reactive.function.server.ServerRequest;
 import org.springframework.web.server.ServerWebExchange;
-import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
+import javax.validation.constraints.NotBlank;
+import java.nio.charset.StandardCharsets;
 import java.time.Duration;
-import java.util.List;
-import java.util.Map;
+import java.util.Optional;
 
 /**
  * 验签过滤器,
@@ -51,13 +44,12 @@ import java.util.Map;
  **/
 @Component
 @Slf4j
-public class VerifySignatureGatewayFilterFactory extends AbstractGatewayFilterFactory {
+public class VerifySignatureGatewayFilterFactory extends AbstractGatewayFilterFactory<VerifySignatureGatewayFilterFactory.Config> {
 
-    private final List<HttpMessageReader<?>> messageReaders;
+    @Autowired
+    private ApplicationContext applicationContext;
 
-    private static final ParameterizedTypeReference MULTIPART_DATA_TYPE;
-
-    private static final ParameterizedTypeReference JSON_DATA_TYPE;
+    public static final String CACHED_REQUEST_BODY_ATTR = ServerWebExchangeUtils.CACHED_REQUEST_BODY_ATTR;
 
     @Autowired
     private ReactiveRedisTemplate<String, String> redisTemplate;
@@ -65,118 +57,58 @@ public class VerifySignatureGatewayFilterFactory extends AbstractGatewayFilterFa
     @Autowired
     private VerifySignatureProperties verifySignatureProperties;
 
-
-    static {
-        MULTIPART_DATA_TYPE = ParameterizedTypeReference.forType(ResolvableType.forClassWithGenerics(
-                MultiValueMap.class, String.class, String.class).getType());
-        JSON_DATA_TYPE = ParameterizedTypeReference.forType(ResolvableType.forClassWithGenerics(
-                Map.class, String.class, Object.class).getType());
-    }
-
     public VerifySignatureGatewayFilterFactory() {
-        this.messageReaders = HandlerStrategies.withDefaults().messageReaders();
+        super(VerifySignatureGatewayFilterFactory.Config.class);
     }
-
 
     @Override
     @SuppressWarnings("unchecked")
-    public GatewayFilter apply(Object config) {
+    public GatewayFilter apply(Config config) {
+        EnableBodyCachingEvent event = new EnableBodyCachingEvent(this, config.getRouterId());
+        applicationContext.publishEvent(event);
         return (exchange, chain) -> {
             SystemRequestParam systemRequestParam = (SystemRequestParam) exchange.getAttributes().get(ExchangeAttributeConstant.SYSTEM_REQUEST_PARAM);
-            verifySignature(systemRequestParam, exchange, null);
-            // TODO 直接获取 请求体 进行验签!
-            String contentType = exchange.getRequest().getHeaders().getFirst(HttpHeaders.CONTENT_TYPE);
 
-            MediaType mediaType = MediaType.valueOf(contentType);
+            String body = Optional.ofNullable((DataBuffer) exchange.getAttributes().get(CACHED_REQUEST_BODY_ATTR))
+                    .map(DataBuffer::asByteBuffer)
+                    .map(StandardCharsets.UTF_8::decode)
+                    .map(Object::toString)
+                    .orElse(StringUtils.EMPTY);
 
-            ParameterizedTypeReference typeReference = null;
-
-
-            if (mediaType.isCompatibleWith(MediaType.APPLICATION_FORM_URLENCODED)) {
-                typeReference = MULTIPART_DATA_TYPE;
-            } else if (mediaType.isCompatibleWith(MediaType.APPLICATION_JSON)) {
-                typeReference = JSON_DATA_TYPE;
-            } else {
-                return ReactorHttpHelper.buildAndWriteJson(HttpStatus.UNSUPPORTED_MEDIA_TYPE, CommonCodeResponse.unSupportedMediaType(), exchange);
-            }
-            ObjectWrapper<ParameterizedTypeReference> objectWrapper = new ObjectWrapper<>(typeReference);
-
-            HttpHeaders headers = new HttpHeaders();
-            headers.putAll(exchange.getRequest().getHeaders());
-            headers.remove(HttpHeaders.CONTENT_LENGTH);
-
-            return ServerRequest.create(exchange, messageReaders)
-                    .bodyToMono(typeReference)
-                    .flatMap(o -> verifySignature(systemRequestParam, exchange, (Map) o)
-                            .flatMap(b -> {
-                                if (b) {
-                                    CachedBodyOutputMessage outputMessage = new CachedBodyOutputMessage(exchange, headers);
-                                    return BodyInserters.fromPublisher(Mono.just(o), objectWrapper.getObject())
-                                            .insert(outputMessage, new BodyInserterContext())
-                                            .then(Mono.defer(() -> {
-                                                ServerHttpRequestDecorator decorator = new ServerHttpRequestDecorator(
-                                                        exchange.getRequest()) {
-
-                                                    @Override
-                                                    public HttpHeaders getHeaders() {
-                                                        long contentLength = headers.getContentLength();
-                                                        HttpHeaders httpHeaders = new HttpHeaders();
-                                                        httpHeaders.putAll(super.getHeaders());
-                                                        if (contentLength > 0) {
-                                                            httpHeaders.setContentLength(contentLength);
-                                                        } else {
-                                                            httpHeaders.set(HttpHeaders.TRANSFER_ENCODING, "chunked");
-                                                        }
-                                                        return httpHeaders;
-                                                    }
-
-                                                    @Override
-                                                    public Flux<DataBuffer> getBody() {
-                                                        return outputMessage.getBody();
-                                                    }
-                                                };
-                                                return chain.filter(exchange.mutate().request(decorator).build());
-                                            }));
-
-                                } else {
-                                    return ReactorHttpHelper.buildAndWriteJson(HttpStatus.BAD_REQUEST, CommonCodeResponse.badRequestParam("签名错误"), exchange);
-                                }
-                            }));
-
+            return verifySignature(systemRequestParam, exchange, body, config)
+                    .flatMap(b ->
+                            PredicateEnhance.predicateThenGet(b,
+                                    () -> chain.filter(exchange),
+                                    () -> ReactorHttpHelper.buildAndWriteJson(HttpStatus.BAD_REQUEST,
+                                            CommonCodeResponse.badRequestParam("签名错误"), exchange)));
         };
     }
 
 
-    private Mono<Boolean> verifySignature(SystemRequestParam systemRequestParam, ServerWebExchange exchange, Map body) {
+    private Mono<Boolean> verifySignature(SystemRequestParam systemRequestParam, ServerWebExchange exchange, String body, Config config) {
         SignTypeEum signType = systemRequestParam.getSignType();
         String appSecret = (String) exchange.getAttributes().get(ExchangeAttributeConstant.APP_SECRET_ATTR);
         ServerHttpRequest httpRequest = exchange.getRequest();
         MultiValueMap<String, String> queryParams = httpRequest.getQueryParams();
-        String sign = null;
-        switch (signType) {
-            case MD5:
-                sign = SignUtil.md5Sign(appSecret, queryParams, "", systemRequestParam);
-                break;
-            case HMAC_SHA256:
-                sign = SignUtil.hmacSha256Sign(appSecret, queryParams, "", systemRequestParam);
-                break;
-            default:
-        }
+        String sign = SignUtil.sign(signType, appSecret, queryParams,
+                body, systemRequestParam);
 
         if (StringUtils.isBlank(sign) || !sign.equals(systemRequestParam.getSignature())) {
             return Mono.just(false);
         }
-        if (!verifySignatureProperties.getNonceCheck()) {
+        if (!config.getNonceCheck()) {
             return Mono.just(true);
         }
         return verifyNonce(systemRequestParam);
     }
 
-
+    /**
+     * 重放检查
+     *
+     * @param systemRequestParam
+     * @return
+     */
     private Mono<Boolean> verifyNonce(SystemRequestParam systemRequestParam) {
-        if (!verifySignatureProperties.getNonceCheck()) {
-            return Mono.just(true);
-        }
         String appKey = systemRequestParam.getAppKey();
         return redisTemplate.opsForValue()
                 .setIfAbsent(key(appKey, systemRequestParam.getNonce()), systemRequestParam.getTimestamp() + "",
@@ -185,6 +117,19 @@ public class VerifySignatureGatewayFilterFactory extends AbstractGatewayFilterFa
 
     private String key(String appKey, String nonce) {
         return RedisConstant.KEY_PREFIX + appKey + "_" + nonce;
+    }
+
+    @Data
+    public static class Config {
+
+        @NotBlank(message = "必须设置 routerId ")
+        private String routerId;
+
+        /**
+         * 是否防重放
+         */
+        private Boolean nonceCheck = false;
+
     }
 
 
