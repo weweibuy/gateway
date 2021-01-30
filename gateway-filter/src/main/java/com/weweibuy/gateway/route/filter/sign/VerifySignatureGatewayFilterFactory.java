@@ -4,6 +4,7 @@ import com.weweibuy.framework.common.core.model.dto.CommonCodeResponse;
 import com.weweibuy.gateway.core.constant.ExchangeAttributeConstant;
 import com.weweibuy.gateway.core.http.ReactorHttpHelper;
 import com.weweibuy.gateway.core.support.ObjectWrapper;
+import com.weweibuy.gateway.route.filter.authorization.AppAuthenticationGatewayFilterFactory;
 import com.weweibuy.gateway.route.filter.config.VerifySignatureProperties;
 import com.weweibuy.gateway.route.filter.constant.RedisConstant;
 import com.weweibuy.gateway.route.filter.utils.SignUtil;
@@ -38,7 +39,12 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * 验签过滤器
+ * 验签过滤器,
+ * 依赖 {@link AppAuthenticationGatewayFilterFactory} 鉴权并设置 appSecret(验签)
+ * 依赖 {@link SystemRequestParamGatewayFilterFactory} 设置系统级输入参数
+ * <p>
+ * 禁止 URL 传参形式: ?name=tom,jack&name=luck (将导致验签失败);
+ * ?name=&age=12   将视 name对应的值为空串进行验签
  *
  * @author durenhao
  * @date 2020/2/22 19:56
@@ -77,13 +83,14 @@ public class VerifySignatureGatewayFilterFactory extends AbstractGatewayFilterFa
     public GatewayFilter apply(Object config) {
         return (exchange, chain) -> {
             SystemRequestParam systemRequestParam = (SystemRequestParam) exchange.getAttributes().get(ExchangeAttributeConstant.SYSTEM_REQUEST_PARAM);
-
-
+            verifySignature(systemRequestParam, exchange, null);
+            // TODO 直接获取 请求体 进行验签!
             String contentType = exchange.getRequest().getHeaders().getFirst(HttpHeaders.CONTENT_TYPE);
 
             MediaType mediaType = MediaType.valueOf(contentType);
 
             ParameterizedTypeReference typeReference = null;
+
 
             if (mediaType.isCompatibleWith(MediaType.APPLICATION_FORM_URLENCODED)) {
                 typeReference = MULTIPART_DATA_TYPE;
@@ -148,13 +155,12 @@ public class VerifySignatureGatewayFilterFactory extends AbstractGatewayFilterFa
         String sign = null;
         switch (signType) {
             case MD5:
-                sign = SignUtil.md5Sign(appSecret, queryParams, body, systemRequestParam);
+                sign = SignUtil.md5Sign(appSecret, queryParams, "", systemRequestParam);
                 break;
             case HMAC_SHA256:
-                sign = SignUtil.hmacSha256Sign(appSecret, queryParams, body, systemRequestParam);
+                sign = SignUtil.hmacSha256Sign(appSecret, queryParams, "", systemRequestParam);
                 break;
             default:
-
         }
 
         if (StringUtils.isBlank(sign) || !sign.equals(systemRequestParam.getSignature())) {

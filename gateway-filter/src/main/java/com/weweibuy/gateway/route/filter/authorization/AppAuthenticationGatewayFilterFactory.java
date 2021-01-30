@@ -5,6 +5,7 @@ import com.weweibuy.framework.common.core.model.dto.CommonDataResponse;
 import com.weweibuy.gateway.core.constant.ExchangeAttributeConstant;
 import com.weweibuy.gateway.route.filter.authorization.model.AppAuthorizationReq;
 import com.weweibuy.gateway.route.filter.authorization.model.AppAuthorizationResp;
+import com.weweibuy.gateway.route.filter.path.ServiceMatchStripPrefixGatewayFilterFactory;
 import com.weweibuy.gateway.route.filter.sign.SystemRequestParam;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -16,6 +17,7 @@ import java.util.Optional;
 
 /**
  * app 权限控制
+ * 依赖{@link ServiceMatchStripPrefixGatewayFilterFactory} 设置请求服务
  *
  * @author durenhao
  * @date 2019/7/6 9:27

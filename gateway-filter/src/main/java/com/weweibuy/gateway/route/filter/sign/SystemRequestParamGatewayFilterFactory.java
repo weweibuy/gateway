@@ -8,13 +8,11 @@ import com.weweibuy.gateway.route.filter.config.VerifySignatureProperties;
 import com.weweibuy.gateway.route.filter.constant.RequestHeaderConstant;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.math.NumberUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.gateway.filter.GatewayFilter;
 import org.springframework.cloud.gateway.filter.factory.AbstractGatewayFilterFactory;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
@@ -45,7 +43,7 @@ public class SystemRequestParamGatewayFilterFactory extends AbstractGatewayFilte
             SignTypeEum signTypeEum = null;
 
             if (StringUtils.isAnyBlank(appKey, timestamp, nonce, signType, signature) ||
-                    !NumberUtils.isCreatable(timestamp) || (signTypeEum = SignTypeEum.getSignType(signType)) == null) {
+                    !StringUtils.isNumeric(timestamp) || (signTypeEum = SignTypeEum.getSignType(signType)) == null) {
                 return ReactorHttpHelper.buildAndWriteJson(HttpStatus.BAD_REQUEST, CommonCodeResponse.badSystemRequestParam(), exchange);
             }
 
@@ -54,17 +52,6 @@ public class SystemRequestParamGatewayFilterFactory extends AbstractGatewayFilte
             if (DateTimeUtils.localDateTimeToTimestampSecond(LocalDateTime.now()) - timestampL > verifySignatureProperties.getTimestampIntervalSecond()) {
                 return ReactorHttpHelper.buildAndWriteJson(HttpStatus.BAD_REQUEST,
                         CommonCodeResponse.badRequestParam("请求时间戳错误"), exchange);
-            }
-
-            String contentType = exchange.getRequest().getHeaders().getFirst(HttpHeaders.CONTENT_TYPE);
-            if (StringUtils.isBlank(contentType)) {
-                return ReactorHttpHelper.buildAndWriteJson(HttpStatus.BAD_REQUEST, CommonCodeResponse.unSupportedMediaType(), exchange);
-            }
-
-            MediaType mediaType = MediaType.parseMediaType(contentType);
-
-            if (!(mediaType.isCompatibleWith(MediaType.APPLICATION_FORM_URLENCODED) || mediaType.isCompatibleWith(MediaType.APPLICATION_JSON))) {
-                return ReactorHttpHelper.buildAndWriteJson(HttpStatus.BAD_REQUEST, CommonCodeResponse.unSupportedMediaType(), exchange);
             }
 
             SystemRequestParam systemRequestParam = SystemRequestParam.builder()

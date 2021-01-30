@@ -7,6 +7,7 @@ import com.weweibuy.gateway.core.constant.ExchangeAttributeConstant;
 import com.weweibuy.gateway.core.lb.LoadBalancerHelper;
 import com.weweibuy.gateway.route.filter.authorization.model.UserAuthorizationReq;
 import com.weweibuy.gateway.route.filter.authorization.model.UserAuthorizationResp;
+import com.weweibuy.gateway.route.filter.path.ServiceMatchStripPrefixGatewayFilterFactory;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.gateway.filter.GatewayFilterChain;
@@ -23,6 +24,7 @@ import static org.springframework.cloud.gateway.support.ServerWebExchangeUtils.G
 
 /**
  * 用户权限控制
+ * 依赖{@link ServiceMatchStripPrefixGatewayFilterFactory} 设置请求服务
  *
  * @author durenhao
  * @date 2020/12/26 11:25
