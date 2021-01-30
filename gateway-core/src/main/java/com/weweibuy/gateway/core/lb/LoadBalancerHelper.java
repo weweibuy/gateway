@@ -69,6 +69,11 @@ public class LoadBalancerHelper {
             throw new NotFoundException("No loadbalancer available for " + uri.getHost());
         }
         return loadBalancer.choose(null)
+                .doOnNext(r -> {
+                    if (!r.hasServer()) {
+                        throw com.weweibuy.framework.common.core.exception.Exceptions.system("无法发现认证服务器");
+                    }
+                })
                 .map(Response::getServer)
                 .map(ServiceInstance::getUri);
     }

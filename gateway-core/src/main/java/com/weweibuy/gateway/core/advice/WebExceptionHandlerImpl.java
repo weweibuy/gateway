@@ -40,7 +40,7 @@ public class WebExceptionHandlerImpl implements WebExceptionHandler {
     private void log(ServerWebExchange exchange, Throwable ex) {
         Route route = exchange.getAttribute(ServerWebExchangeUtils.GATEWAY_ROUTE_ATTR);
         if(route != null){
-            log.warn("请求: {} , 路由: {} , 发生异常: {}", exchange.getRequest().getPath(), route.getUri(), ex);
+            log.warn("请求: {} , 路由: {} , 发生异常: ", exchange.getRequest().getPath(), route.getUri(), ex);
         }else {
             log.warn("请求: {} , 发生异常:", exchange.getRequest().getPath(),  ex);
         }

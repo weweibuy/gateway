@@ -80,8 +80,8 @@ public abstract class AbstractAuthGatewayFilterFactory<C extends AbstractAuthGat
                 .flatMap(uri -> ReactorHttpHelper.<CommonDataResponse<P>>executeForJson(HttpMethod.POST, uri.toString() + authUri.getPath(),
                         null, headerMap, r, authorizationRespType)
                         .flatMap(res -> hashAuthentication(res, chain, exchange)));
-    }
 
+    }
 
     protected Mono<Void> hashAuthentication(ResponseEntity<CommonDataResponse<P>> responseEntity,
                                             GatewayFilterChain chain, ServerWebExchange exchange) {
