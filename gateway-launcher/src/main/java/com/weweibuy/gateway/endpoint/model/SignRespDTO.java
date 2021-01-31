@@ -1,4 +1,4 @@
-package com.weweibuy.gateway.endpoint;
+package com.weweibuy.gateway.endpoint.model;
 
 /**
  * @author durenhao
