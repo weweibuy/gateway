@@ -66,12 +66,12 @@ public class LoadBalancerHelper {
                 .getInstance(uri.getHost(), ReactorLoadBalancer.class,
                         ServiceInstance.class);
         if (loadBalancer == null) {
-            throw new NotFoundException("No loadbalancer available for " + uri.getHost());
+            throw new NotFoundException("无法发现认证服务器: " + uri.getHost());
         }
         return loadBalancer.choose(null)
                 .doOnNext(r -> {
                     if (!r.hasServer()) {
-                        throw new NotFoundException("无法发现认证服务器" + uri.getHost());
+                        throw new NotFoundException("无法发现认证服务器: " + uri.getHost());
                     }
                 })
                 .map(Response::getServer)

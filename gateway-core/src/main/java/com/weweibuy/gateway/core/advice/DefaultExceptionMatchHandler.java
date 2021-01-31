@@ -3,7 +3,6 @@ package com.weweibuy.gateway.core.advice;
 import com.weweibuy.framework.common.core.exception.BusinessException;
 import com.weweibuy.framework.common.core.exception.SystemException;
 import com.weweibuy.framework.common.core.model.dto.CommonCodeResponse;
-import com.weweibuy.framework.common.core.model.eum.CommonErrorCodeEum;
 import com.weweibuy.gateway.core.http.ReactorHttpHelper;
 import com.weweibuy.gateway.core.utils.MediaTypeUtils;
 import org.springframework.http.HttpStatus;
@@ -32,10 +31,8 @@ public class DefaultExceptionMatchHandler implements ExceptionMatchHandler {
         if (ex instanceof ResponseStatusException) {
             ResponseStatusException statusException = (ResponseStatusException) ex;
             HttpStatus status = statusException.getStatus();
-            if (HttpStatus.NOT_FOUND.equals(status)) {
-                return toServerResponse(HttpStatus.NOT_FOUND,
-                        CommonCodeResponse.response(CommonErrorCodeEum.NOT_FOUND));
-            }
+            return toServerResponse(status,
+                    CommonCodeResponse.response(status.value() + "", ex.getMessage()));
         }
         return toServerResponse(ex);
     }
