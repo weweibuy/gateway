@@ -13,10 +13,13 @@ import org.springframework.cloud.gateway.filter.GatewayFilter;
 import org.springframework.cloud.gateway.filter.factory.AbstractGatewayFilterFactory;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
+import java.util.Arrays;
 import java.util.Map;
+import java.util.Optional;
 
 /**
  * 验签 系统级输入参数过滤器
@@ -35,6 +38,12 @@ public class SystemRequestParamGatewayFilterFactory extends AbstractGatewayFilte
     public GatewayFilter apply(Object config) {
         return (exchange, chain) -> {
             HttpHeaders headers = exchange.getRequest().getHeaders();
+            String contentType = headers.getFirst(HttpHeaders.CONTENT_TYPE);
+            if (!validateMediaType(contentType)) {
+                return ReactorHttpHelper.buildAndWriteJson(HttpStatus.UNSUPPORTED_MEDIA_TYPE,
+                        CommonCodeResponse.unSupportedMediaType(), exchange);
+            }
+
             String appKey = headers.getFirst(RequestHeaderConstant.X_CA_APP_KEY);
             String timestamp = headers.getFirst(RequestHeaderConstant.X_CA_TIMESTAMP);
             String nonce = headers.getFirst(RequestHeaderConstant.X_CA_NONCE);
@@ -66,6 +75,18 @@ public class SystemRequestParamGatewayFilterFactory extends AbstractGatewayFilte
             attributeMap.put(ExchangeAttributeConstant.SYSTEM_REQUEST_PARAM, systemRequestParam);
             return chain.filter(exchange);
         };
+    }
+
+    private boolean validateMediaType(String contentType) {
+
+        return Optional.ofNullable(contentType)
+                .filter(StringUtils::isNotBlank)
+                .map(MediaType::parseMediaType)
+                .map(m -> m.isPresentIn(Arrays.asList(MediaType.APPLICATION_JSON,
+                        MediaType.APPLICATION_FORM_URLENCODED,
+                        MediaType.MULTIPART_FORM_DATA)))
+                .orElse(true);
+
     }
 
 

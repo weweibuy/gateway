@@ -24,28 +24,28 @@ public class SignUtil {
 
     private static final ConcurrentHashMap<String, SecretKey> SECRET_KEY_MAP = new ConcurrentHashMap();
 
-    public static String hmacSha256Sign(String appSecret, Map<String, List<String>> queryMap,
-                                        String body, SystemRequestParam requestParam) {
+    public static String hmacSha256Sign(String appSecret, String content) {
         try {
             Mac hmacSha256 = Mac.getInstance(CommonConstant.SignConstant.HMAC_SHA256);
             SecretKey secretKey = SECRET_KEY_MAP.computeIfAbsent(appSecret, SignUtil::generateKey);
             hmacSha256.init(secretKey);
             return base64Encode(
-                    hmacSha256.doFinal(buildArgsToString(appSecret, queryMap, body, requestParam).getBytes(CommonConstant.CharsetConstant.UTF8_STR)));
+                    hmacSha256.doFinal(content.getBytes(CommonConstant.CharsetConstant.UTF8_STR)));
         } catch (Exception e) {
             throw new IllegalStateException(e);
         }
     }
 
     public static String sign(SignTypeEum signType, String appSecret, Map<String, List<String>> queryParams,
-                              String body, SystemRequestParam requestParam) {
+                              Map<String, String> bodyParam, String body, SystemRequestParam requestParam) {
         String sign = null;
+        String content = buildArgsToString(appSecret, queryParams, bodyParam, body, requestParam);
         switch (signType) {
             case MD5:
-                sign = SignUtil.md5Sign(appSecret, queryParams, body, requestParam);
+                sign = SignUtil.md5Sign(content);
                 break;
             case HMAC_SHA256:
-                sign = SignUtil.hmacSha256Sign(appSecret, queryParams, body, requestParam);
+                sign = SignUtil.hmacSha256Sign(appSecret, content);
                 break;
             default:
         }
@@ -53,9 +53,8 @@ public class SignUtil {
     }
 
 
-    public static String md5Sign(String appSecret, Map<String, List<String>> queryMap,
-                                 String body, SystemRequestParam requestParam) {
-        return base64Encode(DigestUtils.md5DigestAsHex(buildArgsToString(appSecret, queryMap, body, requestParam).getBytes()));
+    public static String md5Sign(String str) {
+        return base64Encode(DigestUtils.md5DigestAsHex(str.getBytes()));
     }
 
     private static SecretKey generateKey(String appSecret) {
@@ -77,15 +76,19 @@ public class SignUtil {
     }
 
 
-    private static String buildArgsToString(String appSecret, Map<String, List<String>> queryMap,
+    private static String buildArgsToString(String appSecret, Map<String, List<String>> queryMap, Map<String, String> bodyMap,
                                             String body, SystemRequestParam requestParam) {
+
         Map<String, String> treeMap = new TreeMap<>();
         convertMapAddPut(treeMap, queryMap);
+        if (bodyMap != null) {
+            treeMap.putAll(bodyMap);
+        }
 
         StringBuilder builder = new StringBuilder();
 
-        builder.append("app_key").append("=").append(requestParam.getAppKey()).append("&")
-                .append("app_secret").append("=").append(appSecret).append("&")
+        builder.append("appKey").append("=").append(requestParam.getAppKey()).append("&")
+                .append("appSecret").append("=").append(appSecret).append("&")
                 .append("nonce").append("=").append(requestParam.getNonce()).append("&")
                 .append("timestamp").append("=").append(requestParam.getTimestamp())
                 .append("&");

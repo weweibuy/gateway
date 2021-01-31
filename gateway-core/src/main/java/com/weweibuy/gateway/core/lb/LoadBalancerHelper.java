@@ -71,7 +71,7 @@ public class LoadBalancerHelper {
         return loadBalancer.choose(null)
                 .doOnNext(r -> {
                     if (!r.hasServer()) {
-                        throw com.weweibuy.framework.common.core.exception.Exceptions.system("无法发现认证服务器");
+                        throw new NotFoundException("无法发现认证服务器" + uri.getHost());
                     }
                 })
                 .map(Response::getServer)
