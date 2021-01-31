@@ -1,30 +1,53 @@
 package com.weweibuy.gateway.route.filter.authorization;
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JavaType;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.weweibuy.framework.common.core.model.dto.CommonCodeResponse;
 import com.weweibuy.framework.common.core.model.dto.CommonDataResponse;
+import com.weweibuy.framework.common.core.utils.JackJsonUtils;
 import com.weweibuy.gateway.core.constant.ExchangeAttributeConstant;
 import com.weweibuy.gateway.core.http.ReactorHttpHelper;
 import com.weweibuy.gateway.core.lb.LoadBalancerHelper;
+import com.weweibuy.gateway.core.support.ObjectWrapper;
 import com.weweibuy.gateway.route.filter.authorization.model.DataPermissionReq;
+import com.weweibuy.gateway.route.filter.authorization.model.DataPermissionResp;
 import io.netty.handler.codec.http.HttpMethod;
 import lombok.Data;
+import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.gateway.filter.GatewayFilter;
 import org.springframework.cloud.gateway.filter.GatewayFilterChain;
 import org.springframework.cloud.gateway.filter.factory.AbstractGatewayFilterFactory;
+import org.springframework.cloud.gateway.filter.factory.rewrite.CachedBodyOutputMessage;
+import org.springframework.cloud.gateway.support.BodyInserterContext;
+import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.core.ResolvableType;
+import org.springframework.core.io.buffer.DataBuffer;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.codec.HttpMessageReader;
 import org.springframework.http.server.reactive.ServerHttpRequest;
+import org.springframework.http.server.reactive.ServerHttpRequestDecorator;
 import org.springframework.stereotype.Component;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
+import org.springframework.web.reactive.function.BodyInserters;
+import org.springframework.web.reactive.function.server.HandlerStrategies;
+import org.springframework.web.reactive.function.server.ServerRequest;
 import org.springframework.web.server.ServerWebExchange;
+import org.springframework.web.util.UriComponentsBuilder;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import javax.validation.constraints.NotBlank;
 import java.net.URI;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
+import java.util.stream.Collectors;
 
 import static org.springframework.cloud.gateway.support.ServerWebExchangeUtils.GATEWAY_REQUEST_URL_ATTR;
+import static org.springframework.util.CollectionUtils.unmodifiableMultiValueMap;
 
 /**
  * 数据 权限控制过滤器
@@ -35,15 +58,25 @@ import static org.springframework.cloud.gateway.support.ServerWebExchangeUtils.G
 @Component
 public class DataPermissionGatewayFilterFactory extends AbstractGatewayFilterFactory<DataPermissionGatewayFilterFactory.Config> {
 
+    private static final ParameterizedTypeReference JSON_DATA_TYPE;
+
+    private final List<HttpMessageReader<?>> messageReaders;
+
     @Autowired
     private LoadBalancerHelper loadBalancerHelper;
 
     private JavaType authorizationRespType;
 
-    public DataPermissionGatewayFilterFactory(ObjectMapper objectMapper) {
+    static {
+        JSON_DATA_TYPE = ParameterizedTypeReference.forType(ResolvableType.forClassWithGenerics(
+                Map.class, String.class, Object.class).getType());
+    }
+
+    public DataPermissionGatewayFilterFactory() {
         super(Config.class);
-        authorizationRespType = objectMapper.getTypeFactory()
-                .constructParametricType(CommonDataResponse.class, DataPermissionReq.class);
+        this.messageReaders = HandlerStrategies.withDefaults().messageReaders();
+        authorizationRespType = JackJsonUtils.javaType(new TypeReference<CommonDataResponse<List<DataPermissionResp>>>() {
+        });
     }
 
     @Override
@@ -61,9 +94,9 @@ public class DataPermissionGatewayFilterFactory extends AbstractGatewayFilterFac
             DataPermissionReq dataPermissionReq = new DataPermissionReq(service, requestUri.getPath(), method, username);
 
             return loadBalancerHelper.choose(authUri)
-                    .flatMap(uri -> ReactorHttpHelper.<CommonDataResponse<DataPermissionReq>>executeForJson(HttpMethod.POST,
+                    .flatMap(uri -> ReactorHttpHelper.<CommonDataResponse<List<DataPermissionResp>>>executeForJson(HttpMethod.POST,
                             uri.toString() + authUri.getPath(), dataPermissionReq, authorizationRespType)
-                            .flatMap(resp -> modifyPermissionField(resp, chain, exchange)));
+                            .flatMap(resp -> handlerPermissionResp(resp, chain, exchange)));
 
         };
     }
@@ -76,9 +109,170 @@ public class DataPermissionGatewayFilterFactory extends AbstractGatewayFilterFac
      * @param exchange
      * @return
      */
-    protected Mono<Void> modifyPermissionField(ResponseEntity<CommonDataResponse<DataPermissionReq>> responseEntity,
+    protected Mono<Void> handlerPermissionResp(ResponseEntity<CommonDataResponse<List<DataPermissionResp>>> responseEntity,
                                                GatewayFilterChain chain, ServerWebExchange exchange) {
-        return Mono.empty();
+
+        HttpStatus httpStatus = responseEntity.getStatusCode();
+        int status = httpStatus.value();
+        if (status == 200 && responseEntity.getBody() != null) {
+            CommonDataResponse<List<DataPermissionResp>> response = responseEntity.getBody();
+            List<DataPermissionResp> dataPermissionRespList = response.getData();
+            return handlerPermissionResp(dataPermissionRespList, chain, exchange);
+        } else if (status >= 400 && status < 500) {
+            return ReactorHttpHelper.buildAndWriteJson(responseEntity.getStatusCode(), responseEntity.getBody(), exchange);
+        } else if (status >= 500) {
+            return ReactorHttpHelper.buildAndWriteJson(HttpStatus.INTERNAL_SERVER_ERROR, CommonCodeResponse.unknownException(), exchange);
+        }
+        return ReactorHttpHelper.buildAndWriteJson(HttpStatus.UNAUTHORIZED, CommonCodeResponse.forbidden(), exchange);
+    }
+
+
+    protected Mono<Void> handlerPermissionResp(List<DataPermissionResp> dataPermissionRespList,
+                                               GatewayFilterChain chain, ServerWebExchange exchange) {
+        // 没有要修改的字段
+        if (CollectionUtils.isEmpty(dataPermissionRespList)) {
+            return chain.filter(exchange);
+        }
+        return modifyPermissionField(dataPermissionRespList, chain, exchange);
+    }
+
+    /**
+     * 修改 请求字段
+     *
+     * @param dataPermissionRespList
+     * @param chain
+     * @param exchange
+     * @return
+     */
+    protected Mono<Void> modifyPermissionField(List<DataPermissionResp> dataPermissionRespList,
+                                               GatewayFilterChain chain, ServerWebExchange exchange) {
+        ServerHttpRequest request = exchange.getRequest();
+        Map<Integer, List<DataPermissionResp>> typeListMap = dataPermissionRespList.stream()
+                .collect(Collectors.groupingBy(DataPermissionResp::getReqParamType));
+        return modifyParam(typeListMap, chain, exchange);
+
+    }
+
+
+    private void modifyQueryParam(List<DataPermissionResp> queryDataPermissionList,
+                                  MultiValueMap<String, String> queryParams) {
+
+        queryDataPermissionList.stream()
+                .forEach(p -> {
+                    List<String> paramValueList = queryParams.get(p.getFieldName());
+                    if (CollectionUtils.isEmpty(paramValueList)) {
+                        // 设置权限
+                        queryParams.add(p.getFieldName(), p.getFieldValue());
+                        return;
+                    }
+                    String value = paramValueList.get(0);
+                    String fieldValue = p.getFieldValue();
+                    String fieldType = p.getFieldType();
+                    if ("COLLECTION".equals(fieldType)) {
+                        Set<String> permissionValueSet = Arrays.stream(fieldValue.split(","))
+                                .collect(Collectors.toSet());
+
+                        String allowedValue = Arrays.stream(value.split(","))
+                                .filter(permissionValueSet::contains)
+                                .collect(Collectors.joining(","));
+                        if (StringUtils.isBlank(allowedValue)) {
+                            // TODO 没有权限 响应
+
+                        }
+                        queryParams.put(p.getFieldName(), Collections.singletonList(allowedValue));
+                    } else {
+                        if (!value.equals(fieldValue)) {
+                            // TODO 没有权限 响应
+
+                        }
+                    }
+                });
+    }
+
+
+    private Mono modifyParam(Map<Integer, List<DataPermissionResp>> typeListMap,
+                             GatewayFilterChain chain, ServerWebExchange exchange) {
+
+        ServerHttpRequest request = exchange.getRequest();
+
+        List<DataPermissionResp> queryDataPermissionList = typeListMap.get(DataPermissionResp.QUERY_PARAM_TYPE);
+        URI newUri = null;
+        // 修改query参数
+        if (CollectionUtils.isNotEmpty(queryDataPermissionList)) {
+            MultiValueMap<String, String> queryParams = new LinkedMultiValueMap<>(
+                    request.getQueryParams());
+            modifyQueryParam(queryDataPermissionList, queryParams);
+
+            newUri = UriComponentsBuilder.fromUri(request.getURI())
+                    .replaceQueryParams(unmodifiableMultiValueMap(queryParams))
+                    .build().toUri();
+        }
+
+        ObjectWrapper<URI> newUriWrapper = new ObjectWrapper<>(newUri);
+
+
+        List<DataPermissionResp> bodyDataPermissionList = typeListMap.get(DataPermissionResp.BODY_PARAM_TYPE);
+
+        if (CollectionUtils.isNotEmpty(bodyDataPermissionList)) {
+
+            HttpHeaders headers = new HttpHeaders();
+            headers.putAll(exchange.getRequest().getHeaders());
+            headers.remove(HttpHeaders.CONTENT_LENGTH);
+            return ServerRequest.create(exchange, messageReaders)
+                    // TODO 支持更多类型
+                    .bodyToMono(JSON_DATA_TYPE)
+                    .map(body -> {
+                        // TODO 修改请求体
+                        Map bodyMap = (Map) body;
+                        return bodyMap;
+                    })
+                    .flatMap(body -> {
+                        CachedBodyOutputMessage outputMessage = new CachedBodyOutputMessage(exchange, headers);
+                        return BodyInserters.fromPublisher(Mono.just(body), JSON_DATA_TYPE)
+                                .insert(outputMessage, new BodyInserterContext())
+                                .then(Mono.defer(() -> {
+                                    ServerHttpRequestDecorator decorator = new ServerHttpRequestDecorator(
+                                            exchange.getRequest()) {
+
+                                        @Override
+                                        public HttpHeaders getHeaders() {
+                                            long contentLength = headers.getContentLength();
+                                            HttpHeaders httpHeaders = new HttpHeaders();
+                                            httpHeaders.putAll(super.getHeaders());
+                                            if (contentLength > 0) {
+                                                httpHeaders.setContentLength(contentLength);
+                                            } else {
+                                                httpHeaders.set(HttpHeaders.TRANSFER_ENCODING, "chunked");
+                                            }
+                                            return httpHeaders;
+                                        }
+
+                                        @Override
+                                        public Flux<DataBuffer> getBody() {
+                                            return outputMessage.getBody();
+                                        }
+                                    };
+
+                                    if (newUriWrapper.getObject() != null) {
+                                        ServerHttpRequest httpRequest = decorator.mutate().uri(newUriWrapper.getObject())
+                                                .build();
+                                        return chain.filter(exchange.mutate()
+                                                .request(httpRequest).build());
+                                    } else {
+                                        return chain.filter(exchange.mutate()
+                                                .request(decorator).build());
+                                    }
+                                }));
+                    });
+        }
+
+        if (newUri != null) {
+            request = request.mutate().uri(newUri)
+                    .build();
+            return chain.filter(exchange.mutate().request(request).build());
+        }
+
+        return chain.filter(exchange.mutate().request(request).build());
     }
 
     @Data

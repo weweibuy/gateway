@@ -83,6 +83,7 @@ public abstract class AbstractAuthGatewayFilterFactory<C extends AbstractAuthGat
 
     }
 
+    // TODO 异常设置 源服务 id
     protected Mono<Void> hashAuthentication(ResponseEntity<CommonDataResponse<P>> responseEntity,
                                             GatewayFilterChain chain, ServerWebExchange exchange) {
 
@@ -91,7 +92,7 @@ public abstract class AbstractAuthGatewayFilterFactory<C extends AbstractAuthGat
         if (status == 200 && responseEntity.getBody() != null) {
             return handleReqSuccess(responseEntity.getBody(), chain, exchange);
         } else if (status >= 400 && status < 500) {
-            return ReactorHttpHelper.buildAndWriteJson(HttpStatus.BAD_REQUEST, CommonCodeResponse.badRequestParam(), exchange);
+            return ReactorHttpHelper.buildAndWriteJson(responseEntity.getStatusCode(), responseEntity.getBody(), exchange);
         } else if (status >= 500) {
             return ReactorHttpHelper.buildAndWriteJson(HttpStatus.INTERNAL_SERVER_ERROR, CommonCodeResponse.unknownException(), exchange);
         }
