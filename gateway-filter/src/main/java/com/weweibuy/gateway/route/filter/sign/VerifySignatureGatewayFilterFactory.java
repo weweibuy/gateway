@@ -69,13 +69,11 @@ public class VerifySignatureGatewayFilterFactory extends AbstractGatewayFilterFa
         applicationContext.publishEvent(event);
         return (exchange, chain) -> {
             SystemRequestParam systemRequestParam = (SystemRequestParam) exchange.getAttributes().get(ExchangeAttributeConstant.SYSTEM_REQUEST_PARAM);
-            // todo form-data 和  application/x-www-form-urlencoded 支持
             String body = Optional.ofNullable((DataBuffer) exchange.getAttributes().get(CACHED_REQUEST_BODY_ATTR))
                     .map(DataBuffer::asByteBuffer)
                     .map(StandardCharsets.UTF_8::decode)
                     .map(Object::toString)
                     .orElse(StringUtils.EMPTY);
-
             return verifySignature(systemRequestParam, exchange, body, config)
                     .flatMap(b ->
                             PredicateEnhance.predicateThenGet(b,

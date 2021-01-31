@@ -67,6 +67,9 @@ public class ServiceMatchStripPrefixGatewayFilterFactory extends AbstractGateway
     @Data
     public static class Config {
 
+        /**
+         * 匹配层数
+         */
         private int parts;
 
     }
