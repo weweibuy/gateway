@@ -29,6 +29,7 @@ public class DefaultExceptionMatchHandler implements ExceptionMatchHandler {
             return htmlErrorResponse(ex);
         }
         if (ex instanceof ResponseStatusException) {
+
             ResponseStatusException statusException = (ResponseStatusException) ex;
             HttpStatus status = statusException.getStatus();
             return toServerResponse(status,

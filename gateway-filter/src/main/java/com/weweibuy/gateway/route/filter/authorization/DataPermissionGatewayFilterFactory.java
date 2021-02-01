@@ -2,8 +2,10 @@ package com.weweibuy.gateway.route.filter.authorization;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JavaType;
+import com.weweibuy.framework.common.core.exception.Exceptions;
 import com.weweibuy.framework.common.core.model.dto.CommonCodeResponse;
 import com.weweibuy.framework.common.core.model.dto.CommonDataResponse;
+import com.weweibuy.framework.common.core.model.eum.CommonErrorCodeEum;
 import com.weweibuy.framework.common.core.utils.JackJsonUtils;
 import com.weweibuy.gateway.core.constant.ExchangeAttributeConstant;
 import com.weweibuy.gateway.core.http.ReactorHttpHelper;
@@ -11,6 +13,8 @@ import com.weweibuy.gateway.core.lb.LoadBalancerHelper;
 import com.weweibuy.gateway.core.support.ObjectWrapper;
 import com.weweibuy.gateway.route.filter.authorization.model.DataPermissionReq;
 import com.weweibuy.gateway.route.filter.authorization.model.DataPermissionResp;
+import com.weweibuy.gateway.route.filter.authorization.model.FieldTypeEum;
+import com.weweibuy.gateway.route.filter.support.CachedBodyOutputMessage;
 import io.netty.handler.codec.http.HttpMethod;
 import lombok.Data;
 import org.apache.commons.collections4.CollectionUtils;
@@ -19,13 +23,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.gateway.filter.GatewayFilter;
 import org.springframework.cloud.gateway.filter.GatewayFilterChain;
 import org.springframework.cloud.gateway.filter.factory.AbstractGatewayFilterFactory;
-import org.springframework.cloud.gateway.filter.factory.rewrite.CachedBodyOutputMessage;
 import org.springframework.cloud.gateway.support.BodyInserterContext;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.core.ResolvableType;
 import org.springframework.core.io.buffer.DataBuffer;
+import org.springframework.core.io.buffer.DataBufferUtils;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.codec.HttpMessageReader;
 import org.springframework.http.server.reactive.ServerHttpRequest;
@@ -37,6 +42,7 @@ import org.springframework.web.reactive.function.BodyInserters;
 import org.springframework.web.reactive.function.server.HandlerStrategies;
 import org.springframework.web.reactive.function.server.ServerRequest;
 import org.springframework.web.server.ServerWebExchange;
+import org.springframework.web.server.UnsupportedMediaTypeStatusException;
 import org.springframework.web.util.UriComponentsBuilder;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -44,6 +50,7 @@ import reactor.core.publisher.Mono;
 import javax.validation.constraints.NotBlank;
 import java.net.URI;
 import java.util.*;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import static org.springframework.cloud.gateway.support.ServerWebExchangeUtils.GATEWAY_REQUEST_URL_ATTR;
@@ -168,7 +175,7 @@ public class DataPermissionGatewayFilterFactory extends AbstractGatewayFilterFac
                     String value = paramValueList.get(0);
                     String fieldValue = p.getFieldValue();
                     String fieldType = p.getFieldType();
-                    if ("COLLECTION".equals(fieldType)) {
+                    if (FieldTypeEum.isCollection(fieldType)) {
                         Set<String> permissionValueSet = Arrays.stream(fieldValue.split(","))
                                 .collect(Collectors.toSet());
 
@@ -210,49 +217,32 @@ public class DataPermissionGatewayFilterFactory extends AbstractGatewayFilterFac
 
         ObjectWrapper<URI> newUriWrapper = new ObjectWrapper<>(newUri);
 
-
         List<DataPermissionResp> bodyDataPermissionList = typeListMap.get(DataPermissionResp.BODY_PARAM_TYPE);
 
         if (CollectionUtils.isNotEmpty(bodyDataPermissionList)) {
+            HttpHeaders oriHeaders = exchange.getRequest().getHeaders();
+            String contentType = oriHeaders.getFirst(HttpHeaders.CONTENT_TYPE);
+            if (StringUtils.isBlank(contentType)) {
+
+            }
+            // TODO 支持更多类型
+            if (!MediaType.APPLICATION_JSON.includes(MediaType.parseMediaType(contentType))) {
+                throw new UnsupportedMediaTypeStatusException(contentType);
+            }
 
             HttpHeaders headers = new HttpHeaders();
-            headers.putAll(exchange.getRequest().getHeaders());
+            headers.putAll(oriHeaders);
             headers.remove(HttpHeaders.CONTENT_LENGTH);
             return ServerRequest.create(exchange, messageReaders)
-                    // TODO 支持更多类型
                     .bodyToMono(JSON_DATA_TYPE)
-                    .map(body -> {
-                        // TODO 修改请求体
-                        Map bodyMap = (Map) body;
-                        return bodyMap;
-                    })
+                    // 修改请求体
+                    .map(body -> modifyBody((Map<String, Object>) body, bodyDataPermissionList))
                     .flatMap(body -> {
                         CachedBodyOutputMessage outputMessage = new CachedBodyOutputMessage(exchange, headers);
                         return BodyInserters.fromPublisher(Mono.just(body), JSON_DATA_TYPE)
                                 .insert(outputMessage, new BodyInserterContext())
                                 .then(Mono.defer(() -> {
-                                    ServerHttpRequestDecorator decorator = new ServerHttpRequestDecorator(
-                                            exchange.getRequest()) {
-
-                                        @Override
-                                        public HttpHeaders getHeaders() {
-                                            long contentLength = headers.getContentLength();
-                                            HttpHeaders httpHeaders = new HttpHeaders();
-                                            httpHeaders.putAll(super.getHeaders());
-                                            if (contentLength > 0) {
-                                                httpHeaders.setContentLength(contentLength);
-                                            } else {
-                                                httpHeaders.set(HttpHeaders.TRANSFER_ENCODING, "chunked");
-                                            }
-                                            return httpHeaders;
-                                        }
-
-                                        @Override
-                                        public Flux<DataBuffer> getBody() {
-                                            return outputMessage.getBody();
-                                        }
-                                    };
-
+                                    ServerHttpRequestDecorator decorator = decorate(exchange, headers, outputMessage);
                                     if (newUriWrapper.getObject() != null) {
                                         ServerHttpRequest httpRequest = decorator.mutate().uri(newUriWrapper.getObject())
                                                 .build();
@@ -262,7 +252,10 @@ public class DataPermissionGatewayFilterFactory extends AbstractGatewayFilterFac
                                         return chain.filter(exchange.mutate()
                                                 .request(decorator).build());
                                     }
-                                }));
+                                }))
+                                .onErrorResume(
+                                        (Function<Throwable, Mono<Void>>) throwable -> release(
+                                                exchange, outputMessage, throwable));
                     });
         }
 
@@ -274,6 +267,122 @@ public class DataPermissionGatewayFilterFactory extends AbstractGatewayFilterFac
 
         return chain.filter(exchange.mutate().request(request).build());
     }
+
+
+    /**
+     * 修改请求体
+     *
+     * @param reqMap
+     * @return
+     */
+    private Map<String, Object> modifyBody(Map<String, Object> reqMap, List<DataPermissionResp> bodyDataPermissionList) {
+        Map<Boolean, List<DataPermissionResp>> listMap = bodyDataPermissionList.stream()
+                .collect(Collectors.groupingBy(d -> d.getFieldName().indexOf(".") != -1));
+        // 只操作一层
+        List<DataPermissionResp> dataPermissionList = listMap.get(false);
+        if (CollectionUtils.isNotEmpty(dataPermissionList)) {
+            dataPermissionList.forEach(p -> {
+                Object o = reqMap.get(p.getFieldName());
+                String fieldType = p.getFieldType();
+                FieldTypeEum fieldTypeEum = FieldTypeEum.fieldTypeEum(p.getFieldType())
+                        .orElseThrow(() -> Exceptions.formatSystem("数据权限无法识别的字段类型: %s", p.getFieldType()));
+                String fieldValue = p.getFieldValue();
+                if (o == null) {
+                    reqMap.put(p.getFieldName(), convertBodyValue(fieldTypeEum, fieldValue));
+                } else {
+                    reqMap.replace(p.getFieldName(), modifyBodyValue(fieldTypeEum, o, fieldValue));
+                }
+            });
+
+        }
+
+        // 操作多层
+        List<DataPermissionResp> nestingPermissionList = listMap.get(true);
+
+
+        return reqMap;
+    }
+
+
+    private Object modifyBodyValue(FieldTypeEum fieldTypeEum, Object body, String pValue) {
+        if (!FieldTypeEum.isCollection(fieldTypeEum) && body instanceof List) {
+            throw Exceptions.formatBusiness("数据权限字段类型输入类型错误, 预计: %s, 实际: %s", fieldTypeEum, "List");
+        }
+        if (FieldTypeEum.isCollection(fieldTypeEum) && !(body instanceof List)) {
+            throw Exceptions.formatBusiness("数据权限字段类型输入类型错误, 预计: %s, 实际: %s", fieldTypeEum, "非List");
+        }
+        if (!FieldTypeEum.isCollection(fieldTypeEum) && !Objects.equals(body, pValue)) {
+            // TODO 是否支持隐式 集合 类似 (1,2,3) 这种形式
+            // 没有权限
+            throw Exceptions.business(CommonErrorCodeEum.FORBIDDEN,
+                    "没有数据权限: " + body);
+        }
+        if (FieldTypeEum.isCollection(fieldTypeEum)) {
+            List<Object> bodyList = (List) body;
+            String[] split = pValue.split(",");
+            Set<String> collect = Arrays.stream(split)
+                    .map(s -> convertBodyValue(fieldTypeEum, s) + "")
+                    .collect(Collectors.toSet());
+            if (CollectionUtils.isEmpty(bodyList)) {
+                return collect;
+            }
+            List<String> stringList = bodyList.stream()
+                    .map(b -> b + "")
+                    .filter(collect::contains)
+                    .collect(Collectors.toList());
+            if (CollectionUtils.isEmpty(stringList)) {
+                throw Exceptions.business(CommonErrorCodeEum.FORBIDDEN,
+                        "没有数据权限: " + bodyList);
+            }
+            return stringList;
+        }
+        return convertBodyValue(fieldTypeEum, pValue);
+    }
+
+
+    private Object convertBodyValue(FieldTypeEum fieldTypeEum, String value) {
+        if (FieldTypeEum.isCollection(fieldTypeEum)) {
+            return Arrays.stream(value.split(","))
+                    .collect(Collectors.toList());
+        }
+        return value;
+    }
+
+
+
+    protected Mono<Void> release(ServerWebExchange exchange,
+                                 CachedBodyOutputMessage outputMessage, Throwable throwable) {
+        if (outputMessage.isCached()) {
+            return outputMessage.getBody().map(DataBufferUtils::release)
+                    .then(Mono.error(throwable));
+        }
+        return Mono.error(throwable);
+    }
+
+
+    ServerHttpRequestDecorator decorate(ServerWebExchange exchange, HttpHeaders headers,
+                                        CachedBodyOutputMessage outputMessage) {
+        return new ServerHttpRequestDecorator(exchange.getRequest()) {
+            @Override
+            public HttpHeaders getHeaders() {
+                long contentLength = headers.getContentLength();
+                HttpHeaders httpHeaders = new HttpHeaders();
+                httpHeaders.putAll(headers);
+                if (contentLength > 0) {
+                    httpHeaders.setContentLength(contentLength);
+                } else {
+                    httpHeaders.set(HttpHeaders.TRANSFER_ENCODING, "chunked");
+                }
+                return httpHeaders;
+            }
+
+            @Override
+            public Flux<DataBuffer> getBody() {
+                return outputMessage.getBody();
+            }
+        };
+    }
+
 
     @Data
     public static class Config {
