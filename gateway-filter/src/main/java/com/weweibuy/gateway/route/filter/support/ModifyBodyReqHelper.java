@@ -10,7 +10,7 @@ import reactor.core.publisher.Flux;
  * @author durenhao
  * @date 2021/2/2 19:40
  **/
-public class ModifyBodyHelper {
+public class ModifyBodyReqHelper {
 
 
     public static ServerHttpRequestDecorator decorate(ServerWebExchange exchange, HttpHeaders headers,

@@ -33,7 +33,7 @@ public class SignHelper {
     }
 
     private static String[] splitParam(String param) {
-        int indexOf = param.lastIndexOf('=');
+        int indexOf = param.indexOf('=');
         String key = param.substring(0, indexOf);
         String value = param.substring(indexOf + 1, param.length());
         if (StringUtils.isNotEmpty(key)) {

@@ -13,7 +13,7 @@ import com.weweibuy.gateway.route.filter.authorization.model.DataPermissionReq;
 import com.weweibuy.gateway.route.filter.authorization.model.DataPermissionResp;
 import com.weweibuy.gateway.route.filter.support.CachedBodyOutputMessage;
 import com.weweibuy.gateway.route.filter.support.DataPermissionHelper;
-import com.weweibuy.gateway.route.filter.support.ModifyBodyHelper;
+import com.weweibuy.gateway.route.filter.support.ModifyBodyReqHelper;
 import io.netty.handler.codec.http.HttpMethod;
 import lombok.Data;
 import org.apache.commons.collections4.CollectionUtils;
@@ -205,7 +205,7 @@ public class DataPermissionGatewayFilterFactory extends AbstractGatewayFilterFac
                         return BodyInserters.fromPublisher(Mono.just(body), JSON_DATA_TYPE)
                                 .insert(outputMessage, new BodyInserterContext())
                                 .then(Mono.defer(() -> {
-                                    ServerHttpRequestDecorator decorator = ModifyBodyHelper.decorate(exchange, headers, outputMessage);
+                                    ServerHttpRequestDecorator decorator = ModifyBodyReqHelper.decorate(exchange, headers, outputMessage);
                                     return buildReqIfNecessaryAndFilter(chain, exchange, decorator, newUriWrapper.getObject());
                                 }))
                                 .onErrorResume((Function<Throwable, Mono<Void>>) throwable ->
