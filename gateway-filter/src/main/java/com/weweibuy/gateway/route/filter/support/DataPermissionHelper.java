@@ -97,8 +97,7 @@ public class DataPermissionHelper {
         }
         if (isCollection) {
             List<Object> bodyList = (List) body;
-            String[] split = pValue.split(",");
-            Set<String> collect = Arrays.stream(split)
+            Set<String> collect = Arrays.stream(pValue.split(","))
                     .collect(Collectors.toSet());
             if (CollectionUtils.isEmpty(bodyList)) {
                 return collect;
@@ -164,9 +163,5 @@ public class DataPermissionHelper {
                 "没有数据权限: " + detailMag);
     }
 
-    private static List<String> valueToList(String value) {
-        return Arrays.stream(value.split(","))
-                .collect(Collectors.toList());
-    }
 
 }
