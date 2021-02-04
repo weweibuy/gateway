@@ -1,5 +1,7 @@
 package com.weweibuy.gateway.route.filter.authorization.model;
 
+import lombok.Getter;
+
 import java.util.Arrays;
 import java.util.Map;
 import java.util.Optional;
@@ -8,29 +10,36 @@ import java.util.stream.Collectors;
 
 /**
  * 模型属性类型
- *
+ * COLLECTION_STRING
  * @author durenhao
  * @date 2020/11/8 11:34
  **/
+@Getter
 public enum FieldTypeEum {
 
-    STRING,
-    NUMBER,
-    BOOLEAN,
-    COLLECTION_NUMBER,
-    COLLECTION_STRING,
+    STRING(0),
+    NUMBER(1),
+    BOOLEAN(2),
+    COLLECTION_STRING(3),
+    COLLECTION_NUMBER(4),
     ;
 
-    private static final Map<String, FieldTypeEum> FIELD_TYPE_EUM_MAP;
+    private final Integer code;
+
+    private static final Map<Integer, FieldTypeEum> FIELD_TYPE_EUM_MAP;
 
     static {
         FIELD_TYPE_EUM_MAP = Arrays.stream(FieldTypeEum.values())
-                .collect(Collectors.toMap(FieldTypeEum::toString, Function.identity()));
+                .collect(Collectors.toMap(FieldTypeEum::getCode, Function.identity()));
     }
 
-    public static boolean isCollection(String filedType) {
-        return COLLECTION_STRING.toString().equals(filedType)
-                || COLLECTION_NUMBER.toString().equals(filedType);
+    FieldTypeEum(Integer code) {
+        this.code = code;
+    }
+
+    public static boolean isCollection(Integer filedTypeCode) {
+        return COLLECTION_STRING.getCode().equals(filedTypeCode)
+                || COLLECTION_NUMBER.getCode().equals(filedTypeCode);
     }
 
     public static boolean isCollection(FieldTypeEum filedType) {
@@ -38,8 +47,8 @@ public enum FieldTypeEum {
                 || COLLECTION_NUMBER.equals(filedType);
     }
 
-    public static Optional<FieldTypeEum> fieldTypeEum(String fieldType) {
-        return Optional.ofNullable(FIELD_TYPE_EUM_MAP.get(fieldType));
+    public static Optional<FieldTypeEum> fieldTypeEum(Integer filedTypeCode) {
+        return Optional.ofNullable(FIELD_TYPE_EUM_MAP.get(filedTypeCode));
     }
 
 }

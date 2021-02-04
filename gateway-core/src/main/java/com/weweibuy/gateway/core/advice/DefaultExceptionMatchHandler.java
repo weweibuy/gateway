@@ -3,6 +3,8 @@ package com.weweibuy.gateway.core.advice;
 import com.weweibuy.framework.common.core.exception.BusinessException;
 import com.weweibuy.framework.common.core.exception.SystemException;
 import com.weweibuy.framework.common.core.model.dto.CommonCodeResponse;
+import com.weweibuy.framework.common.core.model.eum.CommonErrorCodeEum;
+import com.weweibuy.gateway.core.exception.ForbiddenException;
 import com.weweibuy.gateway.core.http.ReactorHttpHelper;
 import com.weweibuy.gateway.core.utils.MediaTypeUtils;
 import org.springframework.http.HttpStatus;
@@ -34,6 +36,10 @@ public class DefaultExceptionMatchHandler implements ExceptionMatchHandler {
             HttpStatus status = statusException.getStatus();
             return toServerResponse(status,
                     CommonCodeResponse.response(status.value() + "", ex.getMessage()));
+        }
+        if (ex instanceof ForbiddenException) {
+            return toServerResponse(HttpStatus.FORBIDDEN,
+                    CommonCodeResponse.response(CommonErrorCodeEum.FORBIDDEN.getCode(), ex.getMessage()));
         }
         return toServerResponse(ex);
     }

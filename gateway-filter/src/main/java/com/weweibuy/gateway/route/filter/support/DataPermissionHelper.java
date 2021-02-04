@@ -1,8 +1,7 @@
 package com.weweibuy.gateway.route.filter.support;
 
-import com.weweibuy.framework.common.core.exception.BusinessException;
 import com.weweibuy.framework.common.core.exception.Exceptions;
-import com.weweibuy.framework.common.core.model.eum.CommonErrorCodeEum;
+import com.weweibuy.gateway.core.exception.ForbiddenException;
 import com.weweibuy.gateway.route.filter.authorization.model.DataPermissionResp;
 import com.weweibuy.gateway.route.filter.authorization.model.FieldTypeEum;
 import org.apache.commons.collections4.CollectionUtils;
@@ -50,7 +49,7 @@ public class DataPermissionHelper {
         if (oriValue == null) {
             reqMap.put(fieldName, convertBodyValue(fieldTypeEum, dataPermissionResp.getFieldValue()));
         } else {
-            reqMap.replace(fieldName, modifyBodyValue(fieldTypeEum, oriValue, dataPermissionResp.getFieldValue()));
+            reqMap.replace(fieldName, modifyBodyValue(fieldTypeEum, oriValue, dataPermissionResp));
         }
     }
 
@@ -81,8 +80,10 @@ public class DataPermissionHelper {
     }
 
 
-    public static Object modifyBodyValue(FieldTypeEum fieldTypeEum, Object body, String pValue) {
+    public static Object modifyBodyValue(FieldTypeEum fieldTypeEum, Object body, DataPermissionResp dataPermissionResp) {
         boolean isCollection = FieldTypeEum.isCollection(fieldTypeEum);
+        String fieldValue = dataPermissionResp.getFieldValue();
+        String fieldName = dataPermissionResp.getFieldName();
 
         if (!isCollection && body instanceof List) {
             throw Exceptions.formatBusiness("数据权限字段类型输入类型错误, 预计: %s, 实际: %s", fieldTypeEum, "List");
@@ -90,14 +91,13 @@ public class DataPermissionHelper {
         if (isCollection && !(body instanceof List)) {
             throw Exceptions.formatBusiness("数据权限字段类型输入类型错误, 预计: %s, 实际: %s", fieldTypeEum, "非List");
         }
-        if (!isCollection && !Objects.equals(body, pValue)) {
-            // TODO 是否支持隐式 集合 类似 (1,2,3) 这种形式
+        if (!isCollection && !Objects.equals(body, fieldValue)) {
             // 没有权限
-            throw forbiddenException(body.toString());
+            throw forbiddenException(fieldName, body.toString());
         }
         if (isCollection) {
             List<Object> bodyList = (List) body;
-            Set<String> collect = Arrays.stream(pValue.split(","))
+            Set<String> collect = Arrays.stream(fieldValue.split(","))
                     .collect(Collectors.toSet());
             if (CollectionUtils.isEmpty(bodyList)) {
                 return collect;
@@ -107,11 +107,11 @@ public class DataPermissionHelper {
                     .filter(collect::contains)
                     .collect(Collectors.toList());
             if (CollectionUtils.isEmpty(stringList)) {
-                throw forbiddenException(bodyList.toString());
+                throw forbiddenException(fieldName, bodyList.toString());
             }
             return stringList;
         }
-        return pValue;
+        return fieldValue;
     }
 
 
@@ -137,7 +137,7 @@ public class DataPermissionHelper {
                     }
                     String value = paramValueList.get(0);
                     String fieldValue = p.getFieldValue();
-                    String fieldType = p.getFieldType();
+                    Integer fieldType = p.getFieldType();
                     if (FieldTypeEum.isCollection(fieldType)) {
                         Set<String> permissionValueSet = Arrays.stream(fieldValue.split(","))
                                 .collect(Collectors.toSet());
@@ -146,21 +146,19 @@ public class DataPermissionHelper {
                                 .filter(permissionValueSet::contains)
                                 .collect(Collectors.joining(","));
                         if (StringUtils.isBlank(allowedValue)) {
-                            throw forbiddenException(value);
+                            throw forbiddenException(p.getFieldName(), value);
                         }
                         queryParams.put(p.getFieldName(), Collections.singletonList(allowedValue));
                     } else {
                         if (!value.equals(fieldValue)) {
-                            throw forbiddenException(value);
+                            throw forbiddenException(p.getFieldName(), value);
                         }
                     }
                 });
     }
 
-    private static BusinessException forbiddenException(String detailMag) {
-        // TODO 响应HTTP status 为403
-        return Exceptions.business(CommonErrorCodeEum.FORBIDDEN,
-                "没有数据权限: " + detailMag);
+    private static ForbiddenException forbiddenException(String filedName, String detailMag) {
+        return new ForbiddenException("没有数据权限: " + filedName + ": " + detailMag);
     }
 
 

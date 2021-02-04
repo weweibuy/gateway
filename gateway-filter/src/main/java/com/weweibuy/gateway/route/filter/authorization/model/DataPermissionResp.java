@@ -34,6 +34,6 @@ public class DataPermissionResp {
     /**
      * 字段类型
      */
-    private String fieldType;
+    private Integer fieldType;
 
 }
