@@ -11,7 +11,7 @@ import lombok.Data;
 @Data
 public class SystemRequestParam {
 
-    private String appKey;
+    private String clientId;
 
     private Long timestamp;
 
@@ -20,5 +20,7 @@ public class SystemRequestParam {
     private String signature;
 
     private SignTypeEum signType;
+
+    private String accessToken;
 
 }

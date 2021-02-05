@@ -50,9 +50,9 @@ public class AppAuthenticationGatewayFilterFactory extends AbstractAuthGatewayFi
 
         SystemRequestParam systemRequestParam = (SystemRequestParam) exchange.getAttributes().get(ExchangeAttributeConstant.SYSTEM_REQUEST_PARAM);
 
-        String appKey = systemRequestParam.getAppKey();
+        String clientId = systemRequestParam.getClientId();
 
-        return new AppAuthorizationReq(appKey, service, exchange.getRequest());
+        return new AppAuthorizationReq(clientId, service, exchange.getRequest(), systemRequestParam.getAccessToken());
     }
 
     @Override
@@ -62,7 +62,7 @@ public class AppAuthenticationGatewayFilterFactory extends AbstractAuthGatewayFi
 
         SystemRequestParam systemRequestParam = (SystemRequestParam) exchange.getAttributes().get(ExchangeAttributeConstant.SYSTEM_REQUEST_PARAM);
 
-        String appKey = systemRequestParam.getAppKey();
+        String appKey = systemRequestParam.getClientId();
 
         if (StringUtils.isAnyBlank(appKey, service) || appKey.length() <= 6) {
             return false;

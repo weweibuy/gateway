@@ -61,31 +61,33 @@ public class SignController {
 
 
         HttpHeaders headers = request.getHeaders();
-        String appKey = headers.getFirst(RequestHeaderConstant.X_CA_APP_KEY);
+        String clientId = headers.getFirst(RequestHeaderConstant.X_CA_CLIENT_ID);
         String nonce = headers.getFirst(RequestHeaderConstant.X_CA_NONCE);
         String timestamp = headers.getFirst(RequestHeaderConstant.X_CA_TIMESTAMP);
         String signType = headers.getFirst(RequestHeaderConstant.X_CA_SIGN_TYPE);
+        String accessToken = headers.getFirst(HttpHeaders.AUTHORIZATION);
 
 
         SignTypeEum signTypeEum = SignTypeEum.getSignType(signType);
 
-        if (StringUtils.isAnyBlank(appKey, timestamp, nonce, signType) ||
+        if (StringUtils.isAnyBlank(clientId, timestamp, nonce, signType) ||
                 !StringUtils.isNumeric(timestamp) || signTypeEum == null) {
             return Mono.just(ResponseEntity.status(HttpStatus.BAD_REQUEST)
                     .body(CommonDataResponse.response(CommonErrorCodeEum.BAD_REQUEST_PARAM, null)));
         }
 
         SystemRequestParam systemRequestParam = SystemRequestParam.builder()
-                .appKey(appKey)
+                .clientId(clientId)
                 .nonce(nonce)
                 .signType(signTypeEum)
                 .timestamp(Long.valueOf(timestamp))
+                .accessToken(accessToken)
                 .build();
 
         URI appQueryUri = loadBalancerHelper.strToUri(appQueryUrl);
 
         Map<String, String> queryMap = new HashMap<>();
-        queryMap.put("appKey", appKey);
+        queryMap.put("appId", clientId);
         JavaType javaType = JackJsonUtils.javaType(CommonDataResponse.class, AppRespDTO.class);
 
 

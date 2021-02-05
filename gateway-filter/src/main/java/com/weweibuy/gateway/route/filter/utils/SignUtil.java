@@ -1,5 +1,6 @@
 package com.weweibuy.gateway.route.filter.utils;
 
+import com.weweibuy.framework.common.codec.HexUtils;
 import com.weweibuy.framework.common.core.exception.Exceptions;
 import com.weweibuy.framework.common.core.model.constant.CommonConstant;
 import com.weweibuy.gateway.route.filter.sign.SignTypeEum;
@@ -29,8 +30,8 @@ public class SignUtil {
             Mac hmacSha256 = Mac.getInstance(CommonConstant.SignConstant.HMAC_SHA256);
             SecretKey secretKey = SECRET_KEY_MAP.computeIfAbsent(appSecret, SignUtil::generateKey);
             hmacSha256.init(secretKey);
-            return base64Encode(
-                    hmacSha256.doFinal(content.getBytes(CommonConstant.CharsetConstant.UTF8_STR)));
+            byte[] bytes = hmacSha256.doFinal(content.getBytes(CommonConstant.CharsetConstant.UTF8_STR));
+            return HexUtils.toHexString(bytes);
         } catch (Exception e) {
             throw new IllegalStateException(e);
         }
@@ -54,7 +55,7 @@ public class SignUtil {
 
 
     public static String md5Sign(String str) {
-        return base64Encode(DigestUtils.md5DigestAsHex(str.getBytes()));
+        return DigestUtils.md5DigestAsHex(str.getBytes());
     }
 
     private static SecretKey generateKey(String appSecret) {
@@ -87,10 +88,11 @@ public class SignUtil {
 
         StringBuilder builder = new StringBuilder();
 
-        builder.append("appKey").append("=").append(requestParam.getAppKey()).append("&")
-                .append("appSecret").append("=").append(appSecret).append("&")
+        builder.append("clientId").append("=").append(requestParam.getClientId()).append("&")
+                .append("clientSecret").append("=").append(appSecret).append("&")
                 .append("nonce").append("=").append(requestParam.getNonce()).append("&")
                 .append("timestamp").append("=").append(requestParam.getTimestamp())
+                .append("accessToken").append("=").append(requestParam.getAccessToken())
                 .append("&");
 
         if (!treeMap.isEmpty()) {

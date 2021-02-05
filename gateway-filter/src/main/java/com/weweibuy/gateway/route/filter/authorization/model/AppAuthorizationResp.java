@@ -15,8 +15,6 @@ public class AppAuthorizationResp {
 
     private String appName;
 
-    private String appKey;
-
     private String appSecret;
 
     /**

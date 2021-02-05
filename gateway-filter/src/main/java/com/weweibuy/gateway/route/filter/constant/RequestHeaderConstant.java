@@ -14,7 +14,7 @@ public interface RequestHeaderConstant {
 
     String X_CA_NONCE = "X-Ca-Nonce";
 
-    String X_CA_APP_KEY = "X-Ca-App-Key";
+    String X_CA_CLIENT_ID = "X-Ca-Client-Id";
 
     /**
      * 签名方式 MD5  或 HMAC-SHA256
@@ -22,5 +22,6 @@ public interface RequestHeaderConstant {
      * @see SignTypeEum
      */
     String X_CA_SIGN_TYPE = "X-Ca-Sign-Type";
+
 
 }

@@ -105,9 +105,9 @@ public class VerifySignatureGatewayFilterFactory extends AbstractGatewayFilterFa
      * @return
      */
     private Mono<Boolean> verifyNonce(SystemRequestParam systemRequestParam) {
-        String appKey = systemRequestParam.getAppKey();
+        String clientId = systemRequestParam.getClientId();
         return redisTemplate.opsForValue()
-                .setIfAbsent(key(appKey, systemRequestParam.getNonce()), systemRequestParam.getTimestamp() + "",
+                .setIfAbsent(key(clientId, systemRequestParam.getNonce()), systemRequestParam.getTimestamp() + "",
                         Duration.ofSeconds(verifySignatureProperties.getTimestampIntervalSecond()));
     }
 

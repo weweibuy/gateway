@@ -31,6 +31,8 @@ import java.util.Optional;
 @Component
 public class SystemRequestParamGatewayFilterFactory extends AbstractGatewayFilterFactory {
 
+    private static final String ACCESS_TOKEN_START = "Bearer ";
+
     @Autowired
     private VerifySignatureProperties verifySignatureProperties;
 
@@ -44,16 +46,22 @@ public class SystemRequestParamGatewayFilterFactory extends AbstractGatewayFilte
                         CommonCodeResponse.unSupportedMediaType(), exchange);
             }
 
-            String appKey = headers.getFirst(RequestHeaderConstant.X_CA_APP_KEY);
+            String clientId = headers.getFirst(RequestHeaderConstant.X_CA_CLIENT_ID);
             String timestamp = headers.getFirst(RequestHeaderConstant.X_CA_TIMESTAMP);
             String nonce = headers.getFirst(RequestHeaderConstant.X_CA_NONCE);
             String signType = headers.getFirst(RequestHeaderConstant.X_CA_SIGN_TYPE);
             String signature = headers.getFirst(RequestHeaderConstant.X_CA_SIGNATURE);
+            String accessToken = headers.getFirst(HttpHeaders.AUTHORIZATION);
+
             SignTypeEum signTypeEum = null;
 
-            if (StringUtils.isAnyBlank(appKey, timestamp, nonce, signType, signature) ||
+            if (StringUtils.isAnyBlank(clientId, timestamp, nonce, signType, signature, accessToken) ||
                     !StringUtils.isNumeric(timestamp) || (signTypeEum = SignTypeEum.getSignType(signType)) == null) {
                 return ReactorHttpHelper.buildAndWriteJson(HttpStatus.BAD_REQUEST, CommonCodeResponse.badSystemRequestParam(), exchange);
+            }
+
+            if (accessToken.length() < ACCESS_TOKEN_START.length() + 1 || !accessToken.startsWith(ACCESS_TOKEN_START)) {
+                accessToken = accessToken.substring(ACCESS_TOKEN_START.length(), accessToken.length());
             }
 
             Long timestampL = Long.valueOf(timestamp);
@@ -64,11 +72,12 @@ public class SystemRequestParamGatewayFilterFactory extends AbstractGatewayFilte
             }
 
             SystemRequestParam systemRequestParam = SystemRequestParam.builder()
-                    .appKey(appKey)
+                    .clientId(clientId)
                     .nonce(nonce)
                     .signature(signature)
                     .signType(signTypeEum)
                     .timestamp(Long.valueOf(timestamp))
+                    .accessToken(accessToken)
                     .build();
 
             Map<String, Object> attributeMap = exchange.getAttributes();

@@ -13,7 +13,7 @@ import org.springframework.http.server.reactive.ServerHttpRequest;
 @Data
 public class AppAuthorizationReq {
 
-    private String appKey;
+    private String clientId;
 
     private HttpMethod httpMethod;
 
@@ -21,20 +21,14 @@ public class AppAuthorizationReq {
 
     private String service;
 
-    public AppAuthorizationReq() {
-    }
+    private String accessToken;
 
-    public AppAuthorizationReq(String appKey, HttpMethod httpMethod, String path, String service) {
-        this.appKey = appKey;
-        this.httpMethod = httpMethod;
-        this.path = path;
-        this.service = service;
-    }
 
-    public AppAuthorizationReq(String appKey, String service, ServerHttpRequest request) {
+    public AppAuthorizationReq(String clientId, String service, ServerHttpRequest request, String accessToken) {
         this.service = service;
-        this.appKey = appKey;
+        this.clientId = clientId;
         this.httpMethod = request.getMethod();
         this.path = request.getURI().getPath();
+        this.accessToken = accessToken;
     }
 }
