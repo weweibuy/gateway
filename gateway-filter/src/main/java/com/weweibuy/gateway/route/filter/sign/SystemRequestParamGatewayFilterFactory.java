@@ -46,7 +46,6 @@ public class SystemRequestParamGatewayFilterFactory extends AbstractGatewayFilte
                         CommonCodeResponse.unSupportedMediaType(), exchange);
             }
 
-            String clientId = headers.getFirst(RequestHeaderConstant.X_CA_CLIENT_ID);
             String timestamp = headers.getFirst(RequestHeaderConstant.X_CA_TIMESTAMP);
             String nonce = headers.getFirst(RequestHeaderConstant.X_CA_NONCE);
             String signType = headers.getFirst(RequestHeaderConstant.X_CA_SIGN_TYPE);
@@ -55,7 +54,7 @@ public class SystemRequestParamGatewayFilterFactory extends AbstractGatewayFilte
 
             SignTypeEum signTypeEum = null;
 
-            if (StringUtils.isAnyBlank(clientId, timestamp, nonce, signType, signature, accessToken) ||
+            if (StringUtils.isAnyBlank(timestamp, nonce, signType, signature, accessToken) ||
                     !StringUtils.isNumeric(timestamp) || (signTypeEum = SignTypeEum.getSignType(signType)) == null) {
                 return ReactorHttpHelper.buildAndWriteJson(HttpStatus.BAD_REQUEST, CommonCodeResponse.badSystemRequestParam(), exchange);
             }
@@ -72,7 +71,6 @@ public class SystemRequestParamGatewayFilterFactory extends AbstractGatewayFilte
             }
 
             SystemRequestParam systemRequestParam = SystemRequestParam.builder()
-                    .clientId(clientId)
                     .nonce(nonce)
                     .signature(signature)
                     .signType(signTypeEum)

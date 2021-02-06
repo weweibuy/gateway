@@ -27,11 +27,6 @@ public class AppRespDTO {
     private String appName;
 
     /**
-     * app_key
-     */
-    private String appKey;
-
-    /**
      * app_secret
      */
     private String appSecret;

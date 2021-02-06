@@ -11,8 +11,6 @@ import lombok.Data;
 @Data
 public class SystemRequestParam {
 
-    private String clientId;
-
     private Long timestamp;
 
     private String nonce;

@@ -30,14 +30,9 @@ public interface ExchangeAttributeConstant {
 
 
     /**
-     * app_key
+     * App信息
      */
-    String APP_KEY_ATTR = "app_key";
-
-    /**
-     * AppSecret
-     */
-    String APP_SECRET_ATTR = "app_secret";
+    String APP_INFO_ATTR = "app_info";
 
     String SING_TIMESTAMP_ATTR = "sing_timestamp";
 

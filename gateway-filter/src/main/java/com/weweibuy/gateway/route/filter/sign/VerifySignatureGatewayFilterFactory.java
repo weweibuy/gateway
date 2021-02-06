@@ -5,6 +5,7 @@ import com.weweibuy.framework.common.core.utils.PredicateEnhance;
 import com.weweibuy.gateway.core.constant.ExchangeAttributeConstant;
 import com.weweibuy.gateway.core.http.ReactorHttpHelper;
 import com.weweibuy.gateway.route.filter.authorization.AppAuthenticationGatewayFilterFactory;
+import com.weweibuy.gateway.route.filter.authorization.model.AppInfo;
 import com.weweibuy.gateway.route.filter.config.VerifySignatureProperties;
 import com.weweibuy.gateway.route.filter.constant.RedisConstant;
 import lombok.Data;
@@ -85,9 +86,10 @@ public class VerifySignatureGatewayFilterFactory extends AbstractGatewayFilterFa
 
 
     private Mono<Boolean> verifySignature(SystemRequestParam systemRequestParam, ServerWebExchange exchange, String body, Config config) {
-        String appSecret = (String) exchange.getAttributes().get(ExchangeAttributeConstant.APP_SECRET_ATTR);
 
-        String sign = SignHelper.sign(exchange.getRequest(), systemRequestParam, appSecret, body);
+        AppInfo appInfo = (AppInfo) exchange.getAttributes().get(ExchangeAttributeConstant.APP_INFO_ATTR);
+
+        String sign = SignHelper.sign(exchange.getRequest(), systemRequestParam, appInfo, body);
 
         if (StringUtils.isBlank(sign) || !sign.equals(systemRequestParam.getSignature())) {
             return Mono.just(false);
@@ -95,17 +97,18 @@ public class VerifySignatureGatewayFilterFactory extends AbstractGatewayFilterFa
         if (!config.getNonceCheck()) {
             return Mono.just(true);
         }
-        return verifyNonce(systemRequestParam);
+        return verifyNonce(systemRequestParam, appInfo);
     }
 
     /**
      * 重放检查
      *
      * @param systemRequestParam
+     * @param appInfo
      * @return
      */
-    private Mono<Boolean> verifyNonce(SystemRequestParam systemRequestParam) {
-        String clientId = systemRequestParam.getClientId();
+    private Mono<Boolean> verifyNonce(SystemRequestParam systemRequestParam, AppInfo appInfo) {
+        String clientId = appInfo.getAppId();
         return redisTemplate.opsForValue()
                 .setIfAbsent(key(clientId, systemRequestParam.getNonce()), systemRequestParam.getTimestamp() + "",
                         Duration.ofSeconds(verifySignatureProperties.getTimestampIntervalSecond()));

@@ -3,6 +3,7 @@ package com.weweibuy.gateway.route.filter.utils;
 import com.weweibuy.framework.common.codec.HexUtils;
 import com.weweibuy.framework.common.core.exception.Exceptions;
 import com.weweibuy.framework.common.core.model.constant.CommonConstant;
+import com.weweibuy.gateway.route.filter.authorization.model.AppInfo;
 import com.weweibuy.gateway.route.filter.sign.SignTypeEum;
 import com.weweibuy.gateway.route.filter.sign.SystemRequestParam;
 import lombok.AccessLevel;
@@ -25,10 +26,10 @@ public class SignUtil {
 
     private static final ConcurrentHashMap<String, SecretKey> SECRET_KEY_MAP = new ConcurrentHashMap();
 
-    public static String hmacSha256Sign(String appSecret, String content) {
+    public static String hmacSha256Sign(AppInfo appInfo, String content) {
         try {
             Mac hmacSha256 = Mac.getInstance(CommonConstant.SignConstant.HMAC_SHA256);
-            SecretKey secretKey = SECRET_KEY_MAP.computeIfAbsent(appSecret, SignUtil::generateKey);
+            SecretKey secretKey = SECRET_KEY_MAP.computeIfAbsent(appInfo.getAppSecret(), SignUtil::generateKey);
             hmacSha256.init(secretKey);
             byte[] bytes = hmacSha256.doFinal(content.getBytes(CommonConstant.CharsetConstant.UTF8_STR));
             return HexUtils.toHexString(bytes);
@@ -37,16 +38,16 @@ public class SignUtil {
         }
     }
 
-    public static String sign(SignTypeEum signType, String appSecret, Map<String, List<String>> queryParams,
+    public static String sign(SignTypeEum signType, AppInfo appInfo, Map<String, List<String>> queryParams,
                               Map<String, String> bodyParam, String body, SystemRequestParam requestParam) {
         String sign = null;
-        String content = buildArgsToString(appSecret, queryParams, bodyParam, body, requestParam);
+        String content = buildArgsToString(appInfo, queryParams, bodyParam, body, requestParam);
         switch (signType) {
             case MD5:
                 sign = SignUtil.md5Sign(content);
                 break;
             case HMAC_SHA256:
-                sign = SignUtil.hmacSha256Sign(appSecret, content);
+                sign = SignUtil.hmacSha256Sign(appInfo, content);
                 break;
             default:
         }
@@ -77,7 +78,7 @@ public class SignUtil {
     }
 
 
-    private static String buildArgsToString(String appSecret, Map<String, List<String>> queryMap, Map<String, String> bodyMap,
+    private static String buildArgsToString(AppInfo appInfo, Map<String, List<String>> queryMap, Map<String, String> bodyMap,
                                             String body, SystemRequestParam requestParam) {
 
         Map<String, String> treeMap = new TreeMap<>();
@@ -88,8 +89,8 @@ public class SignUtil {
 
         StringBuilder builder = new StringBuilder();
 
-        builder.append("clientId").append("=").append(requestParam.getClientId()).append("&")
-                .append("clientSecret").append("=").append(appSecret).append("&")
+        builder.append("clientId").append("=").append(appInfo.getAppId()).append("&")
+                .append("clientSecret").append("=").append(appInfo.getAppSecret()).append("&")
                 .append("nonce").append("=").append(requestParam.getNonce()).append("&")
                 .append("timestamp").append("=").append(requestParam.getTimestamp())
                 .append("accessToken").append("=").append(requestParam.getAccessToken())

@@ -2,9 +2,11 @@ package com.weweibuy.gateway.route.filter.authorization;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.weweibuy.framework.common.core.model.dto.CommonDataResponse;
+import com.weweibuy.framework.common.core.utils.BeanCopyUtils;
 import com.weweibuy.gateway.core.constant.ExchangeAttributeConstant;
 import com.weweibuy.gateway.route.filter.authorization.model.AppAuthorizationReq;
 import com.weweibuy.gateway.route.filter.authorization.model.AppAuthorizationResp;
+import com.weweibuy.gateway.route.filter.authorization.model.AppInfo;
 import com.weweibuy.gateway.route.filter.path.ServiceMatchStripPrefixGatewayFilterFactory;
 import com.weweibuy.gateway.route.filter.sign.SystemRequestParam;
 import lombok.extern.slf4j.Slf4j;
@@ -36,11 +38,12 @@ public class AppAuthenticationGatewayFilterFactory extends AbstractAuthGatewayFi
     public void onAuthSuccess(AppAuthorizationResp response, GatewayFilterChain chain, ServerWebExchange exchange) {
         Optional.ofNullable(response)
                 .map(AppAuthorizationResp::getAppId)
-                .ifPresent(user -> exchange.getAttributes().put(ExchangeAttributeConstant.USER_ID_ATTR, user));
+                .ifPresent(appId -> exchange.getAttributes().put(ExchangeAttributeConstant.USER_ID_ATTR, appId));
 
         Optional.ofNullable(response)
-                .map(AppAuthorizationResp::getAppSecret)
-                .ifPresent(user -> exchange.getAttributes().put(ExchangeAttributeConstant.APP_SECRET_ATTR, user));
+                .map(r -> BeanCopyUtils.copy(r, AppInfo.class))
+                .ifPresent(appInfo -> exchange.getAttributes().put(ExchangeAttributeConstant.APP_INFO_ATTR, appInfo));
+
 
     }
 
@@ -50,9 +53,7 @@ public class AppAuthenticationGatewayFilterFactory extends AbstractAuthGatewayFi
 
         SystemRequestParam systemRequestParam = (SystemRequestParam) exchange.getAttributes().get(ExchangeAttributeConstant.SYSTEM_REQUEST_PARAM);
 
-        String clientId = systemRequestParam.getClientId();
-
-        return new AppAuthorizationReq(clientId, service, exchange.getRequest(), systemRequestParam.getAccessToken());
+        return new AppAuthorizationReq(service, exchange.getRequest(), systemRequestParam.getAccessToken());
     }
 
     @Override
@@ -62,9 +63,9 @@ public class AppAuthenticationGatewayFilterFactory extends AbstractAuthGatewayFi
 
         SystemRequestParam systemRequestParam = (SystemRequestParam) exchange.getAttributes().get(ExchangeAttributeConstant.SYSTEM_REQUEST_PARAM);
 
-        String appKey = systemRequestParam.getClientId();
+        String accessToken = systemRequestParam.getAccessToken();
 
-        if (StringUtils.isAnyBlank(appKey, service) || appKey.length() <= 6) {
+        if (StringUtils.isAnyBlank(accessToken, service) || accessToken.length() <= 6) {
             return false;
         }
         return true;

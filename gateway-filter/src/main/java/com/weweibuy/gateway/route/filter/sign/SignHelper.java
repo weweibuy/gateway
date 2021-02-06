@@ -1,6 +1,7 @@
 package com.weweibuy.gateway.route.filter.sign;
 
 import com.weweibuy.framework.common.core.utils.HttpRequestUtils;
+import com.weweibuy.gateway.route.filter.authorization.model.AppInfo;
 import com.weweibuy.gateway.route.filter.utils.SignUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.http.HttpHeaders;
@@ -22,13 +23,13 @@ public class SignHelper {
 
     public static String sign(ServerHttpRequest request,
                               SystemRequestParam systemRequestParam,
-                              String appSecret,
+                              AppInfo appInfo,
                               String body) {
         Map<String, String> bodyParamMap = new HashMap<>();
         boolean needBody = decodeBodyIfNecessary(body, bodyParamMap, request);
         SignTypeEum signType = systemRequestParam.getSignType();
         MultiValueMap<String, String> queryParams = request.getQueryParams();
-        return SignUtil.sign(signType, appSecret, queryParams, bodyParamMap,
+        return SignUtil.sign(signType, appInfo, queryParams, bodyParamMap,
                 needBody ? body : null, systemRequestParam);
     }
 

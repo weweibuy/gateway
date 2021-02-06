@@ -4,10 +4,12 @@ import com.fasterxml.jackson.databind.JavaType;
 import com.weweibuy.framework.common.core.exception.Exceptions;
 import com.weweibuy.framework.common.core.model.dto.CommonDataResponse;
 import com.weweibuy.framework.common.core.model.eum.CommonErrorCodeEum;
+import com.weweibuy.framework.common.core.utils.BeanCopyUtils;
 import com.weweibuy.framework.common.core.utils.JackJsonUtils;
 import com.weweibuy.gateway.core.http.ReactorHttpHelper;
 import com.weweibuy.gateway.core.lb.LoadBalancerHelper;
 import com.weweibuy.gateway.endpoint.model.AppRespDTO;
+import com.weweibuy.gateway.route.filter.authorization.model.AppInfo;
 import com.weweibuy.gateway.route.filter.constant.RequestHeaderConstant;
 import com.weweibuy.gateway.route.filter.sign.SignHelper;
 import com.weweibuy.gateway.route.filter.sign.SignTypeEum;
@@ -61,7 +63,6 @@ public class SignController {
 
 
         HttpHeaders headers = request.getHeaders();
-        String clientId = headers.getFirst(RequestHeaderConstant.X_CA_CLIENT_ID);
         String nonce = headers.getFirst(RequestHeaderConstant.X_CA_NONCE);
         String timestamp = headers.getFirst(RequestHeaderConstant.X_CA_TIMESTAMP);
         String signType = headers.getFirst(RequestHeaderConstant.X_CA_SIGN_TYPE);
@@ -70,14 +71,12 @@ public class SignController {
 
         SignTypeEum signTypeEum = SignTypeEum.getSignType(signType);
 
-        if (StringUtils.isAnyBlank(clientId, timestamp, nonce, signType) ||
-                !StringUtils.isNumeric(timestamp) || signTypeEum == null) {
+        if (!StringUtils.isNumeric(timestamp) || signTypeEum == null) {
             return Mono.just(ResponseEntity.status(HttpStatus.BAD_REQUEST)
                     .body(CommonDataResponse.response(CommonErrorCodeEum.BAD_REQUEST_PARAM, null)));
         }
 
         SystemRequestParam systemRequestParam = SystemRequestParam.builder()
-                .clientId(clientId)
                 .nonce(nonce)
                 .signType(signTypeEum)
                 .timestamp(Long.valueOf(timestamp))
@@ -86,8 +85,9 @@ public class SignController {
 
         URI appQueryUri = loadBalancerHelper.strToUri(appQueryUrl);
 
+        // TODO 根据token 获取
         Map<String, String> queryMap = new HashMap<>();
-        queryMap.put("appId", clientId);
+
         JavaType javaType = JackJsonUtils.javaType(CommonDataResponse.class, AppRespDTO.class);
 
 
@@ -101,8 +101,8 @@ public class SignController {
                                 .orElseThrow(() -> Exceptions.business("app信息不存在")))
                 .map(ResponseEntity::getBody)
                 .map(CommonDataResponse::getData)
-                .map(AppRespDTO::getAppSecret)
-                .flatMap(appSecret -> request.getBody()
+                .map(r -> BeanCopyUtils.copy(r, AppInfo.class))
+                .flatMap(appInfo -> request.getBody()
                         .defaultIfEmpty(defaultDataBufferFactory.allocateBuffer(0))
                         .map(dataBuffer -> {
                             ByteBuffer byteBuffer = dataBuffer.asByteBuffer();
@@ -111,7 +111,7 @@ public class SignController {
                             return charBuffer;
                         })
                         .next()
-                        .map(buf -> SignHelper.sign(request, systemRequestParam, appSecret, buf.toString()))
+                        .map(buf -> SignHelper.sign(request, systemRequestParam, appInfo, buf.toString()))
                         .map(s -> ResponseEntity.ok(CommonDataResponse.success(s))));
     }
 
