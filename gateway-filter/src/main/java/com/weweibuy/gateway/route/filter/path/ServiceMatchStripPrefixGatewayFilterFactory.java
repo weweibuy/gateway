@@ -1,6 +1,5 @@
 package com.weweibuy.gateway.route.filter.path;
 
-import com.weweibuy.gateway.core.constant.ExchangeAttributeConstant;
 import lombok.Data;
 import org.springframework.cloud.gateway.filter.GatewayFilter;
 import org.springframework.cloud.gateway.filter.factory.AbstractGatewayFilterFactory;
@@ -48,7 +47,6 @@ public class ServiceMatchStripPrefixGatewayFilterFactory extends AbstractGateway
 
             String[] array = StringUtils.tokenizeToStringArray(path, "/");
             if (array.length > 0 && StringUtils.hasLength(array[0])) {
-                exchange.getAttributes().put(ExchangeAttributeConstant.SERVICE_KEY, array[0]);
             }
 
             String newPath = "/"

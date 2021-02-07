@@ -2,6 +2,7 @@ package com.weweibuy.gateway.route.filter.authorization;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JavaType;
+import com.weweibuy.framework.common.core.exception.Exceptions;
 import com.weweibuy.framework.common.core.model.dto.CommonCodeResponse;
 import com.weweibuy.framework.common.core.model.dto.CommonDataResponse;
 import com.weweibuy.framework.common.core.utils.JackJsonUtils;
@@ -9,6 +10,7 @@ import com.weweibuy.gateway.core.constant.ExchangeAttributeConstant;
 import com.weweibuy.gateway.core.http.ReactorHttpHelper;
 import com.weweibuy.gateway.core.lb.LoadBalancerHelper;
 import com.weweibuy.gateway.core.support.ObjectWrapper;
+import com.weweibuy.gateway.core.support.RouterIdSystemMapping;
 import com.weweibuy.gateway.route.filter.authorization.model.DataPermissionReq;
 import com.weweibuy.gateway.route.filter.authorization.model.DataPermissionResp;
 import com.weweibuy.gateway.route.filter.support.CachedBodyOutputMessage;
@@ -22,6 +24,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.gateway.filter.GatewayFilter;
 import org.springframework.cloud.gateway.filter.GatewayFilterChain;
 import org.springframework.cloud.gateway.filter.factory.AbstractGatewayFilterFactory;
+import org.springframework.cloud.gateway.route.Route;
 import org.springframework.cloud.gateway.support.BodyInserterContext;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.core.ResolvableType;
@@ -54,6 +57,7 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import static org.springframework.cloud.gateway.support.ServerWebExchangeUtils.GATEWAY_REQUEST_URL_ATTR;
+import static org.springframework.cloud.gateway.support.ServerWebExchangeUtils.GATEWAY_ROUTE_ATTR;
 import static org.springframework.util.CollectionUtils.unmodifiableMultiValueMap;
 
 /**
@@ -71,6 +75,9 @@ public class DataPermissionGatewayFilterFactory extends AbstractGatewayFilterFac
 
     @Autowired
     private LoadBalancerHelper loadBalancerHelper;
+
+    @Autowired
+    private RouterIdSystemMapping routerIdSystemMapping;
 
     private JavaType authorizationRespType;
 
@@ -92,7 +99,12 @@ public class DataPermissionGatewayFilterFactory extends AbstractGatewayFilterFac
             String username = (String) exchange.getAttributes().get(ExchangeAttributeConstant.USER_ID_ATTR);
             URI authUri = loadBalancerHelper.strToUri(config.getAuthUrl());
 
-            String service = exchange.getAttribute(ExchangeAttributeConstant.SERVICE_KEY);
+            Route route = exchange.getAttribute(GATEWAY_ROUTE_ATTR);
+
+            String service = routerIdSystemMapping.routerIdToSystem(route.getId())
+                    .orElseThrow(() -> Exceptions.system("路由id,无法找到系统id"));
+
+
             ServerHttpRequest request = exchange.getRequest();
             org.springframework.http.HttpMethod method = request.getMethod();
 

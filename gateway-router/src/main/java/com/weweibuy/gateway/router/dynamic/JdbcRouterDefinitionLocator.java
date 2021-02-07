@@ -1,6 +1,7 @@
 package com.weweibuy.gateway.router.dynamic;
 
 import com.weweibuy.gateway.core.mode.event.CustomRefreshRoutesEvent;
+import com.weweibuy.gateway.core.support.RouterIdSystemMapping;
 import com.weweibuy.gateway.router.model.vo.FilterVo;
 import com.weweibuy.gateway.router.model.vo.PredicateVo;
 import lombok.extern.slf4j.Slf4j;
@@ -17,10 +18,8 @@ import org.springframework.web.util.UriComponentsBuilder;
 import reactor.cache.CacheFlux;
 import reactor.core.publisher.Flux;
 
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
 /**
@@ -28,7 +27,9 @@ import java.util.stream.Collectors;
  * @date 2019/5/20 22:28
  **/
 @Slf4j
-public class JdbcRouterDefinitionLocator implements RouteDefinitionLocator, ApplicationListener<CustomRefreshRoutesEvent> {
+public class JdbcRouterDefinitionLocator implements RouteDefinitionLocator, ApplicationListener<CustomRefreshRoutesEvent>, RouterIdSystemMapping {
+
+    private final Map<String, String> routerIdSystemIdMapping = new ConcurrentHashMap<>();
 
     @Autowired
     private JdbcRouterManger jdbcRouterManger;
@@ -55,6 +56,9 @@ public class JdbcRouterDefinitionLocator implements RouteDefinitionLocator, Appl
         return Flux.fromStream(jdbcRouterManger.getAllRouter().stream()
                 .map(routerVo -> {
                     String routerId = routerVo.getRouterId();
+                    // 路由id 与系统id关系
+                    routerIdSystemIdMapping.put(routerId, routerVo.getSystemId());
+
                     RouteDefinition routeDefinition = new RouteDefinition();
                     List<PredicateVo> predicates = routerVo.getPredicates();
                     // 断言
@@ -108,5 +112,10 @@ public class JdbcRouterDefinitionLocator implements RouteDefinitionLocator, Appl
         log.info("【路由刷新】>>> 接收到自定义路由刷新事件");
         this.cache.clear();
         applicationContext.publishEvent(new RefreshRoutesEvent(this));
+    }
+
+    @Override
+    public Optional<String> routerIdToSystem(String routerId) {
+        return Optional.ofNullable(routerIdSystemIdMapping.get(routerId));
     }
 }

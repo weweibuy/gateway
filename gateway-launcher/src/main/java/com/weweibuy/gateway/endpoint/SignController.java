@@ -54,7 +54,7 @@ public class SignController {
 
     private final LoadBalancerHelper loadBalancerHelper;
 
-    @Value("${gw.dev.appQueryUrl:lb://upms/app/query/key}")
+    @Value("${gw.dev.app-authorization-url:lb://upms/app/query/key}")
     private String appQueryUrl;
 
     @RequestMapping("/_sign")

@@ -59,8 +59,10 @@ public class SystemRequestParamGatewayFilterFactory extends AbstractGatewayFilte
                 return ReactorHttpHelper.buildAndWriteJson(HttpStatus.BAD_REQUEST, CommonCodeResponse.badSystemRequestParam(), exchange);
             }
 
-            if (accessToken.length() < ACCESS_TOKEN_START.length() + 1 || !accessToken.startsWith(ACCESS_TOKEN_START)) {
+            if (accessToken.length() > ACCESS_TOKEN_START.length() + 1 && accessToken.startsWith(ACCESS_TOKEN_START)) {
                 accessToken = accessToken.substring(ACCESS_TOKEN_START.length(), accessToken.length());
+            } else {
+                return ReactorHttpHelper.buildAndWriteJson(HttpStatus.UNAUTHORIZED, CommonCodeResponse.unauthorized(), exchange);
             }
 
             Long timestampL = Long.valueOf(timestamp);

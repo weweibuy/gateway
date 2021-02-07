@@ -88,6 +88,7 @@ public class SignUtil {
         }
 
         StringBuilder builder = new StringBuilder();
+        // todo 请求 与 URL 方法
 
         builder.append("clientId").append("=").append(appInfo.getAppId()).append("&")
                 .append("clientSecret").append("=").append(appInfo.getAppSecret()).append("&")

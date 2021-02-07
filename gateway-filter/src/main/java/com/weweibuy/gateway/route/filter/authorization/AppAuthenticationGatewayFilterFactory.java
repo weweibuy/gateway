@@ -1,9 +1,11 @@
 package com.weweibuy.gateway.route.filter.authorization;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.weweibuy.framework.common.core.exception.Exceptions;
 import com.weweibuy.framework.common.core.model.dto.CommonDataResponse;
 import com.weweibuy.framework.common.core.utils.BeanCopyUtils;
 import com.weweibuy.gateway.core.constant.ExchangeAttributeConstant;
+import com.weweibuy.gateway.core.support.RouterIdSystemMapping;
 import com.weweibuy.gateway.route.filter.authorization.model.AppAuthorizationReq;
 import com.weweibuy.gateway.route.filter.authorization.model.AppAuthorizationResp;
 import com.weweibuy.gateway.route.filter.authorization.model.AppInfo;
@@ -11,11 +13,15 @@ import com.weweibuy.gateway.route.filter.path.ServiceMatchStripPrefixGatewayFilt
 import com.weweibuy.gateway.route.filter.sign.SystemRequestParam;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.gateway.filter.GatewayFilterChain;
+import org.springframework.cloud.gateway.route.Route;
 import org.springframework.stereotype.Component;
 import org.springframework.web.server.ServerWebExchange;
 
 import java.util.Optional;
+
+import static org.springframework.cloud.gateway.support.ServerWebExchangeUtils.GATEWAY_ROUTE_ATTR;
 
 /**
  * app 权限控制
@@ -28,6 +34,8 @@ import java.util.Optional;
 @Component
 public class AppAuthenticationGatewayFilterFactory extends AbstractAuthGatewayFilterFactory<AbstractAuthGatewayFilterFactory.Config, AppAuthorizationReq, AppAuthorizationResp> {
 
+    @Autowired
+    private RouterIdSystemMapping routerIdSystemMapping;
 
     public AppAuthenticationGatewayFilterFactory(ObjectMapper objectMapper) {
         super(AppAuthenticationGatewayFilterFactory.Config.class,
@@ -49,7 +57,11 @@ public class AppAuthenticationGatewayFilterFactory extends AbstractAuthGatewayFi
 
     @Override
     protected AppAuthorizationReq authReq(Config config, GatewayFilterChain chain, ServerWebExchange exchange) {
-        String service = exchange.getAttribute(ExchangeAttributeConstant.SERVICE_KEY);
+
+        Route route = exchange.getAttribute(GATEWAY_ROUTE_ATTR);
+
+        String service = routerIdSystemMapping.routerIdToSystem(route.getId())
+                .orElseThrow(() -> Exceptions.system("路由id,无法找到系统id"));
 
         SystemRequestParam systemRequestParam = (SystemRequestParam) exchange.getAttributes().get(ExchangeAttributeConstant.SYSTEM_REQUEST_PARAM);
 
@@ -58,8 +70,10 @@ public class AppAuthenticationGatewayFilterFactory extends AbstractAuthGatewayFi
 
     @Override
     protected boolean preCheck(Config config, GatewayFilterChain chain, ServerWebExchange exchange) {
+        Route route = exchange.getAttribute(GATEWAY_ROUTE_ATTR);
 
-        String service = exchange.getAttribute(ExchangeAttributeConstant.SERVICE_KEY);
+        String service = routerIdSystemMapping.routerIdToSystem(route.getId())
+                .orElseThrow(() -> Exceptions.system("路由id,无法找到系统id"));
 
         SystemRequestParam systemRequestParam = (SystemRequestParam) exchange.getAttributes().get(ExchangeAttributeConstant.SYSTEM_REQUEST_PARAM);
 
