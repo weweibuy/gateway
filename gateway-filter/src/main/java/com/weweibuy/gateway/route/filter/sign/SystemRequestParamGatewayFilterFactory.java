@@ -11,13 +11,18 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.gateway.filter.GatewayFilter;
 import org.springframework.cloud.gateway.filter.factory.AbstractGatewayFilterFactory;
+import org.springframework.cloud.gateway.support.ServerWebExchangeUtils;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.stereotype.Component;
 
+import java.net.URI;
 import java.time.LocalDateTime;
 import java.util.Arrays;
+import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Optional;
 
@@ -31,15 +36,15 @@ import java.util.Optional;
 @Component
 public class SystemRequestParamGatewayFilterFactory extends AbstractGatewayFilterFactory {
 
-    private static final String ACCESS_TOKEN_START = "Bearer ";
-
     @Autowired
     private VerifySignatureProperties verifySignatureProperties;
 
     @Override
     public GatewayFilter apply(Object config) {
         return (exchange, chain) -> {
-            HttpHeaders headers = exchange.getRequest().getHeaders();
+            ServerHttpRequest request = exchange.getRequest();
+
+            HttpHeaders headers = request.getHeaders();
             String contentType = headers.getFirst(HttpHeaders.CONTENT_TYPE);
             if (!validateMediaType(contentType)) {
                 return ReactorHttpHelper.buildAndWriteJson(HttpStatus.UNSUPPORTED_MEDIA_TYPE,
@@ -59,9 +64,7 @@ public class SystemRequestParamGatewayFilterFactory extends AbstractGatewayFilte
                 return ReactorHttpHelper.buildAndWriteJson(HttpStatus.BAD_REQUEST, CommonCodeResponse.badSystemRequestParam(), exchange);
             }
 
-            if (accessToken.length() > ACCESS_TOKEN_START.length() + 1 && accessToken.startsWith(ACCESS_TOKEN_START)) {
-                accessToken = accessToken.substring(ACCESS_TOKEN_START.length(), accessToken.length());
-            } else {
+            if (accessToken.length() < 10) {
                 return ReactorHttpHelper.buildAndWriteJson(HttpStatus.UNAUTHORIZED, CommonCodeResponse.unauthorized(), exchange);
             }
 
@@ -72,7 +75,15 @@ public class SystemRequestParamGatewayFilterFactory extends AbstractGatewayFilte
                         CommonCodeResponse.badRequestParam("请求时间戳错误"), exchange);
             }
 
+            LinkedHashSet<URI> uris = exchange
+                    .getRequiredAttribute(ServerWebExchangeUtils.GATEWAY_ORIGINAL_REQUEST_URL_ATTR);
+            URI uri = uris.iterator().next();
+
+            HttpMethod method = request.getMethod();
+
             SystemRequestParam systemRequestParam = SystemRequestParam.builder()
+                    .path(uri.getPath())
+                    .method(method)
                     .nonce(nonce)
                     .signature(signature)
                     .signType(signTypeEum)

@@ -21,6 +21,7 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.core.io.buffer.DataBufferUtils;
 import org.springframework.core.io.buffer.DefaultDataBufferFactory;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.codec.multipart.FilePart;
@@ -54,7 +55,7 @@ public class SignController {
 
     private final LoadBalancerHelper loadBalancerHelper;
 
-    @Value("${gw.dev.app-authorization-url:lb://upms/app/query/key}")
+    @Value("${gw.dev.app-query-url:lb://upms/app/query/accessToken}")
     private String appQueryUrl;
 
     @RequestMapping("/_sign")
@@ -68,6 +69,9 @@ public class SignController {
         String signType = headers.getFirst(RequestHeaderConstant.X_CA_SIGN_TYPE);
         String accessToken = headers.getFirst(HttpHeaders.AUTHORIZATION);
 
+        String path = headers.getFirst("path");
+        String method = headers.getFirst("method");
+
 
         SignTypeEum signTypeEum = SignTypeEum.getSignType(signType);
 
@@ -77,6 +81,8 @@ public class SignController {
         }
 
         SystemRequestParam systemRequestParam = SystemRequestParam.builder()
+                .path(path)
+                .method(HttpMethod.resolve(method))
                 .nonce(nonce)
                 .signType(signTypeEum)
                 .timestamp(Long.valueOf(timestamp))
@@ -87,6 +93,7 @@ public class SignController {
 
         // TODO 根据token 获取
         Map<String, String> queryMap = new HashMap<>();
+        queryMap.put("accessToken", accessToken);
 
         JavaType javaType = JackJsonUtils.javaType(CommonDataResponse.class, AppRespDTO.class);
 

@@ -88,9 +88,12 @@ public class SignUtil {
         }
 
         StringBuilder builder = new StringBuilder();
-        // todo 请求 与 URL 方法
 
-        builder.append("clientId").append("=").append(appInfo.getAppId()).append("&")
+        builder
+                .append("path").append("=").append(requestParam.getPath()).append("&")
+                .append("method").append("=").append(requestParam.getMethod()).append("&")
+                .append("signType").append("=").append(requestParam.getSignType()).append("&")
+                .append("clientId").append("=").append(appInfo.getAppId()).append("&")
                 .append("clientSecret").append("=").append(appInfo.getAppSecret()).append("&")
                 .append("nonce").append("=").append(requestParam.getNonce()).append("&")
                 .append("timestamp").append("=").append(requestParam.getTimestamp())

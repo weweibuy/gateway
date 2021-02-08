@@ -2,6 +2,7 @@ package com.weweibuy.gateway.route.filter.sign;
 
 import lombok.Builder;
 import lombok.Data;
+import org.springframework.http.HttpMethod;
 
 /**
  * @author durenhao
@@ -10,6 +11,10 @@ import lombok.Data;
 @Builder
 @Data
 public class SystemRequestParam {
+
+    private String path;
+
+    private HttpMethod method;
 
     private Long timestamp;
 
