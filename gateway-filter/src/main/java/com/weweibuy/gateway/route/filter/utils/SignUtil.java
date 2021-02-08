@@ -96,9 +96,8 @@ public class SignUtil {
                 .append("clientId").append("=").append(appInfo.getAppId()).append("&")
                 .append("clientSecret").append("=").append(appInfo.getAppSecret()).append("&")
                 .append("nonce").append("=").append(requestParam.getNonce()).append("&")
-                .append("timestamp").append("=").append(requestParam.getTimestamp())
-                .append("accessToken").append("=").append(requestParam.getAccessToken())
-                .append("&");
+                .append("timestamp").append("=").append(requestParam.getTimestamp()).append("&")
+                .append("accessToken").append("=").append(requestParam.getAccessToken()).append("&");
 
         if (!treeMap.isEmpty()) {
             treeMap.forEach((k, v) ->
