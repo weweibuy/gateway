@@ -1,7 +1,6 @@
 package com.weweibuy.gateway.router.dynamic;
 
 import com.weweibuy.gateway.core.mode.event.CustomRefreshRoutesEvent;
-import com.weweibuy.gateway.core.support.RouterIdSystemMapping;
 import com.weweibuy.gateway.router.model.vo.FilterVo;
 import com.weweibuy.gateway.router.model.vo.PredicateVo;
 import lombok.extern.slf4j.Slf4j;
@@ -18,8 +17,10 @@ import org.springframework.web.util.UriComponentsBuilder;
 import reactor.cache.CacheFlux;
 import reactor.core.publisher.Flux;
 
-import java.util.*;
-import java.util.concurrent.ConcurrentHashMap;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
@@ -27,9 +28,7 @@ import java.util.stream.Collectors;
  * @date 2019/5/20 22:28
  **/
 @Slf4j
-public class JdbcRouterDefinitionLocator implements RouteDefinitionLocator, ApplicationListener<CustomRefreshRoutesEvent>, RouterIdSystemMapping {
-
-    private final Map<String, String> routerIdSystemIdMapping = new ConcurrentHashMap<>();
+public class JdbcRouterDefinitionLocator implements RouteDefinitionLocator, ApplicationListener<CustomRefreshRoutesEvent> {
 
     @Autowired
     private JdbcRouterManger jdbcRouterManger;
@@ -56,8 +55,7 @@ public class JdbcRouterDefinitionLocator implements RouteDefinitionLocator, Appl
         return Flux.fromStream(jdbcRouterManger.getAllRouter().stream()
                 .map(routerVo -> {
                     String routerId = routerVo.getRouterId();
-                    // 路由id 与系统id关系
-                    routerIdSystemIdMapping.put(routerId, routerVo.getSystemId());
+
 
                     RouteDefinition routeDefinition = new RouteDefinition();
                     List<PredicateVo> predicates = routerVo.getPredicates();
@@ -91,6 +89,10 @@ public class JdbcRouterDefinitionLocator implements RouteDefinitionLocator, Appl
                     routeDefinition.setId(routerId);
                     routeDefinition.setOrder(routerVo.getRouterPriority());
                     routeDefinition.setUri(UriComponentsBuilder.fromUriString(routerVo.getRouterUri()).build().toUri());
+                    // 路由id 与系统id关系
+                    Map<String, Object> metaDataMap = new HashMap<>();
+                    metaDataMap.put(routerId, routerVo.getSystemId());
+                    routeDefinition.setMetadata(metaDataMap);
                     return routeDefinition;
                 }));
     }
@@ -114,8 +116,4 @@ public class JdbcRouterDefinitionLocator implements RouteDefinitionLocator, Appl
         applicationContext.publishEvent(new RefreshRoutesEvent(this));
     }
 
-    @Override
-    public Optional<String> routerIdToSystem(String routerId) {
-        return Optional.ofNullable(routerIdSystemIdMapping.get(routerId));
-    }
 }

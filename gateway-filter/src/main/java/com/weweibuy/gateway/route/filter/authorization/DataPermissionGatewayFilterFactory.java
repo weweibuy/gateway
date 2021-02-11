@@ -10,7 +10,6 @@ import com.weweibuy.gateway.core.constant.ExchangeAttributeConstant;
 import com.weweibuy.gateway.core.http.ReactorHttpHelper;
 import com.weweibuy.gateway.core.lb.LoadBalancerHelper;
 import com.weweibuy.gateway.core.support.ObjectWrapper;
-import com.weweibuy.gateway.core.support.RouterIdSystemMapping;
 import com.weweibuy.gateway.route.filter.authorization.model.DataPermissionReq;
 import com.weweibuy.gateway.route.filter.authorization.model.DataPermissionResp;
 import com.weweibuy.gateway.route.filter.support.CachedBodyOutputMessage;
@@ -49,10 +48,7 @@ import reactor.core.publisher.Mono;
 
 import javax.validation.constraints.NotBlank;
 import java.net.URI;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -76,8 +72,6 @@ public class DataPermissionGatewayFilterFactory extends AbstractGatewayFilterFac
     @Autowired
     private LoadBalancerHelper loadBalancerHelper;
 
-    @Autowired
-    private RouterIdSystemMapping routerIdSystemMapping;
 
     private JavaType authorizationRespType;
 
@@ -101,7 +95,8 @@ public class DataPermissionGatewayFilterFactory extends AbstractGatewayFilterFac
 
             Route route = exchange.getAttribute(GATEWAY_ROUTE_ATTR);
 
-            String service = routerIdSystemMapping.routerIdToSystem(route.getId())
+            String service = Optional.ofNullable(route.getMetadata())
+                    .map(m -> (String) m.get(route.getId()))
                     .orElseThrow(() -> Exceptions.system("路由id,无法找到系统id"));
 
 
