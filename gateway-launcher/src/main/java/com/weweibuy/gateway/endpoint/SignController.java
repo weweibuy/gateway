@@ -91,7 +91,6 @@ public class SignController {
 
         URI appQueryUri = loadBalancerHelper.strToUri(appQueryUrl);
 
-        // TODO 根据token 获取
         Map<String, String> queryMap = new HashMap<>();
         queryMap.put("accessToken", accessToken);
 

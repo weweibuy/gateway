@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.JavaType;
 import com.weweibuy.framework.common.core.utils.JackJsonUtils;
 import io.netty.handler.codec.http.HttpMethod;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.collections4.MapUtils;
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -151,6 +152,7 @@ public class ReactorHttpHelper {
         return writeResponse(response, exchange);
     }
 
+
     /**
      * 构建响应
      *
@@ -163,6 +165,38 @@ public class ReactorHttpHelper {
         return ServerResponse.status(status)
                 .contentType(contentType)
                 .body(fromValue(body));
+    }
+
+    /**
+     * 构建响应
+     *
+     * @param status
+     * @param contentType
+     * @param body
+     * @return
+     */
+    public static Mono<ServerResponse> buildResponse(HttpStatus status, MediaType contentType, Map<String, String> headerMap, Object body) {
+        ServerResponse.BodyBuilder bodyBuilder = ServerResponse.status(status);
+        if (MapUtils.isNotEmpty(headerMap)) {
+            headerMap.forEach((k, v) -> bodyBuilder.header(k, v));
+        }
+        bodyBuilder.contentType(contentType);
+        return bodyBuilder.body(fromValue(body));
+    }
+
+    /**
+     * 根据 contentType 写出响应
+     *
+     * @param status
+     * @param contentType
+     * @param headerMap
+     * @param body
+     * @param exchange
+     * @return
+     */
+    public static Mono<Void> buildAndWrite(HttpStatus status, MediaType contentType, Map<String, String> headerMap, Object body, ServerWebExchange exchange) {
+        return buildResponse(status, contentType, headerMap, body)
+                .flatMap(response -> write(response, exchange));
     }
 
     /**
@@ -179,6 +213,7 @@ public class ReactorHttpHelper {
                 .flatMap(response -> write(response, exchange));
     }
 
+
     /**
      * 构建并写出 json 响应
      *
@@ -192,6 +227,19 @@ public class ReactorHttpHelper {
                 .flatMap(response -> write(response, exchange));
     }
 
+    /**
+     * 构建并写出 json 响应
+     *
+     * @param status
+     * @param headerMap
+     * @param body
+     * @param exchange
+     * @return
+     */
+    public static Mono<Void> buildAndWriteJson(HttpStatus status, Object body, Map<String, String> headerMap, ServerWebExchange exchange) {
+        return buildResponse(status, MediaType.APPLICATION_JSON, headerMap, body)
+                .flatMap(response -> write(response, exchange));
+    }
 
     private static Mono<Void> writeResponse(ServerResponse response, ServerWebExchange exchange) {
         return response.writeTo(exchange, new ResponseContext());

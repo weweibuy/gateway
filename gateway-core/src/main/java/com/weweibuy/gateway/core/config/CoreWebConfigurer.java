@@ -1,5 +1,6 @@
 package com.weweibuy.gateway.core.config;
 
+import com.weweibuy.framework.common.core.support.SystemIdGetter;
 import com.weweibuy.gateway.core.advice.DefaultExceptionMatchHandler;
 import com.weweibuy.gateway.core.advice.ExceptionMatchHandlerComposite;
 import com.weweibuy.gateway.core.advice.WebExceptionHandlerImpl;
@@ -23,6 +24,8 @@ public class CoreWebConfigurer {
     @Autowired(required = false)
     private List<WebConfigurer> webConfigurerList;
 
+    @Autowired(required = false)
+    private SystemIdGetter systemIdGetter;
 
     @Bean
     @Order(Ordered.HIGHEST_PRECEDENCE)
@@ -31,10 +34,9 @@ public class CoreWebConfigurer {
         if (!CollectionUtils.isEmpty(webConfigurerList)) {
             webConfigurerList.forEach(c -> c.addExceptionMatchHandler(composite));
         }
-        composite.addHandler(new DefaultExceptionMatchHandler());
+        composite.addHandler(new DefaultExceptionMatchHandler(systemIdGetter));
         return new WebExceptionHandlerImpl(composite);
     }
-
 
 
 }

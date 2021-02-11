@@ -79,24 +79,25 @@ public abstract class AbstractAuthGatewayFilterFactory<C extends AbstractAuthGat
         return loadBalancerHelper.choose(authUri)
                 .flatMap(uri -> ReactorHttpHelper.<CommonDataResponse<P>>executeForJson(HttpMethod.POST, uri.toString() + authUri.getPath(),
                         null, headerMap, r, authorizationRespType)
-                        .flatMap(res -> hashAuthentication(res, chain, exchange)));
+                        .flatMap(res -> hashAuthentication(res, chain, exchange, traceCode)));
 
     }
 
     // TODO 异常设置 源服务 id
     protected Mono<Void> hashAuthentication(ResponseEntity<CommonDataResponse<P>> responseEntity,
-                                            GatewayFilterChain chain, ServerWebExchange exchange) {
+                                            GatewayFilterChain chain, ServerWebExchange exchange, String traceCode) {
 
+        Map<String, String> headerMap = Collections.singletonMap(CommonConstant.LogTraceConstant.HTTP_TRACE_CODE_HEADER, traceCode);
 
         int status = responseEntity.getStatusCode().value();
         if (status == 200 && responseEntity.getBody() != null) {
             return handleReqSuccess(responseEntity.getBody(), chain, exchange);
         } else if (status >= 400 && status < 500) {
-            return ReactorHttpHelper.buildAndWriteJson(responseEntity.getStatusCode(), responseEntity.getBody(), exchange);
+            return ReactorHttpHelper.buildAndWriteJson(responseEntity.getStatusCode(), responseEntity.getBody(), headerMap, exchange);
         } else if (status >= 500) {
-            return ReactorHttpHelper.buildAndWriteJson(HttpStatus.INTERNAL_SERVER_ERROR, CommonCodeResponse.unknownException(), exchange);
+            return ReactorHttpHelper.buildAndWriteJson(HttpStatus.INTERNAL_SERVER_ERROR, CommonCodeResponse.unknownException(), headerMap, exchange);
         }
-        return ReactorHttpHelper.buildAndWriteJson(HttpStatus.UNAUTHORIZED, CommonCodeResponse.unauthorized(), exchange);
+        return ReactorHttpHelper.buildAndWriteJson(HttpStatus.UNAUTHORIZED, CommonCodeResponse.unauthorized(), headerMap, exchange);
     }
 
     private Mono<Void> handleReqSuccess(CommonDataResponse<P> response, GatewayFilterChain chain, ServerWebExchange exchange) {
