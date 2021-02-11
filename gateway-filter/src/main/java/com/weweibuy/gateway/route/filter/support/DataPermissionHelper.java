@@ -1,11 +1,13 @@
 package com.weweibuy.gateway.route.filter.support;
 
 import com.weweibuy.framework.common.core.exception.Exceptions;
+import com.weweibuy.framework.common.core.model.eum.CommonErrorCodeEum;
 import com.weweibuy.gateway.core.exception.ForbiddenException;
 import com.weweibuy.gateway.route.filter.authorization.model.DataPermissionResp;
 import com.weweibuy.gateway.route.filter.authorization.model.FieldTypeEum;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.http.MediaType;
 import org.springframework.util.MultiValueMap;
 
 import java.util.*;
@@ -22,49 +24,56 @@ public class DataPermissionHelper {
      * 修改请求体
      *
      * @param reqMap
+     * @param mediaType
      * @return
      */
-    public static Map<String, Object> modifyBody(Map<String, Object> reqMap, List<DataPermissionResp> bodyDataPermissionList) {
+    public static Map<String, Object> modifyBody(Map<String, Object> reqMap, List<DataPermissionResp> bodyDataPermissionList, MediaType mediaType) {
         Map<Boolean, List<DataPermissionResp>> listMap = bodyDataPermissionList.stream()
                 .collect(Collectors.groupingBy(d -> d.getFieldName().indexOf(".") != -1));
         // 只操作一层
         List<DataPermissionResp> dataPermissionList = listMap.get(false);
         if (CollectionUtils.isNotEmpty(dataPermissionList)) {
             dataPermissionList.forEach(p ->
-                    modify(reqMap.get(p.getFieldName()), p, p.getFieldName(), reqMap));
+                    modify(reqMap.get(p.getFieldName()), p, p.getFieldName(), reqMap, mediaType));
         }
 
         // 操作多层
         List<DataPermissionResp> nestingPermissionList = listMap.get(true);
+        if (CollectionUtils.isNotEmpty(nestingPermissionList) && MediaType.APPLICATION_FORM_URLENCODED.includes(mediaType)) {
+            throw Exceptions.formatSystem(CommonErrorCodeEum.UNKNOWN_SERVER_EXCEPTION.getCode(),
+                    "数据权限对于 %s, 不支持嵌套类型", MediaType.APPLICATION_FORM_URLENCODED_VALUE);
+        }
 
         if (CollectionUtils.isNotEmpty(nestingPermissionList)) {
-            modifyNestingParam(nestingPermissionList, reqMap);
+            modifyNestingParam(nestingPermissionList, reqMap, mediaType);
         }
         return reqMap;
     }
 
-    private static void modify(Object oriValue, DataPermissionResp dataPermissionResp, String fieldName, Map<String, Object> reqMap) {
+    private static void modify(Object oriValue, DataPermissionResp dataPermissionResp, String fieldName, Map<String, Object> reqMap, MediaType mediaType) {
         FieldTypeEum fieldTypeEum = FieldTypeEum.fieldTypeEum(dataPermissionResp.getFieldType())
                 .orElseThrow(() -> Exceptions.formatSystem("数据权限无法识别的字段类型: %s", dataPermissionResp.getFieldType()));
         if (oriValue == null) {
-            reqMap.put(fieldName, convertBodyValue(fieldTypeEum, dataPermissionResp.getFieldValue()));
+            // 如果没有则为其增加一个值
+            reqMap.put(fieldName, convertBodyValue(fieldTypeEum, dataPermissionResp.getFieldValue(), mediaType));
         } else {
-            reqMap.replace(fieldName, modifyBodyValue(fieldTypeEum, oriValue, dataPermissionResp));
+            // 如果有值值进行修改
+            reqMap.replace(fieldName, modifyBodyValue(fieldTypeEum, oriValue, dataPermissionResp, mediaType));
         }
     }
 
-    private static void modifyNestingParam(List<DataPermissionResp> nestingPermissionList, Map<String, Object> reqMap) {
-        nestingPermissionList.forEach(p -> modifyNestingParam(p, reqMap, p.getFieldName().split("\\."), 0));
+    private static void modifyNestingParam(List<DataPermissionResp> nestingPermissionList, Map<String, Object> reqMap, MediaType mediaType) {
+        nestingPermissionList.forEach(p -> modifyNestingParam(p, reqMap, p.getFieldName().split("\\."), 0, mediaType));
     }
 
-    private static void modifyNestingParam(DataPermissionResp permissionResp, Map<String, Object> reqMap, String[] split, int index) {
+    private static void modifyNestingParam(DataPermissionResp permissionResp, Map<String, Object> reqMap, String[] split, int index, MediaType mediaType) {
         if (index > split.length) {
             return;
         }
         String key = split[index];
         Object value = reqMap.get(key);
         if (index == split.length - 1) {
-            modify(value, permissionResp, key, reqMap);
+            modify(value, permissionResp, key, reqMap, mediaType);
             return;
         }
 
@@ -76,11 +85,11 @@ public class DataPermissionHelper {
         if (!(value instanceof Map)) {
             throw Exceptions.formatBusiness("数据权限字段类型输入类型错误, 预计: %s, 实际: %s", "Map", value.getClass().getName());
         }
-        modifyNestingParam(permissionResp, (Map<String, Object>) value, split, ++index);
+        modifyNestingParam(permissionResp, (Map<String, Object>) value, split, ++index, mediaType);
     }
 
 
-    public static Object modifyBodyValue(FieldTypeEum fieldTypeEum, Object body, DataPermissionResp dataPermissionResp) {
+    public static Object modifyBodyValue(FieldTypeEum fieldTypeEum, Object body, DataPermissionResp dataPermissionResp, MediaType mediaType) {
         boolean isCollection = FieldTypeEum.isCollection(fieldTypeEum);
         String fieldValue = dataPermissionResp.getFieldValue();
         String fieldName = dataPermissionResp.getFieldName();
@@ -115,10 +124,13 @@ public class DataPermissionHelper {
     }
 
 
-    public static Object convertBodyValue(FieldTypeEum fieldTypeEum, String value) {
+    public static Object convertBodyValue(FieldTypeEum fieldTypeEum, String value, MediaType mediaType) {
         if (FieldTypeEum.isCollection(fieldTypeEum)) {
             return Arrays.stream(value.split(","))
                     .collect(Collectors.toList());
+        }
+        if (MediaType.APPLICATION_FORM_URLENCODED.includes(mediaType)) {
+            return Collections.singletonList(value);
         }
         return value;
     }

@@ -110,13 +110,13 @@ public class VerifySignatureGatewayFilterFactory extends AbstractGatewayFilterFa
     private Mono<Boolean> verifyNonce(SystemRequestParam systemRequestParam, AppInfo appInfo) {
         String clientId = appInfo.getAppId();
         return redisTemplate.opsForValue()
-                .setIfAbsent(key(clientId, systemRequestParam.getNonce()), systemRequestParam.getTimestamp() + "",
+                .setIfAbsent(key(clientId, systemRequestParam), systemRequestParam.getTimestamp() + "",
                         Duration.ofSeconds(verifySignatureProperties.getTimestampIntervalSecond()));
     }
 
-    // todo key 取值有问题
-    private String key(String appKey, String nonce) {
-        return RedisConstant.KEY_PREFIX + appKey + "_" + nonce;
+    private String key(String clientId, SystemRequestParam systemRequestParam) {
+        return RedisConstant.KEY_PREFIX + clientId + "_" +
+                systemRequestParam.getSignature() + "_" + systemRequestParam.getNonce();
     }
 
     @Data

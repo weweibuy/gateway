@@ -67,6 +67,9 @@ public class DataPermissionGatewayFilterFactory extends AbstractGatewayFilterFac
 
     private static final ParameterizedTypeReference JSON_DATA_TYPE;
 
+    private static final ParameterizedTypeReference FORM_DATA_TYPE;
+
+
     private final List<HttpMessageReader<?>> messageReaders;
 
     @Autowired
@@ -78,6 +81,9 @@ public class DataPermissionGatewayFilterFactory extends AbstractGatewayFilterFac
     static {
         JSON_DATA_TYPE = ParameterizedTypeReference.forType(ResolvableType.forClassWithGenerics(
                 Map.class, String.class, Object.class).getType());
+        ResolvableType resolvableType = ResolvableType.forClassWithGenerics(
+                MultiValueMap.class, String.class, String.class);
+        FORM_DATA_TYPE = ParameterizedTypeReference.forType(resolvableType.getType());
     }
 
     public DataPermissionGatewayFilterFactory() {
@@ -193,10 +199,12 @@ public class DataPermissionGatewayFilterFactory extends AbstractGatewayFilterFac
             HttpHeaders oriHeaders = exchange.getRequest().getHeaders();
             String contentType = oriHeaders.getFirst(HttpHeaders.CONTENT_TYPE);
             if (StringUtils.isBlank(contentType)) {
-
+                throw new UnsupportedMediaTypeStatusException("contentType为空");
             }
             // TODO 支持更多类型
-            if (!MediaType.APPLICATION_JSON.includes(MediaType.parseMediaType(contentType))) {
+            MediaType mediaType = MediaType.parseMediaType(contentType);
+            if (!MediaType.APPLICATION_JSON.includes(mediaType) &&
+                    !MediaType.APPLICATION_FORM_URLENCODED.includes(mediaType)) {
                 throw new UnsupportedMediaTypeStatusException(contentType);
             }
 
@@ -204,12 +212,12 @@ public class DataPermissionGatewayFilterFactory extends AbstractGatewayFilterFac
             headers.putAll(oriHeaders);
             headers.remove(HttpHeaders.CONTENT_LENGTH);
             return ServerRequest.create(exchange, messageReaders)
-                    .bodyToMono(JSON_DATA_TYPE)
+                    .bodyToMono(mediaTypeToTypeReference(mediaType))
                     // 修改请求体
-                    .map(body -> DataPermissionHelper.modifyBody((Map<String, Object>) body, bodyDataPermissionList))
+                    .map(body -> DataPermissionHelper.modifyBody((Map<String, Object>) body, bodyDataPermissionList, mediaType))
                     .flatMap(body -> {
                         CachedBodyOutputMessage outputMessage = new CachedBodyOutputMessage(exchange, headers);
-                        return BodyInserters.fromPublisher(Mono.just(body), JSON_DATA_TYPE)
+                        return BodyInserters.fromPublisher(Mono.just(body), mediaTypeToTypeReference(mediaType))
                                 .insert(outputMessage, new BodyInserterContext())
                                 .then(Mono.defer(() -> {
                                     ServerHttpRequestDecorator decorator = ModifyBodyReqHelper.decorate(exchange, headers, outputMessage);
@@ -228,6 +236,17 @@ public class DataPermissionGatewayFilterFactory extends AbstractGatewayFilterFac
         return chain.filter(exchange);
     }
 
+
+    private ParameterizedTypeReference mediaTypeToTypeReference(MediaType mediaType) {
+
+        if (MediaType.APPLICATION_JSON.includes(mediaType)) {
+            return JSON_DATA_TYPE;
+        }
+        if (MediaType.APPLICATION_FORM_URLENCODED.includes(mediaType)) {
+            return FORM_DATA_TYPE;
+        }
+        throw new UnsupportedMediaTypeStatusException(mediaType.getType() + mediaType.getSubtype());
+    }
 
     private Mono<Void> buildReqIfNecessaryAndFilter(GatewayFilterChain chain, ServerWebExchange exchange,
                                                     ServerHttpRequest request, URI newUri) {
