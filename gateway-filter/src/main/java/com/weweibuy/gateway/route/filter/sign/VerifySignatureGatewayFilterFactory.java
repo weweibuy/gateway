@@ -106,9 +106,10 @@ public class VerifySignatureGatewayFilterFactory extends AbstractGatewayFilterFa
             HttpHeaders oriHeaders = exchange.getRequest().getHeaders();
 
             String contentType = oriHeaders.getFirst(HttpHeaders.CONTENT_TYPE);
+
+            // MULTIPART_FORM_DATA 单独校验
             if (StringUtils.isNotBlank(contentType) &&
                     MediaType.MULTIPART_FORM_DATA.includes(MediaType.parseMediaType(contentType))) {
-                // MULTIPART_FORM_DATA 单独校验
                 return verifyMultipartFormData(systemRequestParam, exchange, chain, config);
             }
 
@@ -127,22 +128,20 @@ public class VerifySignatureGatewayFilterFactory extends AbstractGatewayFilterFa
         };
     }
 
-    private Mono verifyMultipartFormData(SystemRequestParam systemRequestParam, ServerWebExchange exchange, GatewayFilterChain chain, Config config) {
+    @SuppressWarnings("unchecked")
+    private Mono<Void> verifyMultipartFormData(SystemRequestParam systemRequestParam, ServerWebExchange exchange, GatewayFilterChain chain, Config config) {
         return ServerRequest.create(exchange, httpMessageReaders)
                 .bodyToMono(MULTIPART_VALUE_TYPE)
+                .map(body -> ((LinkedMultiValueMap) body).toSingleValueMap())
                 // 验签
-                .flatMap(body -> {
-                    LinkedMultiValueMap<String, Part> multiValueMap = (LinkedMultiValueMap) (body);
-                    Map<String, Part> singleValueMap = multiValueMap.toSingleValueMap();
-                    return verifySignature(systemRequestParam, exchange, null,
-                            SignHelper.multipartSignBodyParam(singleValueMap), config)
-                            .flatMap(b -> PredicateEnhance.predicateThenGet(b,
-                                    () -> multipartSuccessVerify(singleValueMap, exchange, chain),
-                                    () -> ReactorHttpHelper.buildAndWriteJson(HttpStatus.BAD_REQUEST,
-                                            CommonCodeResponse.badSignature(), exchange)));
-                });
+                .flatMap((Function<Map<String, Part>, Mono<Void>>) singleValueMap ->
+                        verifySignature(systemRequestParam, exchange, null,
+                                SignHelper.multipartSignBodyParam(singleValueMap), config)
+                                .flatMap(b -> PredicateEnhance.predicateThenGet(b,
+                                        () -> multipartSuccessVerify(singleValueMap, exchange, chain),
+                                        () -> ReactorHttpHelper.buildAndWriteJson(HttpStatus.BAD_REQUEST,
+                                                CommonCodeResponse.badSignature(), exchange))));
     }
-
 
 
     /**
