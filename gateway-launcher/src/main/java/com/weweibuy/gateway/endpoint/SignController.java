@@ -25,12 +25,13 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.codec.multipart.FilePart;
+import org.springframework.http.codec.multipart.Part;
 import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.util.MultiValueMap;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestPart;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
 
 import java.net.URI;
@@ -55,47 +56,24 @@ public class SignController {
 
     private final LoadBalancerHelper loadBalancerHelper;
 
+    private JavaType javaType = JackJsonUtils.javaType(CommonDataResponse.class, AppRespDTO.class);
+
     @Value("${gw.dev.app-query-url:lb://upms/app/query/accessToken}")
     private String appQueryUrl;
 
     @RequestMapping("/_sign")
     public Mono<ResponseEntity<CommonDataResponse<String>>> healthCheck(ServerHttpRequest request) {
-        MultiValueMap<String, String> queryParams = request.getQueryParams();
 
-
-        HttpHeaders headers = request.getHeaders();
-        String nonce = headers.getFirst(RequestHeaderConstant.X_CA_NONCE);
-        String timestamp = headers.getFirst(RequestHeaderConstant.X_CA_TIMESTAMP);
-        String signType = headers.getFirst(RequestHeaderConstant.X_CA_SIGN_TYPE);
-        String accessToken = headers.getFirst(HttpHeaders.AUTHORIZATION);
-
-        String path = headers.getFirst("path");
-        String method = headers.getFirst("method");
-
-
-        SignTypeEum signTypeEum = SignTypeEum.getSignType(signType);
-
-        if (!StringUtils.isNumeric(timestamp) || signTypeEum == null) {
+        SystemRequestParam systemRequestParam = buildSystemRequestParam(request);
+        if (systemRequestParam == null) {
             return Mono.just(ResponseEntity.status(HttpStatus.BAD_REQUEST)
                     .body(CommonDataResponse.response(CommonErrorCodeEum.BAD_REQUEST_PARAM, null)));
         }
 
-        SystemRequestParam systemRequestParam = SystemRequestParam.builder()
-                .path(path)
-                .method(HttpMethod.resolve(method))
-                .nonce(nonce)
-                .signType(signTypeEum)
-                .timestamp(Long.valueOf(timestamp))
-                .accessToken(accessToken)
-                .build();
-
         URI appQueryUri = loadBalancerHelper.strToUri(appQueryUrl);
 
         Map<String, String> queryMap = new HashMap<>();
-        queryMap.put("accessToken", accessToken);
-
-        JavaType javaType = JackJsonUtils.javaType(CommonDataResponse.class, AppRespDTO.class);
-
+        queryMap.put("accessToken", systemRequestParam.getAccessToken());
 
         return loadBalancerHelper.choose(appQueryUri)
                 .flatMap(uri -> ReactorHttpHelper.<CommonDataResponse<AppRespDTO>>getForJson(uri.toString() + appQueryUri.getPath(), queryMap, javaType))
@@ -117,16 +95,71 @@ public class SignController {
                             return charBuffer;
                         })
                         .next()
-                        .map(buf -> SignHelper.sign(request, systemRequestParam, appInfo, buf.toString()))
+                        .map(buf -> SignHelper.sign(request, systemRequestParam, appInfo, buf.toString(), null))
                         .map(s -> ResponseEntity.ok(CommonDataResponse.success(s))));
     }
 
-    @PostMapping("/upload")
-    public Mono<ResponseEntity> addAttach(@RequestPart("file") FilePart filePart,
-                                          @RequestPart("qqq") String dataId) {
+    @RequestMapping("/_sign-form-data")
+    public Mono<ResponseEntity<CommonDataResponse<String>>> addAttach(@RequestParam Map<String, FilePart> filePartMap,
+                                                                      ServerHttpRequest request, ServerWebExchange exchange) {
 
-        String strFileName = filePart.filename();//获取文件名
-        return Mono.just(ResponseEntity.noContent().build());
+        Mono<MultiValueMap<String, Part>> multipartData = exchange.getMultipartData();
+
+        SystemRequestParam systemRequestParam = buildSystemRequestParam(request);
+        if (systemRequestParam == null) {
+            return Mono.just(ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(CommonDataResponse.response(CommonErrorCodeEum.BAD_REQUEST_PARAM, null)));
+        }
+
+        URI appQueryUri = loadBalancerHelper.strToUri(appQueryUrl);
+        Map<String, String> queryMap = new HashMap<>();
+        queryMap.put("accessToken", systemRequestParam.getAccessToken());
+
+        return loadBalancerHelper.choose(appQueryUri)
+                .flatMap(uri -> ReactorHttpHelper.<CommonDataResponse<AppRespDTO>>getForJson(uri.toString() + appQueryUri.getPath(), queryMap, javaType))
+                .doOnNext(resp ->
+                        Optional.ofNullable(resp)
+                                .map(ResponseEntity::getBody)
+                                .map(CommonDataResponse::getData)
+                                .filter(a -> StringUtils.isNotBlank(a.getAppSecret()))
+                                .orElseThrow(() -> Exceptions.business("app信息不存在")))
+                .map(ResponseEntity::getBody)
+                .map(CommonDataResponse::getData)
+                .map(r -> BeanCopyUtils.copy(r, AppInfo.class))
+                .flatMap(appInfo -> exchange.getMultipartData()
+                        .map(md -> SignHelper.multipartSignBodyParam(md.toSingleValueMap()))
+                        .map(bd -> SignHelper.sign(request, systemRequestParam, appInfo, null, bd))
+                        .map(s -> ResponseEntity.ok(CommonDataResponse.success(s))));
+    }
+
+
+    private SystemRequestParam buildSystemRequestParam(ServerHttpRequest request) {
+        MultiValueMap<String, String> queryParams = request.getQueryParams();
+
+        HttpHeaders headers = request.getHeaders();
+        String nonce = headers.getFirst(RequestHeaderConstant.X_CA_NONCE);
+        String timestamp = headers.getFirst(RequestHeaderConstant.X_CA_TIMESTAMP);
+        String signType = headers.getFirst(RequestHeaderConstant.X_CA_SIGN_TYPE);
+        String accessToken = headers.getFirst(HttpHeaders.AUTHORIZATION);
+
+        String path = headers.getFirst("path");
+        String method = headers.getFirst("method");
+
+
+        SignTypeEum signTypeEum = SignTypeEum.getSignType(signType);
+
+        if (!StringUtils.isNumeric(timestamp) || signTypeEum == null) {
+            return null;
+        }
+
+        return SystemRequestParam.builder()
+                .path(path)
+                .method(HttpMethod.resolve(method))
+                .nonce(nonce)
+                .signType(signTypeEum)
+                .timestamp(Long.valueOf(timestamp))
+                .accessToken(accessToken)
+                .build();
 
     }
 }

@@ -27,7 +27,6 @@ import org.springframework.cloud.gateway.route.Route;
 import org.springframework.cloud.gateway.support.BodyInserterContext;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.core.ResolvableType;
-import org.springframework.core.io.buffer.DataBufferUtils;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -213,7 +212,7 @@ public class DataPermissionGatewayFilterFactory extends AbstractGatewayFilterFac
             headers.remove(HttpHeaders.CONTENT_LENGTH);
             return ServerRequest.create(exchange, messageReaders)
                     .bodyToMono(mediaTypeToTypeReference(mediaType))
-                    // 修改请求体
+                    // 修改请求体  TODO 修改结构不抛异常 参考 VerifySignatureGatewayFilterFactory
                     .map(body -> DataPermissionHelper.modifyBody((Map<String, Object>) body, bodyDataPermissionList, mediaType))
                     .flatMap(body -> {
                         CachedBodyOutputMessage outputMessage = new CachedBodyOutputMessage(exchange, headers);
@@ -224,7 +223,7 @@ public class DataPermissionGatewayFilterFactory extends AbstractGatewayFilterFac
                                     return buildReqIfNecessaryAndFilter(chain, exchange, decorator, newUriWrapper.getObject());
                                 }))
                                 .onErrorResume((Function<Throwable, Mono<Void>>) throwable ->
-                                        release(exchange, outputMessage, throwable));
+                                        ModifyBodyReqHelper.release(exchange, outputMessage, throwable));
                     });
         }
 
@@ -256,16 +255,6 @@ public class DataPermissionGatewayFilterFactory extends AbstractGatewayFilterFac
             return chain.filter(exchange.mutate().request(request).build());
         }
         return chain.filter(exchange.mutate().request(request).build());
-    }
-
-
-    protected Mono<Void> release(ServerWebExchange exchange,
-                                 CachedBodyOutputMessage outputMessage, Throwable throwable) {
-        if (outputMessage.isCached()) {
-            return outputMessage.getBody().map(DataBufferUtils::release)
-                    .then(Mono.error(throwable));
-        }
-        return Mono.error(throwable);
     }
 
 

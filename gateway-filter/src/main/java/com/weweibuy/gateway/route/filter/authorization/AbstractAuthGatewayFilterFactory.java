@@ -111,7 +111,8 @@ public abstract class AbstractAuthGatewayFilterFactory<C extends AbstractAuthGat
             return ReactorHttpHelper.buildAndWriteJson(HttpStatus.FORBIDDEN, CommonCodeResponse.forbidden(), exchange);
         }
 
-        return ReactorHttpHelper.buildAndWriteJson(HttpStatus.UNAUTHORIZED, CommonCodeResponse.unauthorized(), exchange);
+        return ReactorHttpHelper.buildAndWriteJson(HttpStatus.UNAUTHORIZED,
+                CommonCodeResponse.response(response), exchange);
 
     }
 

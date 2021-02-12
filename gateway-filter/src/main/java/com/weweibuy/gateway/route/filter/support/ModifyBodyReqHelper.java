@@ -1,10 +1,12 @@
 package com.weweibuy.gateway.route.filter.support;
 
 import org.springframework.core.io.buffer.DataBuffer;
+import org.springframework.core.io.buffer.DataBufferUtils;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.server.reactive.ServerHttpRequestDecorator;
 import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
 /**
  * @author durenhao
@@ -34,6 +36,16 @@ public class ModifyBodyReqHelper {
                 return outputMessage.getBody();
             }
         };
+    }
+
+
+    public static Mono<Void> release(ServerWebExchange exchange,
+                                 CachedBodyOutputMessage outputMessage, Throwable throwable) {
+        if (outputMessage.isCached()) {
+            return outputMessage.getBody().map(DataBufferUtils::release)
+                    .then(Mono.error(throwable));
+        }
+        return Mono.error(throwable);
     }
 
 }

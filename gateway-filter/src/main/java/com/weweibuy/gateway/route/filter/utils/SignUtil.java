@@ -8,6 +8,7 @@ import com.weweibuy.gateway.route.filter.sign.SignTypeEum;
 import com.weweibuy.gateway.route.filter.sign.SystemRequestParam;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
+import org.apache.commons.collections4.MapUtils;
 import org.springframework.util.DigestUtils;
 
 import javax.crypto.Mac;
@@ -83,7 +84,7 @@ public class SignUtil {
 
         Map<String, String> treeMap = new TreeMap<>();
         convertMapAddPut(treeMap, queryMap);
-        if (bodyMap != null) {
+        if (MapUtils.isNotEmpty(bodyMap)) {
             treeMap.putAll(bodyMap);
         }
 

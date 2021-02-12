@@ -3,13 +3,20 @@ package com.weweibuy.gateway.route.filter.sign;
 import com.weweibuy.framework.common.core.utils.HttpRequestUtils;
 import com.weweibuy.gateway.route.filter.authorization.model.AppInfo;
 import com.weweibuy.gateway.route.filter.utils.SignUtil;
+import org.apache.commons.collections4.MapUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
+import org.springframework.http.codec.multipart.Part;
+import org.springframework.http.codec.multipart.SynchronossPartHttpMessageReader;
 import org.springframework.http.server.reactive.ServerHttpRequest;
+import org.springframework.util.DigestUtils;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.reactive.function.UnsupportedMediaTypeException;
+import org.synchronoss.cloud.nio.stream.storage.StreamStorage;
 
+import java.io.IOException;
+import java.io.UncheckedIOException;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
@@ -21,12 +28,26 @@ import java.util.Map;
 public class SignHelper {
 
 
+    /**
+     * 签名
+     *
+     * @param request
+     * @param systemRequestParam
+     * @param appInfo
+     * @param body
+     * @param fileMd5Map         文件 名称 - MD5 map
+     * @return
+     */
     public static String sign(ServerHttpRequest request,
                               SystemRequestParam systemRequestParam,
                               AppInfo appInfo,
-                              String body) {
+                              String body,
+                              Map<String, String> fileMd5Map) {
         Map<String, String> bodyParamMap = new HashMap<>();
         boolean needBody = decodeBodyIfNecessary(body, bodyParamMap, request);
+        if (MapUtils.isNotEmpty(fileMd5Map)) {
+            fileMd5Map.forEach((k, v) -> bodyParamMap.put(k, v));
+        }
         SignTypeEum signType = systemRequestParam.getSignType();
         MultiValueMap<String, String> queryParams = request.getQueryParams();
         return SignUtil.sign(signType, appInfo, queryParams, bodyParamMap,
@@ -78,5 +99,34 @@ public class SignHelper {
 
     }
 
+    /**
+     * multipart 验签参数; 文件取MD5值验签
+     *
+     * @param singleValueMap
+     * @return
+     */
+    public static Map<String, String> multipartSignBodyParam(Map<String, Part> singleValueMap) {
+        Map<String, String> fileInfoMap = new HashMap<>(singleValueMap.size());
+        singleValueMap.forEach((k, v) -> {
+            if (v instanceof SynchronossPartHttpMessageReader.SynchronossFormFieldPart) {
+                String name = v.name();
+                String value = ((SynchronossPartHttpMessageReader.SynchronossFormFieldPart) v).value();
+                fileInfoMap.put(name, value);
+            } else if (v instanceof SynchronossPartHttpMessageReader.SynchronossFilePart) {
+                String name = v.name();
+                StreamStorage storage = ((SynchronossPartHttpMessageReader.SynchronossFilePart) v).getStorage();
+                String md5 = null;
+                try {
+                    // 文件MD5值
+                    md5 = DigestUtils.md5DigestAsHex(storage.getInputStream());
+                } catch (IOException e) {
+                    throw new UncheckedIOException(e);
+                }
+                fileInfoMap.put(name, md5);
+            }
+
+        });
+        return fileInfoMap;
+    }
 
 }
