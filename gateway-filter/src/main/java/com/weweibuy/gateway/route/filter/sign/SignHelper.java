@@ -90,7 +90,7 @@ public class SignHelper {
                     .forEach(s -> bodyParamMap.put(s[0], s[1]));
             return false;
         }
-        // multipart/form-data  TODO 如何处理?
+        // multipart/form-data
         if (mediaType.equalsTypeAndSubtype(MediaType.MULTIPART_FORM_DATA)) {
             return false;
         }

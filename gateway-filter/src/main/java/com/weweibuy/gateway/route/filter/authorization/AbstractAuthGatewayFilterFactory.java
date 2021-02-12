@@ -5,6 +5,7 @@ import com.weweibuy.framework.common.core.model.constant.CommonConstant;
 import com.weweibuy.framework.common.core.model.dto.CommonCodeResponse;
 import com.weweibuy.framework.common.core.model.dto.CommonDataResponse;
 import com.weweibuy.framework.common.core.model.eum.CommonErrorCodeEum;
+import com.weweibuy.framework.common.core.support.SystemIdGetter;
 import com.weweibuy.framework.common.core.utils.HttpRequestUtils;
 import com.weweibuy.framework.common.core.utils.PredicateEnhance;
 import com.weweibuy.gateway.core.constant.ExchangeAttributeConstant;
@@ -36,6 +37,9 @@ public abstract class AbstractAuthGatewayFilterFactory<C extends AbstractAuthGat
 
     @Autowired
     private LoadBalancerHelper loadBalancerHelper;
+
+    @Autowired(required = false)
+    private SystemIdGetter systemIdGetter;
 
     private JavaType authorizationRespType;
 
@@ -83,7 +87,6 @@ public abstract class AbstractAuthGatewayFilterFactory<C extends AbstractAuthGat
 
     }
 
-    // TODO 异常设置 源服务 id
     protected Mono<Void> hashAuthentication(ResponseEntity<CommonDataResponse<P>> responseEntity,
                                             GatewayFilterChain chain, ServerWebExchange exchange, String traceCode) {
 
@@ -92,11 +95,21 @@ public abstract class AbstractAuthGatewayFilterFactory<C extends AbstractAuthGat
         int status = responseEntity.getStatusCode().value();
         if (status == 200 && responseEntity.getBody() != null) {
             return handleReqSuccess(responseEntity.getBody(), chain, exchange);
-        } else if (status >= 400 && status < 500) {
+        }
+        // 响应系统id
+        Optional.ofNullable(responseEntity.getHeaders())
+                .map(h -> h.getFirst(CommonConstant.HttpResponseConstant.RESPONSE_HEADER_FIELD_SYSTEM_ID))
+                .ifPresent(sId -> headerMap.put(CommonConstant.HttpResponseConstant.RESPONSE_HEADER_FIELD_SYSTEM_ID, sId));
+        if (status >= 400 && status < 500) {
             return ReactorHttpHelper.buildAndWriteJson(responseEntity.getStatusCode(), responseEntity.getBody(), headerMap, exchange);
-        } else if (status >= 500) {
+        }
+        if (status >= 500) {
             return ReactorHttpHelper.buildAndWriteJson(HttpStatus.INTERNAL_SERVER_ERROR, CommonCodeResponse.unknownException(), headerMap, exchange);
         }
+        // 响应网关的系统id
+        Optional.ofNullable(systemIdGetter)
+                .map(SystemIdGetter::getSystemId)
+                .ifPresent(sId -> headerMap.put(CommonConstant.HttpResponseConstant.RESPONSE_HEADER_FIELD_SYSTEM_ID, sId));
         return ReactorHttpHelper.buildAndWriteJson(HttpStatus.UNAUTHORIZED, CommonCodeResponse.unauthorized(), headerMap, exchange);
     }
 

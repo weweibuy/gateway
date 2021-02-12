@@ -25,6 +25,9 @@ spring:
       maxLifetime: 30000
 
   cloud:
+    gateway:
+      httpclient:
+        connect-timeout: 200
     consul:
       host: 127.0.0.1
       discovery:

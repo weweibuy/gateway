@@ -200,7 +200,7 @@ public class DataPermissionGatewayFilterFactory extends AbstractGatewayFilterFac
             if (StringUtils.isBlank(contentType)) {
                 throw new UnsupportedMediaTypeStatusException("contentType为空");
             }
-            // TODO 支持更多类型
+            // 只支持 Json 与 application/x-www-form-urlencoded
             MediaType mediaType = MediaType.parseMediaType(contentType);
             if (!MediaType.APPLICATION_JSON.includes(mediaType) &&
                     !MediaType.APPLICATION_FORM_URLENCODED.includes(mediaType)) {
