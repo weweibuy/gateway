@@ -1,15 +1,5 @@
 package com.weweibuy.gateway.route.filter.sentinel;
 
-import com.alibaba.csp.sentinel.adapter.gateway.common.SentinelGatewayConstants;
-import com.alibaba.csp.sentinel.adapter.gateway.common.api.ApiDefinition;
-import com.alibaba.csp.sentinel.adapter.gateway.common.api.ApiPathPredicateItem;
-import com.alibaba.csp.sentinel.adapter.gateway.common.api.ApiPredicateItem;
-import com.alibaba.csp.sentinel.adapter.gateway.common.api.GatewayApiDefinitionManager;
-import com.alibaba.csp.sentinel.adapter.gateway.common.rule.GatewayFlowRule;
-import com.alibaba.csp.sentinel.adapter.gateway.common.rule.GatewayParamFlowItem;
-import com.alibaba.csp.sentinel.adapter.gateway.common.rule.GatewayRuleManager;
-import com.alibaba.csp.sentinel.adapter.gateway.sc.SentinelGatewayFilter;
-import com.alibaba.csp.sentinel.adapter.gateway.sc.exception.SentinelGatewayBlockExceptionHandler;
 import com.alibaba.csp.sentinel.datasource.ReadableDataSource;
 import com.alibaba.csp.sentinel.datasource.apollo.ApolloDataSource;
 import com.alibaba.csp.sentinel.slots.block.RuleConstant;
@@ -19,6 +9,14 @@ import com.alibaba.csp.sentinel.slots.block.flow.FlowRule;
 import com.alibaba.csp.sentinel.slots.block.flow.FlowRuleManager;
 import com.ctrip.framework.apollo.core.spi.Ordered;
 import com.weweibuy.framework.common.core.utils.JackJsonUtils;
+import com.weweibuy.gateway.sentinel.common.SentinelGatewayConstants;
+import com.weweibuy.gateway.sentinel.common.api.ApiDefinition;
+import com.weweibuy.gateway.sentinel.common.api.GatewayApiDefinitionManager;
+import com.weweibuy.gateway.sentinel.common.rule.GatewayFlowRule;
+import com.weweibuy.gateway.sentinel.common.rule.GatewayParamFlowItem;
+import com.weweibuy.gateway.sentinel.common.rule.GatewayRuleManager;
+import com.weweibuy.gateway.sentinel.sc.SentinelGatewayFilter;
+import com.weweibuy.gateway.sentinel.sc.exception.SentinelGatewayBlockExceptionHandler;
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.cloud.gateway.filter.GlobalFilter;
 import org.springframework.context.annotation.Bean;
@@ -36,7 +34,7 @@ import java.util.Set;
  * @author durenhao
  * @date 2019/7/19 22:43
  **/
-//@Configuration
+@Deprecated
 public class SentinelConfig {
 
     private final List<ViewResolver> viewResolvers;
@@ -70,13 +68,12 @@ public class SentinelConfig {
 
     private void initCustomizedApis() {
         Set<ApiDefinition> definitions = new HashSet<>();
-        ApiDefinition api1 = new ApiDefinition("test")
-                .setPredicateItems(new HashSet<ApiPredicateItem>() {{
-                    add(new ApiPathPredicateItem().setPattern("/hello"));
-                    add(new ApiPathPredicateItem().setPattern("/sample-application/**")
-                            .setMatchStrategy(SentinelGatewayConstants.URL_MATCH_STRATEGY_PREFIX));
-                }});
-
+        ApiDefinition api1 = new ApiDefinition("test", "5");
+        HashSet<String> pathSet = new HashSet<String>() {{
+            add("/hello");
+            add("/sample-application/**");
+        }};
+        api1.setPath(pathSet);
         definitions.add(api1);
         GatewayApiDefinitionManager.loadApiDefinitions(definitions);
     }
@@ -132,6 +129,16 @@ public class SentinelConfig {
 
         );
         GatewayRuleManager.loadRules(rules);
+        Set<GatewayFlowRule> rules2 = new HashSet<>();
+
+        rules2.add(new GatewayFlowRule("5")
+                .setResourceMode(SentinelGatewayConstants.RESOURCE_MODE_ROUTE_ID)
+                .setCount(10)
+                .setIntervalSec(1)
+
+        );
+        GatewayRuleManager.loadRules(rules2);
+
     }
 
 
@@ -156,7 +163,6 @@ public class SentinelConfig {
 
         ReadableDataSource<String, List<DegradeRule>> degradeRuleDataSource = new ApolloDataSource<>(namespaceName,
                 degradeRuleKey, defaultDegradeRule, source -> JackJsonUtils.readValue(source, List.class, DegradeRule.class));
-
 
         FlowRuleManager.register2Property(flowRuleDataSource.getProperty());
         DegradeRuleManager.register2Property(degradeRuleDataSource.getProperty());

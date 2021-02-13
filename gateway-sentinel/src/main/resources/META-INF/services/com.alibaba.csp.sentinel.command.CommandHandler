@@ -1,0 +1,4 @@
+com.weweibuy.gateway.sentinel.common.command.UpdateGatewayApiDefinitionGroupCommandHandler
+com.weweibuy.gateway.sentinel.common.command.UpdateGatewayRuleCommandHandler
+com.weweibuy.gateway.sentinel.common.command.GetGatewayApiDefinitionGroupCommandHandler
+com.weweibuy.gateway.sentinel.common.command.GetGatewayRuleCommandHandler

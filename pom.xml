@@ -14,6 +14,7 @@
         <module>gateway-core</module>
         <module>gateway-filter</module>
         <module>gateway-lb</module>
+        <module>gateway-sentinel</module>
     </modules>
 
 
@@ -51,6 +52,12 @@
             <dependency>
                 <groupId>com.weweibuy</groupId>
                 <artifactId>gateway-lb</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.weweibuy</groupId>
+                <artifactId>gateway-sentinel</artifactId>
                 <version>${project.version}</version>
             </dependency>
 
