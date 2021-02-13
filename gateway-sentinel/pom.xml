@@ -21,37 +21,22 @@
         <dependency>
             <groupId>com.alibaba.csp</groupId>
             <artifactId>sentinel-reactor-adapter</artifactId>
-            <version>${sentinel.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.springframework.cloud</groupId>
-            <artifactId>spring-cloud-gateway-core</artifactId>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-webflux</artifactId>
-            <scope>provided</scope>
         </dependency>
 
         <dependency>
             <groupId>com.alibaba.csp</groupId>
             <artifactId>sentinel-core</artifactId>
-            <version>${sentinel.version}</version>
         </dependency>
         <dependency>
             <groupId>com.alibaba.csp</groupId>
             <artifactId>sentinel-parameter-flow-control</artifactId>
-            <version>${sentinel.version}</version>
         </dependency>
+
         <dependency>
             <groupId>com.alibaba.csp</groupId>
             <artifactId>sentinel-transport-common</artifactId>
-            <version>${sentinel.version}</version>
             <scope>provided</scope>
         </dependency>
-
 
     </dependencies>
 

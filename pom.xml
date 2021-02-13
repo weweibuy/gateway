@@ -93,6 +93,30 @@
                 <version>${sentinel.version}</version>
             </dependency>
 
+            <dependency>
+                <groupId>com.alibaba.csp</groupId>
+                <artifactId>sentinel-reactor-adapter</artifactId>
+                <version>${sentinel.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.alibaba.csp</groupId>
+                <artifactId>sentinel-core</artifactId>
+                <version>${sentinel.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.alibaba.csp</groupId>
+                <artifactId>sentinel-parameter-flow-control</artifactId>
+                <version>${sentinel.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.alibaba.csp</groupId>
+                <artifactId>sentinel-transport-common</artifactId>
+                <version>${sentinel.version}</version>
+            </dependency>
+
         </dependencies>
     </dependencyManagement>
 
