@@ -49,6 +49,8 @@ import java.util.stream.Collectors;
 @Component
 public class SentinelGatewayFilterFactory extends AbstractGatewayFilterFactory<SentinelGatewayFilterFactory.Config> {
 
+    private Boolean enable = false;
+
     private final GatewayParamParser<ServerWebExchange> paramParser = new GatewayParamParser<>(
             new ServerWebExchangeItemParser());
 
@@ -65,6 +67,9 @@ public class SentinelGatewayFilterFactory extends AbstractGatewayFilterFactory<S
 
     @EventListener
     public synchronized void onRefreshRoutesResultEvent(RefreshRoutesResultEvent event) {
+        if (!enable) {
+            return;
+        }
         Throwable throwable = event.getThrowable();
         try {
             if (throwable == null) {
@@ -84,7 +89,7 @@ public class SentinelGatewayFilterFactory extends AbstractGatewayFilterFactory<S
 
     @Override
     public GatewayFilter apply(Config config) {
-
+        enable = true;
         boolean hasApiDefinition = initApiDefinition(config);
         boolean[] hasFlowRule = initFlowRule(config.getGatewayFlowRuleList(), config.getRouterId());
         boolean[] hasDegradeRule = initDegradeRule(config.getDegradeRuleList(), config.getRouterId());
