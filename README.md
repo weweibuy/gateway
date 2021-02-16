@@ -7,8 +7,9 @@
   - 日志与APM  
   - 流控,降级  
 
-### 先下载 https://github.com/weweibuy/weweibuy-framework  mvn install
- 
+#####  注意: 该项目对 [weweibuy-framework](https://github.com/weweibuy/weweibuy-framework)项目有依赖直接打开会报错,需要先下载:  
+ [weweibuy-framework](https://github.com/weweibuy/weweibuy-framework) 然后 mvn install
+
 ### 1. 鉴权:
   支持功能:
   - 用户鉴权  
