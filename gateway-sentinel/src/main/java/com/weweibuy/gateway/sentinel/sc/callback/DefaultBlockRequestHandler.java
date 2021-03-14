@@ -18,13 +18,12 @@ package com.weweibuy.gateway.sentinel.sc.callback;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.InvalidMediaTypeException;
 import org.springframework.http.MediaType;
+import org.springframework.web.reactive.function.BodyInserters;
 import org.springframework.web.reactive.function.server.ServerResponse;
 import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
 
 import java.util.List;
-
-import static org.springframework.web.reactive.function.BodyInserters.fromObject;
 
 /**
  * The default implementation of {@link BlockRequestHandler}.
@@ -43,8 +42,8 @@ public class DefaultBlockRequestHandler implements BlockRequestHandler {
         }
         // JSON result by default.
         return ServerResponse.status(HttpStatus.TOO_MANY_REQUESTS)
-            .contentType(MediaType.APPLICATION_JSON_UTF8)
-            .body(fromObject(buildErrorResult(ex)));
+            .contentType(MediaType.APPLICATION_JSON)
+            .body(BodyInserters.fromValue(buildErrorResult(ex)));
     }
 
     private Mono<ServerResponse> htmlErrorResponse(Throwable ex) {

@@ -30,6 +30,7 @@ import org.springframework.lang.Nullable;
 import org.springframework.util.Assert;
 import org.synchronoss.cloud.nio.multipart.*;
 import org.synchronoss.cloud.nio.stream.storage.StreamStorage;
+import org.synchronoss.cloud.nio.multipart.MultipartUtils;
 import reactor.core.publisher.*;
 
 import java.io.IOException;
@@ -290,6 +291,7 @@ public class SynchronossPartHttpMessageReader extends LoggingCodecSupport implem
 		@Override
 		public StreamStorage newStreamStorageForPartBody(Map<String, List<String>> headers, int index) {
 			this.index = index;
+
 			this.isFilePart = (MultipartUtils.getFileName(headers) != null);
 			this.partSize = 0;
 			if (maxParts > 0 && index > maxParts) {

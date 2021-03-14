@@ -24,7 +24,7 @@
         <maven.compiler.target>1.8</maven.compiler.target>
         <apollo-client.version>1.3.0</apollo-client.version>
         <sentinel.version>1.8.1</sentinel.version>
-        <weweibuy.framework.version>1.0-SNAPSHOT</weweibuy.framework.version>
+        <weweibuy.framework.version>1.1-SNAPSHOT</weweibuy.framework.version>
     </properties>
 
     <dependencyManagement>
@@ -121,26 +121,35 @@
     </dependencyManagement>
 
     <dependencies>
-        <!--junit测试-->
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <version>4.12</version>
-            <scope>test</scope>
-        </dependency>
-
-        <!--spring-boot-starter-test-->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.junit.jupiter</groupId>
+                    <artifactId>junit-jupiter</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.junit.vintage</groupId>
+                    <artifactId>junit-vintage-engine</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.mockito</groupId>
+                    <artifactId>mockito-junit-jupiter</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
 
-        <!--lombok-->
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <scope>test</scope>
+        </dependency>
+
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
-            <version>1.18.8</version>
             <scope>provided</scope>
         </dependency>
     </dependencies>

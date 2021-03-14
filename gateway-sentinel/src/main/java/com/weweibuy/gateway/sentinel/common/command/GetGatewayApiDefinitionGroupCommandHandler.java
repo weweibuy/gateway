@@ -31,6 +31,6 @@ public class GetGatewayApiDefinitionGroupCommandHandler implements CommandHandle
 
     @Override
     public CommandResponse<String> handle(CommandRequest request) {
-        return CommandResponse.ofSuccess(JackJsonUtils.write(GatewayApiDefinitionManager.getApiDefinitions()));
+        return CommandResponse.ofSuccess(JackJsonUtils.writeValue(GatewayApiDefinitionManager.getApiDefinitions()));
     }
 }

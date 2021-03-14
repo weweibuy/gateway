@@ -21,6 +21,7 @@ import reactor.netty.http.server.HttpServerRequest;
 import reactor.netty.http.server.HttpServerResponse;
 import reactor.netty.tcp.SslProvider;
 
+import java.net.InetSocketAddress;
 import java.time.Duration;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
@@ -40,7 +41,7 @@ public class HttpHelperTest {
 
         HttpClient client =
                 HttpClient.create()
-                        .port(server.address().getPort())
+                        .port(((InetSocketAddress) server.address()).getPort())
                         .wiretap(true);
 
         Mono<ByteBuf> content =
@@ -75,7 +76,7 @@ public class HttpHelperTest {
 
         HttpClient client =
                 HttpClient.create()
-                        .port(server.address().getPort())
+                        .port(((InetSocketAddress) server.address()).getPort())
                         .wiretap(true);
 
         Mono<String> content =
@@ -122,7 +123,9 @@ public class HttpHelperTest {
         DisposableServer server =
                 HttpServer.create()
                         .port(0)
-                        .route(r -> r.get("/test", (req, res) -> {throw new RuntimeException("test");})
+                        .route(r -> r.get("/test", (req, res) -> {
+                            throw new RuntimeException("test");
+                        })
                                 .get("/test2", (req, res) -> res.send(Flux.error(new Exception("test2")))
                                         .then()
                                         .log("send-1")
@@ -149,7 +152,7 @@ public class HttpHelperTest {
 
         HttpClient client =
                 HttpClient.create()
-                        .port(server.address().getPort())
+                        .port(((InetSocketAddress) server.address()).getPort())
                         .wiretap(true);
 
         Mono<Integer> code =
@@ -211,7 +214,7 @@ public class HttpHelperTest {
     }
 
 /*	@Test
-	public void webSocketRespondsToRequestsFromClients() {
+    public void webSocketRespondsToRequestsFromClients() {
 		AtomicInteger clientRes = new AtomicInteger();
 		AtomicInteger serverRes = new AtomicInteger();
 		DisposableServer server =
@@ -282,7 +285,7 @@ public class HttpHelperTest {
 
         String content =
                 HttpClient.create()
-                        .port(server.address().getPort())
+                        .port(((InetSocketAddress) server.address()).getPort())
                         .headers(h -> h.add("Expect", "100-continue"))
                         .post()
                         .uri("/")
@@ -321,7 +324,7 @@ public class HttpHelperTest {
 
         String content =
                 HttpClient.create()
-                        .port(server.address().getPort())
+                        .port(((InetSocketAddress) server.address()).getPort())
                         .compress(true)
                         .post()
                         .uri("/hi")
@@ -333,7 +336,7 @@ public class HttpHelperTest {
                         .block();
 
         Flux<String> f = HttpClient.create()
-                .port(server.address().getPort())
+                .port(((InetSocketAddress) server.address()).getPort())
                 .compress(true)
                 .get()
                 .uri("/stream")
@@ -342,10 +345,8 @@ public class HttpHelperTest {
         System.out.println(content);
 
 
-
-
         HttpClient.create()
-                .port(server.address().getPort())
+                .port(((InetSocketAddress) server.address()).getPort())
                 .compress(true)
                 .post()
                 .uri("/hi")
@@ -384,7 +385,7 @@ public class HttpHelperTest {
 
         String content =
                 HttpClient.create()
-                        .port(server.address().getPort())
+                        .port(((InetSocketAddress) server.address()).getPort())
                         .compress(true)
                         .post()
                         .uri("/hi")
@@ -396,7 +397,7 @@ public class HttpHelperTest {
                         .block();
 
         Flux<String> f = HttpClient.create()
-                .port(server.address().getPort())
+                .port(((InetSocketAddress) server.address()).getPort())
                 .compress(true)
                 .get()
                 .uri("/stream")
@@ -405,9 +406,8 @@ public class HttpHelperTest {
         System.out.println(content);
 
 
-
         HttpClient.create()
-                .port(server.address().getPort())
+                .port(((InetSocketAddress) server.address()).getPort())
                 .compress(true)
                 .post()
                 .uri("/hi")
@@ -463,7 +463,7 @@ public class HttpHelperTest {
         DisposableServer server =
                 HttpServer.create()
                         .secure(sslContextSpec -> sslContextSpec.sslContext(serverOptions))
-                        .handle((req, res) -> res.sendString(Mono.just("Hello "+Mono.just(sb.toString()))
+                        .handle((req, res) -> res.sendString(Mono.just("Hello " + Mono.just(sb.toString()))
                                 .delayElement
                                         (Duration.ofMillis(500))))
                         .wiretap(true)
@@ -652,7 +652,7 @@ public class HttpHelperTest {
     }
 
     @Test
-    public void testHttpNoSslH2Fails()  {
+    public void testHttpNoSslH2Fails() {
     }
 
 

@@ -3,7 +3,7 @@ package com.weweibuy.gateway.core.lb;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.client.ServiceInstance;
 import org.springframework.cloud.client.loadbalancer.LoadBalancerClient;
-import org.springframework.cloud.client.loadbalancer.reactive.Response;
+import org.springframework.cloud.client.loadbalancer.Response;
 import org.springframework.cloud.gateway.support.NotFoundException;
 import org.springframework.cloud.loadbalancer.core.ReactorLoadBalancer;
 import org.springframework.cloud.loadbalancer.support.LoadBalancerClientFactory;

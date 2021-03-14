@@ -31,6 +31,6 @@ public class GetGatewayRuleCommandHandler implements CommandHandler<String> {
 
     @Override
     public CommandResponse<String> handle(CommandRequest request) {
-        return CommandResponse.ofSuccess(JackJsonUtils.write(GatewayRuleManager.getRules()));
+        return CommandResponse.ofSuccess(JackJsonUtils.writeValue(GatewayRuleManager.getRules()));
     }
 }

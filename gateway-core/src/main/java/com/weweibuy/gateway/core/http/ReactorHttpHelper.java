@@ -137,7 +137,7 @@ public class ReactorHttpHelper {
                     Optional.ofNullable(headerMap)
                             .ifPresent(map -> map.forEach((k, v) -> req.addHeader(k, v)));
                     req.addHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE);
-                    return nettyOutbound.send(ByteBufFlux.fromString(Mono.just(JackJsonUtils.write(body))));
+                    return nettyOutbound.send(ByteBufFlux.fromString(Mono.just(JackJsonUtils.writeValue(body))));
                 });
     }
 
