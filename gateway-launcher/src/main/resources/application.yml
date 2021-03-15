@@ -4,6 +4,8 @@ server:
 spring:
   profiles:
     active: ${profileActive}
+  main:
+    web-application-type: reactive
   application:
     name: gateway-server
   redis:
@@ -14,6 +16,7 @@ spring:
     lettuce:
       pool:
         max-idle: 5
+
 
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
@@ -47,3 +50,8 @@ mybatis:
 rocket-mq:
   name-server: 122.51.171.126:9876
 
+common:
+  lb:
+    server-change-listener:
+      topic: COMMON_SERVER_UPDATE_TOPIC
+      group: GATEWAY_C_GROUP
