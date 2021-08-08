@@ -46,8 +46,6 @@ public class ServiceMatchStripPrefixGatewayFilterFactory extends AbstractGateway
             String path = request.getURI().getRawPath();
 
             String[] array = StringUtils.tokenizeToStringArray(path, "/");
-            if (array.length > 0 && StringUtils.hasLength(array[0])) {
-            }
 
             String newPath = "/"
                     + Arrays.stream(array)
