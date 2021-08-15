@@ -76,6 +76,7 @@ public class JdbcRouterDefinitionLocator implements RouteDefinitionLocator, Appl
                     List<FilterDefinition> filterDefinitions = filters.stream()
                             // 根据优先级排序, 排序越小越靠前
                             .sorted(Comparator.comparing(FilterVo::getFilterPriority))
+
                             .map(filter -> {
                                 FilterDefinition filterDefinition = new FilterDefinition();
                                 filterDefinition.setName(filter.getFilterName());

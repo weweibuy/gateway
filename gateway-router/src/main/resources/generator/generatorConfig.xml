@@ -8,6 +8,7 @@
 		<plugin type="com.weweibuy.framework.mybatis.plugin.OverwrittenMapperXmlPlugin"/>
 		<plugin type="com.itfsw.mybatis.generator.plugins.SelectOneByExamplePlugin"/>
 		<plugin type="com.itfsw.mybatis.generator.plugins.LombokPlugin"/>
+		<plugin type="com.itfsw.mybatis.generator.plugins.ExampleEnhancedPlugin"/>
 		<plugin type="com.itfsw.mybatis.generator.plugins.CommentPlugin">
 			<!-- 自定义模板路径 -->
 			<property name="template" value="src/main/resources/generator/mybatis-generator-comment.ftl" />

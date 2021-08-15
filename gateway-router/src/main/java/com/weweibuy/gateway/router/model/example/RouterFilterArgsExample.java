@@ -45,6 +45,23 @@ public class RouterFilterArgsExample {
         return criteria;
     }
 
+    public RouterFilterArgsExample orderBy(String orderByClause) {
+        this.setOrderByClause(orderByClause);
+        return this;
+    }
+
+    public RouterFilterArgsExample orderBy(String ... orderByClauses) {
+        StringBuffer sb = new StringBuffer();
+        for (int i = 0; i < orderByClauses.length; i++) {
+            sb.append(orderByClauses[i]);
+            if (i < orderByClauses.length - 1) {
+                sb.append(" , ");
+            }
+        }
+        this.setOrderByClause(sb.toString());
+        return this;
+    }
+
     public Criteria createCriteria() {
         Criteria criteria = createCriteriaInternal();
         if (oredCriteria.size() == 0) {
@@ -54,7 +71,7 @@ public class RouterFilterArgsExample {
     }
 
     protected Criteria createCriteriaInternal() {
-        Criteria criteria = new Criteria();
+        Criteria criteria = new Criteria(this);
         return criteria;
     }
 
@@ -62,6 +79,27 @@ public class RouterFilterArgsExample {
         oredCriteria.clear();
         orderByClause = null;
         distinct = false;
+    }
+
+    public static Criteria newAndCreateCriteria() {
+        RouterFilterArgsExample example = new RouterFilterArgsExample();
+        return example.createCriteria();
+    }
+
+    public RouterFilterArgsExample when(boolean condition, IExampleWhen then) {
+        if (condition) {
+            then.example(this);
+        }
+        return this;
+    }
+
+    public RouterFilterArgsExample when(boolean condition, IExampleWhen then, IExampleWhen otherwise) {
+        if (condition) {
+            then.example(this);
+        } else {
+            otherwise.example(this);
+        }
+        return this;
     }
 
     protected abstract static class GeneratedCriteria {
@@ -627,9 +665,44 @@ public class RouterFilterArgsExample {
     }
 
     public static class Criteria extends GeneratedCriteria {
+        private RouterFilterArgsExample example;
 
-        protected Criteria() {
+        protected Criteria(RouterFilterArgsExample example) {
             super();
+            this.example = example;
+        }
+
+        public RouterFilterArgsExample example() {
+            return this.example;
+        }
+
+        @Deprecated
+        public Criteria andIf(boolean ifAdd, ICriteriaAdd add) {
+            if (ifAdd) {
+                add.add(this);
+            }
+            return this;
+        }
+
+        public Criteria when(boolean condition, ICriteriaWhen then) {
+            if (condition) {
+                then.criteria(this);
+            }
+            return this;
+        }
+
+        public Criteria when(boolean condition, ICriteriaWhen then, ICriteriaWhen otherwise) {
+            if (condition) {
+                then.criteria(this);
+            } else {
+                otherwise.criteria(this);
+            }
+            return this;
+        }
+
+        @Deprecated
+        public interface ICriteriaAdd {
+            Criteria add(Criteria add);
         }
     }
 
@@ -717,5 +790,13 @@ public class RouterFilterArgsExample {
         protected Criterion(String condition, Object value, Object secondValue) {
             this(condition, value, secondValue, null);
         }
+    }
+
+    public interface ICriteriaWhen {
+        void criteria(Criteria criteria);
+    }
+
+    public interface IExampleWhen {
+        void example(com.weweibuy.gateway.router.model.example.RouterFilterArgsExample example);
     }
 }

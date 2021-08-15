@@ -25,8 +25,8 @@
         </dependency>
 
         <dependency>
-            <groupId>org.mybatis.spring.boot</groupId>
-            <artifactId>mybatis-spring-boot-starter</artifactId>
+            <groupId>com.weweibuy.framework</groupId>
+            <artifactId>common-db</artifactId>
         </dependency>
 
 
