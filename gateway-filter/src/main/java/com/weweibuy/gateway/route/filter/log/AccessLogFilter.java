@@ -27,7 +27,7 @@ public class AccessLogFilter implements GlobalFilter, Ordered {
     public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
         exchange.getAttributes().put(ExchangeAttributeConstant.REQUEST_TIMESTAMP, LocalDateTime.now());
         exchange.getAttributes().put(ExchangeAttributeConstant.TRACE_ID_ATTR, IdWorker.nextStringId());
-
+        // exchange.getAttribute(ServerWebExchangeUtils.GATEWAY_ROUTE_ATTR)  此处已经命中路由
         return chain.filter(exchange).transform(p ->
                 actual ->
                         p.subscribe(new LogBaseSubscriber(actual, exchange)));
