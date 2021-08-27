@@ -32,6 +32,7 @@ public class RouterManagerEndpoint {
 
     @PostMapping
     public synchronized CommonCodeResponse refreshRoute() {
+        // 监听 com.weweibuy.gateway.router.dynamic.JdbcRouterDefinitionLocator.onApplicationEvent()
         applicationContext.publishEvent(new CustomRefreshRoutesEvent(this));
         return CommonCodeResponse.success();
     }

@@ -1,5 +1,6 @@
 package com.weweibuy.gateway.router.config;
 
+import com.weweibuy.gateway.router.dynamic.JdbcRouterDefinitionLocator;
 import org.springframework.cloud.gateway.event.RefreshRoutesEvent;
 import org.springframework.cloud.gateway.route.CachingRouteLocator;
 import org.springframework.cloud.gateway.route.RouteLocator;
@@ -20,6 +21,9 @@ public class SyncLoadCachingRouteLocator extends CachingRouteLocator {
 
     @Override
     public synchronized void onApplicationEvent(RefreshRoutesEvent event) {
-        super.onApplicationEvent(event);
+        Object source = event.getSource();
+        if (source instanceof JdbcRouterDefinitionLocator) {
+            super.onApplicationEvent(event);
+        }
     }
 }
