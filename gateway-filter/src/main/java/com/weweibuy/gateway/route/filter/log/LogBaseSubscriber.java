@@ -41,8 +41,11 @@ public class LogBaseSubscriber extends BaseSubscriber {
 
     @Override
     protected void hookOnComplete() {
-        recordLog(exchange);
-        actual.onComplete();
+        try {
+            recordLog(exchange);
+        } finally {
+            actual.onComplete();
+        }
     }
 
     @Override
@@ -53,8 +56,11 @@ public class LogBaseSubscriber extends BaseSubscriber {
 
     @Override
     protected void hookOnError(Throwable t) {
-        actual.onError(t);
-        recordLog(exchange);
+        try {
+            recordLog(exchange);
+        } finally {
+            actual.onError(t);
+        }
     }
 
 
@@ -67,7 +73,7 @@ public class LogBaseSubscriber extends BaseSubscriber {
         HttpHeaders headers = request.getHeaders();
         log.info("{} {} {} {} {} {} {} {}ms",
                 RequestIpUtil.getIp(request),
-                headers.get("Host"),
+                headers.get(HttpHeaders.HOST),
                 request.getMethod(),
                 route.getUri(),
                 request.getURI().getPath(),
