@@ -62,6 +62,11 @@ public interface ExchangeAttributeConstant {
      */
     String CACHED_RESPONSE_BODY_ATTR = "cached_response_body_attr";
 
+    /**
+     * 输出OpLog
+     */
+    String OP_LOG_OUTPUT_ATTR = "op_log_output_attr";
+
 
 
 }
