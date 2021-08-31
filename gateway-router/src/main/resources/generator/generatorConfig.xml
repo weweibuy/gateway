@@ -71,6 +71,8 @@
 		</table>
 		<table tableName="gw_router_filter_args" domainObjectName="RouterFilterArgs">
 		</table>
+		<table tableName="gw_op_log_config" domainObjectName="OpLogConfig">
+		</table>
 
 	</context>
 </generatorConfiguration>
