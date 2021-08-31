@@ -1,7 +1,10 @@
 package com.weweibuy.gateway.route.filter.log;
 
 import com.weweibuy.gateway.core.constant.ExchangeAttributeConstant;
+import com.weweibuy.gateway.core.support.OpLogProperties;
+import com.weweibuy.gateway.core.support.OpLogPropertiesLocator;
 import io.netty.buffer.ByteBuf;
+import lombok.RequiredArgsConstructor;
 import org.reactivestreams.Publisher;
 import org.springframework.cloud.gateway.filter.GatewayFilterChain;
 import org.springframework.cloud.gateway.filter.GlobalFilter;
@@ -10,8 +13,10 @@ import org.springframework.core.io.buffer.DataBuffer;
 import org.springframework.core.io.buffer.DataBufferFactory;
 import org.springframework.core.io.buffer.DataBufferUtils;
 import org.springframework.core.io.buffer.NettyDataBufferFactory;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.server.reactive.AbstractServerHttpResponse;
 import org.springframework.http.server.reactive.PubicReactorServerHttpResponse;
+import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.stereotype.Component;
 import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
@@ -24,17 +29,33 @@ import reactor.netty.http.server.HttpServerResponse;
  * @date 2021/8/31 14:46
  **/
 @Component
+@RequiredArgsConstructor
 public class CachedResponseBodyStrFilter implements GlobalFilter, Ordered {
+
+    private final OpLogPropertiesLocator opLogPropertiesLocator;
 
     @Override
     public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
         AbstractServerHttpResponse response = (AbstractServerHttpResponse) exchange.getResponse();
-        DataBufferFactory dataBufferFactory = response.bufferFactory();
-        return chain.filter(exchange.mutate()
-                .response(new CachedBodyResponse(response.getNativeResponse(),
-                        response.bufferFactory(), exchange))
-                .build());
+        if (needCacheResponseBody(exchange, chain)) {
+            return chain.filter(exchange.mutate()
+                    .response(new CachedBodyResponse(response.getNativeResponse(),
+                            response.bufferFactory(), exchange))
+                    .build());
+        }
+        return chain.filter(exchange);
     }
+
+    // 是否需要缓存 响应 body
+    private boolean needCacheResponseBody(ServerWebExchange exchange, GatewayFilterChain chain) {
+        ServerHttpRequest request = exchange.getRequest();
+        String host = request.getHeaders().getFirst(HttpHeaders.HOST);
+        String path = request.getURI().getPath();
+
+        OpLogProperties opLogProperties = opLogPropertiesLocator.getOpLogProperties();
+        return opLogProperties.match(host, path);
+    }
+
 
     @Override
     public int getOrder() {
