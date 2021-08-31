@@ -65,6 +65,7 @@ public class LogBaseSubscriber extends BaseSubscriber {
 
 
     static void recordLog(ServerWebExchange exchange) {
+        logOpLog(exchange);
         Route route = exchange.getAttribute(ServerWebExchangeUtils.GATEWAY_ROUTE_ATTR);
         LocalDateTime requestTimestamp = exchange.getAttribute(ExchangeAttributeConstant.REQUEST_TIMESTAMP);
         String traceId = exchange.getAttribute(ExchangeAttributeConstant.TRACE_ID_ATTR);
@@ -80,6 +81,12 @@ public class LogBaseSubscriber extends BaseSubscriber {
                 traceId,
                 exchange.getResponse().getStatusCode().value(),
                 Duration.between(requestTimestamp, now).toMillis());
+    }
+
+
+    static void logOpLog(ServerWebExchange exchange) {
+        String responseBodyStr = (String) exchange.getAttribute(ExchangeAttributeConstant.CACHED_RESPONSE_BODY_ATTR);
+        log.info("响应数据: {}", responseBodyStr);
     }
 
 }

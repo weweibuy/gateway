@@ -69,8 +69,6 @@ public class VerifySignatureGatewayFilterFactory extends AbstractGatewayFilterFa
     @Autowired
     private ApplicationContext applicationContext;
 
-    public static final String CACHED_REQUEST_BODY_ATTR = ServerWebExchangeUtils.CACHED_REQUEST_BODY_ATTR;
-
     private static final ParameterizedTypeReference MULTIPART_VALUE_TYPE;
 
     @Autowired
@@ -113,7 +111,7 @@ public class VerifySignatureGatewayFilterFactory extends AbstractGatewayFilterFa
                 return verifyMultipartFormData(systemRequestParam, exchange, chain, config);
             }
 
-            String body = Optional.ofNullable((DataBuffer) exchange.getAttributes().get(CACHED_REQUEST_BODY_ATTR))
+            String body = Optional.ofNullable((DataBuffer) exchange.getAttributes().get(ServerWebExchangeUtils.CACHED_REQUEST_BODY_ATTR))
                     .map(DataBuffer::asByteBuffer)
                     .map(StandardCharsets.UTF_8::decode)
                     .map(Object::toString)

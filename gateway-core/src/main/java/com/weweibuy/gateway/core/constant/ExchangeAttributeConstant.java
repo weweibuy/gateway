@@ -28,7 +28,6 @@ public interface ExchangeAttributeConstant {
      */
     String REQUEST_URL_ATTR = "request_url";
 
-
     /**
      * App信息
      */
@@ -57,6 +56,11 @@ public interface ExchangeAttributeConstant {
     String USER_ID_ATTR = "user_id";
 
     String REQUEST_TIMESTAMP = "request_timestamp";
+
+    /**
+     * 缓存响应 body string
+     */
+    String CACHED_RESPONSE_BODY_ATTR = "cached_response_body_attr";
 
 
 
