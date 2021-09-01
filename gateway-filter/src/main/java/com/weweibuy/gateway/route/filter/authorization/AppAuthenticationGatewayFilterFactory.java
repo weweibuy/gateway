@@ -5,6 +5,7 @@ import com.weweibuy.framework.common.core.exception.Exceptions;
 import com.weweibuy.framework.common.core.model.dto.CommonDataResponse;
 import com.weweibuy.framework.common.core.utils.BeanCopyUtils;
 import com.weweibuy.gateway.core.constant.ExchangeAttributeConstant;
+import com.weweibuy.gateway.core.constant.RouterMetaDataConstant;
 import com.weweibuy.gateway.route.filter.authorization.model.AppAuthorizationReq;
 import com.weweibuy.gateway.route.filter.authorization.model.AppAuthorizationResp;
 import com.weweibuy.gateway.route.filter.authorization.model.AppInfo;
@@ -55,7 +56,7 @@ public class AppAuthenticationGatewayFilterFactory extends AbstractAuthGatewayFi
 
         Route route = exchange.getAttribute(GATEWAY_ROUTE_ATTR);
         String service = Optional.ofNullable(route.getMetadata())
-                .map(m -> (String) m.get(route.getId()))
+                .map(m -> (String) m.get(RouterMetaDataConstant.SYSTEM_ID))
                 .orElseThrow(() -> Exceptions.system("路由id,无法找到系统id"));
 
         SystemRequestParam systemRequestParam = (SystemRequestParam) exchange.getAttributes().get(ExchangeAttributeConstant.SYSTEM_REQUEST_PARAM);
@@ -68,7 +69,7 @@ public class AppAuthenticationGatewayFilterFactory extends AbstractAuthGatewayFi
         Route route = exchange.getAttribute(GATEWAY_ROUTE_ATTR);
 
         String service = Optional.ofNullable(route.getMetadata())
-                .map(m -> (String) m.get(route.getId()))
+                .map(m -> (String) m.get(RouterMetaDataConstant.SYSTEM_ID))
                 .orElseThrow(() -> Exceptions.system("路由id,无法找到系统id"));
 
         SystemRequestParam systemRequestParam = (SystemRequestParam) exchange.getAttributes().get(ExchangeAttributeConstant.SYSTEM_REQUEST_PARAM);

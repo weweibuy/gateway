@@ -29,6 +29,10 @@
             <artifactId>common-db</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>com.weweibuy.framework</groupId>
+            <artifactId>common-local-cache</artifactId>
+        </dependency>
 
     </dependencies>
 

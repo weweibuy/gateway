@@ -46,9 +46,17 @@ mybatis:
 
 rocket-mq:
   name-server: 122.51.171.126:9876
+  producer:
+    group: GW_PG
 
 common:
   lb:
     server-change-listener:
       topic: COMMON_SERVER_UPDATE_TOPIC
       group: GATEWAY_C_GROUP
+  local-cache:
+    mq-evict:
+      enable: true
+      consumer-group: GW_LOCAL_CHAHE_EVICT_CG
+      topic: LOCAL_CHAHE_EVICT_TOPIC
+      tag: GW

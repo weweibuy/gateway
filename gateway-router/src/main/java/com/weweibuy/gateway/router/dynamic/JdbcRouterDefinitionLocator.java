@@ -1,5 +1,6 @@
 package com.weweibuy.gateway.router.dynamic;
 
+import com.weweibuy.gateway.core.constant.RouterMetaDataConstant;
 import com.weweibuy.gateway.core.mode.event.CustomRefreshRoutesEvent;
 import com.weweibuy.gateway.router.model.vo.FilterVo;
 import com.weweibuy.gateway.router.model.vo.PredicateVo;
@@ -92,7 +93,7 @@ public class JdbcRouterDefinitionLocator implements RouteDefinitionLocator, Appl
                     routeDefinition.setUri(UriComponentsBuilder.fromUriString(routerVo.getRouterUri()).build().toUri());
                     // 路由id 与系统id关系
                     Map<String, Object> metaDataMap = new HashMap<>();
-                    metaDataMap.put(routerId, routerVo.getSystemId());
+                    metaDataMap.put(RouterMetaDataConstant.SYSTEM_ID, routerVo.getSystemId());
                     routeDefinition.setMetadata(metaDataMap);
                     return routeDefinition;
                 }));

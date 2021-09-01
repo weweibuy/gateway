@@ -10,6 +10,7 @@ public interface OpLogPropertiesLocator {
 
     /**
      * 获取操作日志配置
+     * TODO 响应式
      *
      * @return
      */
