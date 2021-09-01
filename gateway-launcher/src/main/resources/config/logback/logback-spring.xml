@@ -41,6 +41,21 @@
         </rollingPolicy>
     </appender>
 
+    <appender name="OP_LOG_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${log.path}/oplog.log</file>
+        <encoder>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{50} [%X{uid},%X{tid}] - %m%n</pattern>
+            <charset>UTF-8</charset>
+        </encoder>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${log.path}/oplog-%d{yyyy-MM-dd}.%i.log.tar.gz</fileNamePattern>
+            <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+                <maxFileSize>100MB</maxFileSize>
+            </timeBasedFileNamingAndTriggeringPolicy>
+            <maxHistory>15</maxHistory>
+        </rollingPolicy>
+    </appender>
+
     <springProfile name="dev">
         <root level="INFO">
             <appender-ref ref="CONSOLE"/>
@@ -50,5 +65,9 @@
     <root level="INFO">
         <appender-ref ref="FILE"/>
     </root>
+
+    <logger name="com.weweibuy.gateway.route.filter.log.OpLogLogger" level="INFO" additivity="false">
+        <appender-ref ref="OP_LOG_FILE" />
+    </logger>
 
 </configuration>
