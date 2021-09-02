@@ -60,6 +60,9 @@
         <root level="INFO">
             <appender-ref ref="CONSOLE"/>
         </root>
+        <logger name="com.weweibuy.gateway.route.filter.log.OpLogLogger" level="INFO" additivity="false">
+            <appender-ref ref="CONSOLE" />
+        </logger>
     </springProfile>
 
     <root level="INFO">
