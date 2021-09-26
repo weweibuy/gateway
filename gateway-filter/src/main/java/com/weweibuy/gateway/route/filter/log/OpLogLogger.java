@@ -33,12 +33,14 @@ public class OpLogLogger {
         String responseBodyStr = Optional.ofNullable((String) exchange.getAttribute(ExchangeAttributeConstant.CACHED_RESPONSE_BODY_ATTR))
                 .orElse(StringUtils.EMPTY);
 
-        String body = Optional.ofNullable((DataBuffer) exchange.getAttributes().get(ServerWebExchangeUtils.CACHED_REQUEST_BODY_ATTR))
+        String reqBodyStr = Optional.ofNullable((DataBuffer) exchange.getAttributes().get(ServerWebExchangeUtils.CACHED_REQUEST_BODY_ATTR))
                 .map(DataBuffer::asByteBuffer)
                 .map(StandardCharsets.UTF_8::decode)
                 .map(Object::toString)
                 .orElse(StringUtils.EMPTY);
-        log.info("操作日志: {}, req: {}, resp: {}", JackJsonUtils.writeCamelCase(logParam), body, responseBodyStr);
+        logParam.setReq(reqBodyStr);
+        logParam.setResp(responseBodyStr);
+        log.info("操作日志: {}", JackJsonUtils.writeSnakeCase(logParam));
     }
 
 

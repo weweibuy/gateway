@@ -36,6 +36,9 @@ public class LogParam {
 
     private LocalDateTime reqTime;
 
+    private String req;
+
+    private String resp;
 
 
 }

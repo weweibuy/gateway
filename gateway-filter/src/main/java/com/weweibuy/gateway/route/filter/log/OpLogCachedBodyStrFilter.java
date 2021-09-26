@@ -69,7 +69,13 @@ public class OpLogCachedBodyStrFilter implements GlobalFilter, Ordered {
     }
 
 
-    // 是否需要缓存 响应 body
+    /**
+     * 是否需要缓存 响应 body
+     *
+     * @param exchange
+     * @param chain
+     * @return
+     */
     private boolean needCacheBody(ServerWebExchange exchange, GatewayFilterChain chain) {
         ServerHttpRequest request = exchange.getRequest();
         String host = request.getHeaders().getFirst(HttpHeaders.HOST);
